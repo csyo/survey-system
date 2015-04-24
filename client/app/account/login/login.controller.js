@@ -10,7 +10,7 @@ angular.module('surveyApp')
 
       if(form.$valid) {
         Auth.login({
-          email: $scope.user.email,
+          name: $scope.user.name,
           password: $scope.user.password
         })
         .then( function() {

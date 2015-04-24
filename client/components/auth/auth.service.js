@@ -21,7 +21,7 @@ angular.module('surveyApp')
         var deferred = $q.defer();
 
         $http.post('/auth/local', {
-          email: user.email,
+          name: user.name,
           password: user.password
         }).
         success(function(data) {
