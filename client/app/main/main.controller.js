@@ -1,21 +1,24 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($scope, $http) {
-    $scope.awesomeThings = [];
-
+  .controller('MainCtrl', function ($scope, $http, $location) {
+    // $scope.awesomeThings = [];
     // $http.get('/api/things').success(function(awesomeThings) {
     //   $scope.awesomeThings = awesomeThings;
     // });
 
     $scope.rowCollection = [
-        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
-        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
-        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+        {number: 0, title: 'TestSurvey', account: 'test', name: 'test', status: true}
     ];
 
+    $scope.displayedCollection = [].concat($scope.rowCollection);
+
+    $scope.toggleStatus = function(row) {
+      row.status = !row.status;
+    };
+
     $scope.addForm = function() {
-      // body...
+      $location.path('/editor');
     };
 
     $scope.editForm = function() {
