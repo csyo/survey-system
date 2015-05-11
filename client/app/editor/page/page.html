@@ -1,17 +1,7 @@
-<!-- <div ng-include="'components/navbar/navbar.html'"></div>
- -->
-<!-- <div class="navbar navbar-default navbar-static-top"> -->
-<!-- </div> -->
-
 <div class="container">
   <div class="row">
     <div class="page-header">
-      <h1>{{currentSurvey.title || '編輯問卷名稱'}}
-      <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-default">
-        <i class="glyphicon glyphicon-pencil">
-        </i>
-      </button>
-      </h1>
+      <h1>編輯頁面</h1>
     </div>
     <div class="col-md-12">
       <button type="button" ng-click="addItem()" class="btn btn-sm btn-primary">
@@ -20,13 +10,15 @@
       </button>
       <button type="button" ng-click="saveAll()" class="btn btn-sm btn-warning">
         <i class="glyphicon glyphicon-save">
-        </i> 儲存問卷
+        </i> 儲存頁面
       </button>
       <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
         <thead>
         <tr>
           <th>順序</th>
+          <th>必填</th>
           <th>類型</th>
+          <th>題目</th>
           <th>編輯</th>
           <th>刪除</th>
         </tr>
@@ -34,7 +26,9 @@
         <tbody>
         <tr ng-repeat="row in rowCollection">
           <td>{{row.order}}</td>
-          <td>{{row.pageType}}</td>
+          <td>{{row.must}}</td>
+          <td>{{row.itemType}}</td>
+          <td>{{row.title}}</td>
           <td>
           <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">

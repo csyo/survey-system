@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($scope, $location, ngDialog) {
-    $scope.currentSurvey = {
+  .controller('PageCtrl', function ($scope, $location, ngDialog) {
+    $scope.currentPage = {
         // title: 'TestSurvey'
     };
 
     $scope.rowCollection = [
-        {order: 0, pageType: 'unknown'}
+        {order: 0, must: true, itemType: 'unknown', title: 'test'}
     ];
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
@@ -18,15 +18,14 @@ angular.module('surveyApp')
 
     $scope.addItem = function() {
         ngDialog.open({
-            template: 'app/editor/type/type.html',
-            controller: 'TypeCtrl'
+            template: 'app/editor/item/item.html',
+            controller: 'ItemCtrl'
         });
     };
     $scope.editItem = function() {
-        $location.path('/editor/page');
+
     };
     $scope.removeItem = function() {
 
     };
-
   });

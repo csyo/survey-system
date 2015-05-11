@@ -1,0 +1,22 @@
+<div class="ngdialog-message">
+  <h2>選擇項目類型</h2>
+  <div class="form-group">
+    <label for="itemOrder">順序</label>
+    <input type="text" class="form-control" id="itemOrder" placeholder="預設值">
+  </div>
+
+  <div class="form-group">
+    <label for="itemType">類型</label>
+    <select class="form-control mt" ng-model="itemType">
+      <option value="title">標題</option>
+      <option value="likert">李克特量表</option>
+      <option value="semantic">語意差異量表</option>
+      <option value="choice">選擇題</option>
+      <option value="answer">問答題</option>
+    </select>
+  </div>
+
+</div>
+<div class="ngdialog-buttons mt">
+  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="done()">完成</button>
+</div>

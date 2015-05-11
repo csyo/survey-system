@@ -6,7 +6,8 @@ angular.module('surveyApp', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'smart-table'
+  'smart-table',
+  'ngDialog'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
