@@ -1,15 +1,13 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($scope, $http, $location) {
+  .controller('MainCtrl', function ($scope, $http, $location, surveydata) {
     // $scope.awesomeThings = [];
     // $http.get('/api/things').success(function(awesomeThings) {
     //   $scope.awesomeThings = awesomeThings;
     // });
 
-    $scope.rowCollection = [
-        {number: 0, title: 'TestSurvey', account: 'test', name: 'test', status: true}
-    ];
+    $scope.rowCollection = surveydata.getSurveys();
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
@@ -18,19 +16,19 @@ angular.module('surveyApp')
     };
 
     $scope.addForm = function() {
-      $location.path('/editor');
+      $location.path('/editor'); // change to editor view to create survey
     };
 
     $scope.editForm = function() {
-      // body...
+      $location.path('/editor'); // change to editor view to edit survey
     };
 
     $scope.previewForm = function() {
-      // body...
+      // TODO: generate the whole survey for preview
     };
 
     $scope.generateUrl = function() {
-      // body...
+      // TODO: generate a url for the survey with database communication
     };
 
     $scope.addThing = function() {

@@ -15,7 +15,8 @@ describe('Controller: ItemCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
+  it("should have method done", function() {
+    expect(scope.done).toBeDefined();
   });
+
 });

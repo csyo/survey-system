@@ -15,7 +15,11 @@ describe('Controller: EditorCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
+  it('should have a survey title', function () {
+    expect(scope.currentSurvey.title).toBeDefined();
+  });
+
+  it("should have display items", function() {
+    expect(scope.displayedCollection.length).not.toBe(0);
   });
 });

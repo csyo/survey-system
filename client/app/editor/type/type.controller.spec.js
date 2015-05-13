@@ -5,7 +5,7 @@ describe('Controller: TypeCtrl', function () {
   // load the controller's module
   beforeEach(module('surveyApp'));
 
-  var TypeCtrl, scope;
+  var TypeCtrl, scope, surveydata;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
@@ -15,7 +15,11 @@ describe('Controller: TypeCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
+  it('should have a "done" method', function () {
+    expect(scope.done).toBeDefined();
+  });
+
+  it("should add a page to surveydata", function() {
+
   });
 });

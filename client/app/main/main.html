@@ -27,7 +27,6 @@
           <th>編號</th>
           <th>標題</th>
           <th>帳號</th>
-          <th>姓名</th>
           <th>狀態</th>
           <th>編輯</th>
           <th>預覽</th>
@@ -36,10 +35,9 @@
         </thead>
         <tbody>
         <tr ng-repeat="row in rowCollection">
-          <td>{{row.number}}</td>
-          <td>{{row.title}}</td>
+          <td>{{row.index}}</td>
+          <td>{{row.title || '編輯問卷標題'}}</td>
           <td>{{row.account}}</td>
-          <td>{{row.name}}</td>
           <td>
           <button type="button" ng-click="toggleStatus(row)" class="btn btn-sm btn-default">
             <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">

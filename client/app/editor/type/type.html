@@ -2,25 +2,23 @@
   <h2>選擇頁面類型</h2>
   <div class="form-group">
     <label for="pageOrder">順序</label>
-    <input type="text" class="form-control" id="typeOrder" placeholder="預設值">
+    <input type="text" class="form-control" ng-model="pageOrder" placeholder="預設值">
   </div>
 
   <div class="form-group">
     <label for="pageCount">讀秒</label>
-    <input type="text" class="form-control" id="typeCount" placeholder="0">
+    <input type="text" class="form-control" ng-model="pageCount" placeholder="0">
   </div>
 
   <div class="form-group">
-    <label for="pageMenu">類型</label>
-    <select class="form-control mt" ng-model="pageType">
-      <option value="txt">文字頁面</option>
-      <option value="pic">圖片頁面</option>
-      <option value="mix">問卷頁面</option>
-      <option value="ans">填答頁面</option>
-    </select>
+    <label for="pageType">類型
+      <select class="form-control mt" ng-model="pageType" ng-options="pageType.name for pageType in pageTypes">
+        <option value="">-- 選擇類型 --</option>
+      </select>
+    </label>
   </div>
 
 </div>
 <div class="ngdialog-buttons mt">
-  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="done()">完成</button>
+  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-disabled="pageType === undefined" ng-click="done()">完成</button>
 </div>

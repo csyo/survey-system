@@ -1,14 +1,10 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($scope, $location, ngDialog) {
-    $scope.currentSurvey = {
-        // title: 'TestSurvey'
-    };
+  .controller('EditorCtrl', function ($scope, $location, ngDialog, surveydata) {
+    $scope.currentSurvey = surveydata.getCurrentSurvey(); // TODO: how to detect the 'add' or 'edit' mode
 
-    $scope.rowCollection = [
-        {order: 0, pageType: 'unknown'}
-    ];
+    $scope.rowCollection = surveydata.getPages();
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
@@ -16,16 +12,19 @@ angular.module('surveyApp')
 
     };
 
-    $scope.addItem = function() {
+    $scope.addPage = function() {
         ngDialog.open({
             template: 'app/editor/type/type.html',
             controller: 'TypeCtrl'
         });
     };
-    $scope.editItem = function() {
+    $scope.editPage = function(row) {
+        surveydata.getCurrentPage().pageOrder = row.pageOrder;
+        surveydata.getCurrentPage().pageCount = row.pageCount;
+        surveydata.getCurrentPage().pageType = row.pageType;
         $location.path('/editor/page');
     };
-    $scope.removeItem = function() {
+    $scope.removePage = function(row) {
 
     };
 

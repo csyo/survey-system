@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('PageCtrl', function ($scope, $location, ngDialog) {
+  .controller('PageCtrl', function ($scope, $location, ngDialog, surveydata) {
     $scope.currentPage = {
-        // title: 'TestSurvey'
+        title: 'TestSurvey'
     };
 
     $scope.rowCollection = [

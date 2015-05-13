@@ -15,7 +15,11 @@ describe('Controller: PageCtrl', function () {
     });
   }));
 
-  it('should ...', function () {
-    expect(1).toEqual(1);
+  it('should have a page title', function () {
+    expect(scope.currentPage.title).toBeDefined();
+  });
+
+  it("should have display items", function() {
+    expect(scope.displayedCollection.length).not.toBe(0);
   });
 });

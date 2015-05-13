@@ -7,14 +7,14 @@
   <div class="row">
     <div class="page-header">
       <h1>{{currentSurvey.title || '編輯問卷名稱'}}
-      <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-default">
+      <button type="button" ng-click="edit(row)" class="btn btn-sm btn-default">
         <i class="glyphicon glyphicon-pencil">
         </i>
       </button>
       </h1>
     </div>
     <div class="col-md-12">
-      <button type="button" ng-click="addItem()" class="btn btn-sm btn-primary">
+      <button type="button" ng-click="addPage()" class="btn btn-sm btn-primary">
         <i class="glyphicon glyphicon-plus">
         </i> 新增項目
       </button>
@@ -27,22 +27,24 @@
         <tr>
           <th>順序</th>
           <th>類型</th>
+          <th>讀秒</th>
           <th>編輯</th>
           <th>刪除</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="row in rowCollection">
-          <td>{{row.order}}</td>
-          <td>{{row.pageType}}</td>
+          <td>{{row.pageOrder}}</td>
+          <td>{{row.pageType.name}}</td>
+          <td>{{row.pageCount}}</td>
           <td>
-          <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-info">
+          <button type="button" ng-click="editPage(row)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
+          <button type="button" ng-click="removePage(row)" class="btn btn-sm btn-danger">
             <i class="glyphicon glyphicon-remove">
             </i>
           </button>
