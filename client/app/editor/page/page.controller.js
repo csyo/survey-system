@@ -2,18 +2,15 @@
 
 angular.module('surveyApp')
   .controller('PageCtrl', function ($scope, $location, ngDialog, surveydata) {
-    $scope.currentPage = {
-        title: 'TestSurvey'
-    };
+    $scope.currentPage = surveydata.getCurrentPage();
 
-    $scope.rowCollection = [
-        {order: 0, must: true, itemType: 'unknown', title: 'test'}
-    ];
+    $scope.rowCollection = surveydata.getItems();
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
     $scope.saveAll = function() {
-
+        // TODO: saving changes
+        $location.path('/editor');
     };
 
     $scope.addItem = function() {
@@ -22,8 +19,8 @@ angular.module('surveyApp')
             controller: 'ItemCtrl'
         });
     };
-    $scope.editItem = function() {
-
+    $scope.editItem = function(row) {
+        console.log(row);
     };
     $scope.removeItem = function() {
 

@@ -19,6 +19,7 @@ angular.module('surveyApp')
         });
     };
     $scope.editPage = function(row) {
+        console.log(row);
         surveydata.getCurrentPage().pageOrder = row.pageOrder;
         surveydata.getCurrentPage().pageCount = row.pageCount;
         surveydata.getCurrentPage().pageType = row.pageType;

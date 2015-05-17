@@ -6,17 +6,14 @@
   </div>
 
   <div class="form-group">
-    <label for="itemType">類型</label>
-    <select class="form-control mt" ng-model="itemType">
-      <option value="title">標題</option>
-      <option value="likert">李克特量表</option>
-      <option value="semantic">語意差異量表</option>
-      <option value="choice">選擇題</option>
-      <option value="answer">問答題</option>
-    </select>
+    <label for="pageType">類型
+      <select class="form-control mt" ng-model="itemType" ng-options="itemType.name for itemType in itemTypes">
+        <option value="">-- 選擇 --</option>
+      </select>
+    </label>
   </div>
 
 </div>
 <div class="ngdialog-buttons mt">
-  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="done()">完成</button>
+  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-disabled="itemType === undefined" ng-click="done()">新增</button>
 </div>
