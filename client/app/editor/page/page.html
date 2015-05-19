@@ -19,7 +19,7 @@
           <th class="must">必填</th>
           <th class="type">類型</th>
           <th class="content">內容</th>
-          <th class="tableBtn">設定</th>
+          <th class="tableBtn">量表尺度</th>
           <th class="tableBtn">編輯項目</th>
         </tr>
         </thead>
@@ -27,19 +27,33 @@
         <tr ng-repeat="row in rowCollection">
           <td>{{row.itemOrder}}</td>
           <td><input type="checkbox" ng-model="row.must"></td>
-          <td>{{row.itemType.name}}</td>
-          <td>{{row.content}}</td>
           <td>
-          <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-info">
-            <i class="glyphicon glyphicon-edit">
-            </i>
-          </button>
+            <span editable-select="row.itemType" e-name="itemType" buttons="no" e-ng-options="t.name for t in itemTypes" onaftersave="checkRow(row)">
+              {{ row.itemType.name || '選擇'}}
+            </span>
           </td>
           <td>
-          <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
-            <i class="glyphicon glyphicon-remove">
-            </i>
-          </button>
+            <span editable-text="row.content" e-name="content" e-form="rowform" e-ng-hide="checkGroup(row)">
+              {{ row.content }}
+            </span>
+            <span editable-textarea="row.multicontent" e-name="multicontent" e-form="rowform" e-rows="5" e-cols="40" e-ng-show="checkGroup(row)">
+              {{ row.multicontent }}
+            </span>
+          </td>
+          <td>
+            <span editable-select="row.options" e-name="scaleOption" e-form="rowform" e-ng-options="s.val for s in scaleOptions" e-ng-show="checkType(row.itemType)">
+              {{ row.options.val }}
+            </span>
+          </td>
+          <td style="white-space: nowrap">
+            <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">儲存</button>
+              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">取消</button>
+            </form>
+            <div class="buttons" ng-show="!rowform.$visible">
+              <button class="btn btn-primary" ng-click="rowform.$show()">編輯</button>
+              <button class="btn btn-danger" ng-click="removeItem($index)">刪除</button>
+            </div>
           </td>
         </tr>
         </tbody>

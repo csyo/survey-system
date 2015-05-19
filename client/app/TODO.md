@@ -8,6 +8,7 @@
 ## 'page' route
 - dragable table row to rearrange item order
 - editable item content
+- settings for scales
 
 
 ### 'type' route
