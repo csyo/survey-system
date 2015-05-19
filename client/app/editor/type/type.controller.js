@@ -13,6 +13,6 @@ angular.module('surveyApp')
         pageType: $scope.pageType
       };
       surveydata.setPage(page);
-      ngDialog.closeAll();
+      // ngDialog.closeAll();
     };
   });

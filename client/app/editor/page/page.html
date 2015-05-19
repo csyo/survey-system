@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="page-header">
-      <h1>編輯頁面</h1>
+      <h1>順序{{currentPage.pageOrder}}－{{currentPage.pageType.name}}</h1>
     </div>
     <div class="col-md-12">
       <button type="button" ng-click="addItem()" class="btn btn-sm btn-primary">
@@ -18,17 +18,17 @@
           <th class="order">順序</th>
           <th class="must">必填</th>
           <th class="type">類型</th>
-          <th class="title">題目</th>
-          <th class="tableBtn">編輯</th>
-          <th class="tableBtn">刪除</th>
+          <th class="content">內容</th>
+          <th class="tableBtn">設定</th>
+          <th class="tableBtn">編輯項目</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="row in rowCollection">
           <td>{{row.itemOrder}}</td>
-          <td><input type="checkbox" ng-model="row.must"> </td>
+          <td><input type="checkbox" ng-model="row.must"></td>
           <td>{{row.itemType.name}}</td>
-          <td>{{row.title}}</td>
+          <td>{{row.content}}</td>
           <td>
           <button type="button" ng-click="editItem(row)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">

@@ -7,7 +7,8 @@ angular.module('surveyApp', [
   'ui.router',
   'ui.bootstrap',
   'smart-table',
-  'ngDialog'
+  'ngDialog',
+  'xeditable'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -43,7 +44,7 @@ angular.module('surveyApp', [
     };
   })
 
-  .run(function ($rootScope, $location, Auth) {
+  .run(function ($rootScope, $location, Auth, editableOptions) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
@@ -52,4 +53,6 @@ angular.module('surveyApp', [
         }
       });
     });
+    // Set theme for angular-editable
+    editableOptions.theme = 'bs3';
   });

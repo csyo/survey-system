@@ -2,14 +2,16 @@
 
 angular.module('surveyApp')
   .controller('PageCtrl', function ($scope, $location, ngDialog, surveydata) {
-    $scope.currentPage = surveydata.getCurrentPage();
+    var currentPage = $scope.currentPage = surveydata.getCurrentPage();
 
     $scope.rowCollection = surveydata.getItems();
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
     $scope.saveAll = function() {
-        // TODO: saving changes
+        // clear tmpPage data
+        surveydata.reset();
+        // change route
         $location.path('/editor');
     };
 
@@ -20,7 +22,15 @@ angular.module('surveyApp')
         });
     };
     $scope.editItem = function(row) {
-        console.log(row);
+        var type = surveydata.getItemType()
+        switch (row.itemType.val) {
+            case type['likert'].val:
+            case type['likert-group'].val:
+                break;
+            case type['semantic'].val:
+            case type['semantic-group'].val:
+                break;
+        }
     };
     $scope.removeItem = function() {
 
