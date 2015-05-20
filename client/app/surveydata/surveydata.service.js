@@ -7,7 +7,7 @@ angular.module('surveyApp')
     user.info = Auth.getCurrentUser();
     user.surveys = [];
 
-    var tmpSurvey = { index: 0, title: '', account: '', status: false, pages: []},
+    var tmpSurvey = { serialNo: '', title: '', pages: []},
       tmpPage = { pageOrder: 0, pageCount: 0 , pageType: '', items: []};
 
     var pageTypes = [
@@ -49,22 +49,40 @@ angular.module('surveyApp')
             tmpPage.items = [];
             break;
           case '/editor':
+            tmpSurvey.serialNo = '';
+            tmpSurvey.title = '';
+            tmpSurvey.pages = [];
             break;
         }
       },
-      setSurveys: function (data) {
-        data.account = user.info.name;
-        user.surveys.push(data);
+      getUserData: function () { return user; },
+      getSurveyData: function (index) { return user.surveys[index]; },
+      setSurveys: function (data, callback) {
+        var survey = {};
+        survey.title = data.title;
+        survey.serialNo = data.serialNo;
+        survey.status = data.status || false;
+        survey.pages = data.pages;
+        survey.account = data.account || user.info.name;
+        if (survey.serialNo) { // edit mode
+          survey.index = data.index;
+          user.surveys[survey.index] = survey;
+        } else { // add mode
+          survey.index = user.surveys.length;
+          var pad = '000', n = survey.index + 1;
+          survey.serialNo = (pad+n).slice(-pad.length);
+          user.surveys.push(survey);
+        }
+        callback && callback();
       },
       getSurveys: function () { return user.surveys; },
       getCurrentSurvey: function () { return tmpSurvey; },
+      setCurrentSurvey: function (data) { tmpSurvey = data; },
       setPage: function (data) { tmpSurvey.pages.push(data); },
       getPages: function () { return tmpSurvey.pages; },
       getPageIndex: function () { return tmpSurvey.pages.length; },
       getCurrentPage: function () { return tmpPage; },
-      setItems: function (items) {
-        tmpSurvey.pages[tmpPage.pageOrder - 1].items = items;
-      },
+      setItems: function (items) { tmpSurvey.pages[tmpPage.pageOrder - 1].items = items; },
       getItems: function () {
         var items = tmpSurvey.pages[tmpPage.pageOrder - 1].items;
         if (!items) return tmpPage.items;

@@ -17,7 +17,7 @@
       <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
         <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
       </ul> -->
-      <button type="button" ng-click="addForm()" class="btn btn-sm btn-primary">
+      <button type="button" ng-click="addSurvey()" class="btn btn-sm btn-primary">
         <i class="glyphicon glyphicon-plus">
         </i> 新增問卷
       </button>
@@ -35,8 +35,8 @@
         </thead>
         <tbody>
         <tr ng-repeat="row in rowCollection">
-          <td>{{row.index}}</td>
-          <td>{{row.title || '編輯問卷標題'}}</td>
+          <td>{{row.serialNo}}</td>
+          <td>{{row.title || '無標題'}}</td>
           <td>{{row.account}}</td>
           <td>
           <button type="button" ng-click="toggleStatus(row)" class="btn btn-sm btn-default">
@@ -45,13 +45,13 @@
           </button>
           </td>
           <td>
-          <button type="button" ng-click="editForm(row)" class="btn btn-sm btn-info">
+          <button type="button" ng-click="editSurvey(row)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="previewForm(row)" class="btn btn-sm btn-success">
+          <button type="button" ng-click="previewSurvey(row)" class="btn btn-sm btn-success">
             <i class="glyphicon glyphicon-file">
             </i>
           </button>

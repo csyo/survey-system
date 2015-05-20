@@ -15,16 +15,21 @@ angular.module('surveyApp')
       row.status = !row.status;
     };
 
-    $scope.addForm = function() {
+    $scope.addSurvey = function() {
       $location.path('/editor'); // change to editor view to create survey
     };
 
-    $scope.editForm = function() {
-      $location.path('/editor'); // change to editor view to edit survey
+    $scope.editSurvey = function(row) {
+      console.log(row);
+      // update current page info
+      surveydata.setCurrentSurvey(row);
+      // change route to editing state
+      $location.path('/editor');
     };
 
-    $scope.previewForm = function() {
+    $scope.previewSurvey = function() {
       // TODO: generate the whole survey for preview
+      console.log(surveydata.getUserData());
     };
 
     $scope.generateUrl = function() {

@@ -2,14 +2,20 @@
 
 angular.module('surveyApp')
   .controller('EditorCtrl', function ($scope, $location, ngDialog, surveydata) {
-    var currentSurvey = $scope.currentSurvey = surveydata.getCurrentSurvey(); // TODO: how to detect the 'add' or 'edit' mode
+    $scope.currentSurvey = surveydata.getCurrentSurvey();
 
     $scope.rowCollection = surveydata.getPages();
 
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
     $scope.saveAll = function() {
-        surveydata.setSurveys(currentSurvey);
+        surveydata.setSurveys($scope.currentSurvey, function(err){
+            if (err) throw Error('error on saving survey');
+            // clear tmpSurvey data
+            surveydata.reset();
+            // change route
+            $location.path('/');
+        });
     };
 
     $scope.addPage = function() {
