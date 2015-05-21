@@ -6,8 +6,9 @@
 <div class="container">
   <div class="row">
     <div class="page-header">
-      <h1>{{currentSurvey.title || '編輯問卷名稱'}}
-      <button type="button" ng-click="edit(row)" class="btn btn-sm btn-default">
+      <h1>
+        <span editable-text="currentSurvey.title" e-form="textBtnForm">{{currentSurvey.title || '編輯問卷名稱'}}</span>
+      <button type="button" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible" class="btn btn-sm btn-default">
         <i class="glyphicon glyphicon-pencil">
         </i>
       </button>
@@ -35,16 +36,22 @@
         <tbody>
         <tr ng-repeat="row in rowCollection">
           <td>{{row.pageOrder}}</td>
-          <td>{{row.pageType.name}}</td>
-          <td>{{row.pageCount}}</td>
           <td>
-          <button type="button" ng-click="editPage(row)" class="btn btn-sm btn-info">
+              <span editable-select="row.pageType" buttons="no" e-ng-options="t.name for t in pageTypes">
+              {{ row.pageType.name || '選擇'}}
+            </span>
+          </td>
+          <td>
+              <input type="number" class="number form-control" name="pageCount" ng-model="row.pageCount" min="0" max="10">
+          </td>
+          <td>
+          <button type="button" ng-click="editPage(row)" class="btn btn-sm btn-info" ng-disabled="row.pageType === ''">
             <i class="glyphicon glyphicon-edit">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="removePage(row)" class="btn btn-sm btn-danger">
+          <button type="button" ng-click="removePage($index)" class="btn btn-sm btn-danger">
             <i class="glyphicon glyphicon-remove">
             </i>
           </button>

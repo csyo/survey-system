@@ -8,7 +8,8 @@ angular.module('surveyApp', [
   'ui.bootstrap',
   'smart-table',
   'ngDialog',
-  'xeditable'
+  'xeditable',
+  'textAngular'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

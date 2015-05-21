@@ -1,22 +1,21 @@
 'use strict';
 
-describe('Controller: ItemCtrl', function () {
+describe('Controller: TextCtrl', function () {
 
   // load the controller's module
   beforeEach(module('surveyApp'));
 
-  var ItemCtrl, scope;
+  var TextCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    ItemCtrl = $controller('ItemCtrl', {
+    TextCtrl = $controller('TextCtrl', {
       $scope: scope
     });
   }));
 
-  it("should have method done", function() {
-    expect(scope.done).toBeDefined();
+  it('should ...', function () {
+    expect(1).toEqual(1);
   });
-
 });

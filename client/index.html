@@ -18,6 +18,8 @@
       <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog.css" />
       <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-default.css" />
       <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
+      <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.css" />
+      <link rel="stylesheet" href="bower_components/textAngular/src/textAngular.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -27,9 +29,8 @@
       <link rel="stylesheet" href="app/admin/admin.css">
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/editor/editor.css">
-      <link rel="stylesheet" href="app/editor/item/item.css">
       <link rel="stylesheet" href="app/editor/page/page.css">
-      <link rel="stylesheet" href="app/editor/type/type.css">
+      <link rel="stylesheet" href="app/editor/text/text.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="components/modal/modal.css">
       <!-- endinjector -->
@@ -60,6 +61,16 @@
       <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
       <script src="bower_components/ngDialog/js/ngDialog.js"></script>
       <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+      <script src="bower_components/angular-number-picker/angular-number-picker.js"></script>
+      <script src="bower_components/rangy/rangy-core.js"></script>
+      <script src="bower_components/rangy/rangy-classapplier.js"></script>
+      <script src="bower_components/rangy/rangy-highlighter.js"></script>
+      <script src="bower_components/rangy/rangy-selectionsaverestore.js"></script>
+      <script src="bower_components/rangy/rangy-serializer.js"></script>
+      <script src="bower_components/rangy/rangy-textrange.js"></script>
+      <script src="bower_components/textAngular/src/textAngular.js"></script>
+      <script src="bower_components/textAngular/src/textAngular-sanitize.js"></script>
+      <script src="bower_components/textAngular/src/textAngularSetup.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
 
@@ -74,10 +85,9 @@
           <script src="app/admin/admin.js"></script>
           <script src="app/editor/editor.controller.js"></script>
           <script src="app/editor/editor.js"></script>
-          <script src="app/editor/item/item.controller.js"></script>
           <script src="app/editor/page/page.controller.js"></script>
           <script src="app/editor/page/page.js"></script>
-          <script src="app/editor/type/type.controller.js"></script>
+          <script src="app/editor/text/text.controller.js"></script>
           <script src="app/main/main.controller.js"></script>
           <script src="app/main/main.js"></script>
           <script src="app/surveydata/surveydata.service.js"></script>

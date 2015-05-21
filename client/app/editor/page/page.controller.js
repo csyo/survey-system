@@ -52,10 +52,6 @@ angular.module('surveyApp')
         }
     };
 
-    // $scope.checkEmpty = function(data) {
-    //     if (!data) return "必填";
-    // };
-
     $scope.checkType = function(item) {
         var type = surveydata.getItemType();
         switch (item.val) {

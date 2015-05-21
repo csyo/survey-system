@@ -12,13 +12,13 @@
 [-] dragable table row to rearrange page order
 
 ## 'page' route
+[-] two input fields (left/right items) for semantic scales
 [v] editable item content
 [v] settings for scales
 [-] dragable table row to rearrange item order
 
 ### 'type' route
-
-### 'item' route
+[-] to be removed after refactoring
 
 # 'surveydata' service
 [v] reset temporary data

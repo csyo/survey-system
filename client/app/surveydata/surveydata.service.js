@@ -15,7 +15,11 @@ angular.module('surveyApp')
       { val: 'multimedia', name: '多媒體頁面'},
       { val: 'description', name: '文字說明頁面'},
       { val: 'information', name: '資料填答頁面'}
-    ];
+    ],
+    pageTypesByName = pageTypes.reduce(function(o, v){
+      o[v.val] = v;
+      return o;
+    }, {});
 
     var itemTypes = [
       { val: 'title', name: '標題'},
@@ -27,17 +31,20 @@ angular.module('surveyApp')
       { val: 'choice', name: '選擇題'},
       { val: 'fill-in-blank', name: '問答題'}
     ],
-    itemTypesRef = itemTypes.reduce(function(o, v, i){
-      o[v.val] = v
+    itemTypesByName = itemTypes.reduce(function(o, v){
+      o[v.val] = v;
       return o;
     }, {});
 
     // Public API here
     return {
-      pageType: pageTypes,
+      getPageType: function (type) {
+        if (type === 'arr') return pageTypes;
+        else return pageTypesByName;
+      },
       getItemType: function (type) {
         if (type === 'arr') return itemTypes;
-        else return itemTypesRef;
+        else return itemTypesByName;
       },
       reset: function () {
         var type = $location.path();
@@ -56,7 +63,6 @@ angular.module('surveyApp')
         }
       },
       getUserData: function () { return user; },
-      getSurveyData: function (index) { return user.surveys[index]; },
       setSurveys: function (data, callback) {
         var survey = {};
         survey.title = data.title;
@@ -73,7 +79,7 @@ angular.module('surveyApp')
           survey.serialNo = (pad+n).slice(-pad.length);
           user.surveys.push(survey);
         }
-        callback && callback();
+        if (callback) callback();
       },
       getSurveys: function () { return user.surveys; },
       getCurrentSurvey: function () { return tmpSurvey; },
@@ -91,6 +97,12 @@ angular.module('surveyApp')
           return items;
         }
       },
-      getItemIndex: function () { return tmpPage.items.length; }
+      getItemIndex: function () { return tmpPage.items.length; },
+      setHtmlText: function (data) {
+          tmpSurvey.pages[tmpPage.pageOrder-1].content = data;
+      },
+      getHtmlText: function () {
+          return tmpSurvey.pages[tmpPage.pageOrder-1].content || '';
+      }
     };
   });
