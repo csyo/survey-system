@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($scope, $location, ngDialog, surveydata) {
+  .controller('EditorCtrl', function ($scope, $state, ngDialog, surveydata) {
     $scope.currentSurvey = surveydata.getCurrentSurvey();
     $scope.pageTypes = surveydata.getPageType('arr');
     $scope.theme = 'ngdialog-theme-default custom-width';
@@ -16,7 +16,7 @@ angular.module('surveyApp')
         // clear tmpSurvey data
         surveydata.reset();
         // change route
-        $location.path('/');
+        $state.go('main');
       });
     };
 
@@ -38,19 +38,18 @@ angular.module('surveyApp')
       // change route
       var type = surveydata.getPageType();
       switch (targetPage.pageType.val) {
-      case type['questionary'].val:
-        $location.path('/editor/page');
-        break;
-      case type['description'].val:
-        ngDialog.open({
-          template: 'app/editor/text/text.html',
-          className: 'ngdialog-theme-default custom-width',
-          controller: 'TextCtrl'
-        });
-        break;
-      case type['multimedia'].val:
-      case type['information'].val:
-        break;
+        case type['questionary'].val:
+          $state.go('page');
+          break;
+        case type['description'].val:
+          ngDialog.open({
+            template: 'app/editor/text/text.html',
+            className: 'ngdialog-theme-default custom-width',
+            controller: 'TextCtrl'
+          });
+          break;
+        case type['multimedia'].val:
+          break;
       }
     };
     $scope.removePage = function (index) {

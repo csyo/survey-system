@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($scope, $http, $location, surveydata) {
+  .controller('MainCtrl', function ($scope, $http, $state, surveydata) {
     // $scope.awesomeThings = [];
     // $http.get('/api/things').success(function(awesomeThings) {
     //   $scope.awesomeThings = awesomeThings;
@@ -16,7 +16,7 @@ angular.module('surveyApp')
     };
 
     $scope.addSurvey = function() {
-      $location.path('/editor'); // change to editor view to create survey
+      $state.go('editor'); // change to editor view to create survey
     };
 
     $scope.editSurvey = function(row) {
@@ -24,7 +24,7 @@ angular.module('surveyApp')
       // update current page info
       surveydata.setCurrentSurvey(row);
       // change route to editing state
-      $location.path('/editor');
+      $state.go('editor');
     };
 
     $scope.previewSurvey = function() {

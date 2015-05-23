@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .factory('surveydata', function (Auth, $location) {
+  .factory('surveydata', function (Auth, $state) {
 
     var user = {};
     user.info = Auth.getCurrentUser();
@@ -10,18 +10,19 @@ angular.module('surveyApp')
     var tmpSurvey = { serialNo: '', title: '', pages: []},
       tmpPage = { pageOrder: 0, pageCount: 0 , pageType: '', items: []};
 
-    var pageTypes = [
+    var pageTypes = {};
+    pageTypes.arr = [
       { val: 'questionary', name: '問卷頁面'},
-      { val: 'multimedia', name: '多媒體頁面'},
       { val: 'description', name: '文字說明頁面'},
-      { val: 'information', name: '資料填答頁面'}
-    ],
-    pageTypesByName = pageTypes.reduce(function(o, v){
+      { val: 'multimedia', name: '多媒體頁面'}
+    ];
+    pageTypes.obj = pageTypes.arr.reduce(function(o, v){ // access types by val
       o[v.val] = v;
       return o;
     }, {});
 
-    var itemTypes = [
+    var itemTypes = {};
+    itemTypes.arr = [
       { val: 'title', name: '標題'},
       { val: 'caption', name: '說明'},
       { val: 'likert', name: '李克特量表'},
@@ -30,8 +31,8 @@ angular.module('surveyApp')
       { val: 'semantic-group', name: '語意差異量表題組'},
       { val: 'choice', name: '選擇題'},
       { val: 'fill-in-blank', name: '問答題'}
-    ],
-    itemTypesByName = itemTypes.reduce(function(o, v){
+    ];
+    itemTypes.obj = itemTypes.arr.reduce(function(o, v){ // access types by val
       o[v.val] = v;
       return o;
     }, {});
@@ -39,23 +40,23 @@ angular.module('surveyApp')
     // Public API here
     return {
       getPageType: function (type) {
-        if (type === 'arr') return pageTypes;
-        else return pageTypesByName;
+        if (type === 'arr') return pageTypes.arr;
+        else return pageTypes.obj;
       },
       getItemType: function (type) {
-        if (type === 'arr') return itemTypes;
-        else return itemTypesByName;
+        if (type === 'arr') return itemTypes.arr;
+        else return itemTypes.obj;
       },
       reset: function () {
-        var type = $location.path();
-        switch (type) {
-          case '/editor/page':
+        var state = $state.current.name;
+        switch (state) {
+          case 'page':
             tmpPage.pageOrder = 0;
             tmpPage.pageCount = 0;
             tmpPage.pageType = '';
             tmpPage.items = [];
             break;
-          case '/editor':
+          case 'editor':
             tmpSurvey.serialNo = '';
             tmpSurvey.title = '';
             tmpSurvey.pages = [];

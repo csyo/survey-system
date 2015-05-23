@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('PageCtrl', function ($scope, $location, ngDialog, surveydata) {
+  .controller('PageCtrl', function ($scope, $state, ngDialog, surveydata) {
     var currentPage = $scope.currentPage = surveydata.getCurrentPage();
     $scope.itemTypes = surveydata.getItemType('arr');
     $scope.scaleOptions = [
@@ -21,8 +21,7 @@ angular.module('surveyApp')
         // clear tmpPage data
         surveydata.reset();
         // change route
-        $location.path('/editor');
-        console.log(surveydata.getCurrentSurvey());
+        $state.go('editor');
     };
 
     $scope.checkRow = function(row) {
