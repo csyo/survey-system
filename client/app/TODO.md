@@ -6,18 +6,17 @@
 [v] editable survey title
 [v] editable page content
 [v] implement description page
-[-] implement information page
 [-] implement multimedia page
 [-] feature: copy a page
-[-] dragable table row to rearrange page order
 
 ## 'page' route
-[-] two input fields (left/right items) for semantic scales
-[-] edit choice options
-[-] additional input field for choice item
+[-] placeholder tips for item types
+[v] edit choice options, including a optional input field for user-defined option
+[-] show the default scale metric (if not chosen)
+[-] change text color in the text-editor
+[x] two input fields (left/right items) for semantic scales
 [v] editable item content
 [v] settings for scales
-[-] dragable table row to rearrange item order
 
 # 'surveydata' service
 [v] reset temporary data

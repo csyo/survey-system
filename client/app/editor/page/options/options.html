@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h3 class="modal-title">編輯項目</h3>
+</div>
+<div class="modal-body">
+  <button class="btn btn-info" ng-click="add()">新增項目</button>
+  <div class="options" ng-repeat="option in options">
+    <input type="text" class="form-control" ng-model="option.name">
+    <button class="btn btn-danger" ng-show="$last" ng-click="removeLast()">刪除</button>
+  </div>
+  <input type="checkbox" ng-model="options.otherOption"> 增加「其他」選項供填答者輸入
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok()">完成</button>
+  <button class="btn btn-warning" ng-click="cancel()">取消</button>
+</div>

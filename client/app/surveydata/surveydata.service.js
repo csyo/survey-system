@@ -91,7 +91,7 @@ angular.module('surveyApp')
       getCurrentPage: function () { return tmpPage; },
       setItems: function (items) { tmpSurvey.pages[tmpPage.pageOrder - 1].items = items; },
       getItems: function () {
-        var items = tmpSurvey.pages[tmpPage.pageOrder - 1].items;
+        var items = tmpSurvey.pages.length ? tmpSurvey.pages[tmpPage.pageOrder - 1].items : '';
         if (!items) return tmpPage.items;
         else {
           tmpPage.items = items;

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('PageCtrl', function ($scope, $state, ngDialog, surveydata) {
+  .controller('PageCtrl', function ($scope, $state, $modal, surveydata) {
     var currentPage = $scope.currentPage = surveydata.getCurrentPage();
     $scope.itemTypes = surveydata.getItemType('arr');
     $scope.scaleOptions = [
@@ -17,11 +17,28 @@ angular.module('surveyApp')
     $scope.displayedCollection = [].concat($scope.rowCollection);
 
     $scope.saveAll = function() {
+        console.log($scope.rowCollection);
         surveydata.setItems($scope.rowCollection);
         // clear tmpPage data
         surveydata.reset();
         // change route
         $state.go('editor');
+    };
+
+    $scope.editOptions = function(row) {
+      var options = $modal.open({
+        animation: true,
+        templateUrl: 'app/editor/page/options/options.html',
+        controller: 'OptionsCtrl',
+        resolve: {
+          options: function () { return row.options ? row.options : [{index: 1}, {index: 2}]; }
+        }
+      });
+
+      options.result.then(function (optionList){
+        row.options = optionList;
+        console.log(row);
+      });
     };
 
     $scope.checkRow = function(row) {
@@ -51,7 +68,7 @@ angular.module('surveyApp')
         }
     };
 
-    $scope.checkType = function(item) {
+    $scope.checkScale = function(item) {
         var type = surveydata.getItemType();
         switch (item.val) {
             case type['likert'].val:
@@ -63,6 +80,16 @@ angular.module('surveyApp')
                 return false;
         }
     };
+
+    $scope.checkChoice = function(item) {
+      var type = surveydata.getItemType();
+      switch (item.val) {
+        case type['choice'].val:
+          return true;
+        default:
+          return false;
+      }
+    }
 
     $scope.addItem = function() {
         $scope.inserted = {
