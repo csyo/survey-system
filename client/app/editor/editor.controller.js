@@ -49,6 +49,10 @@ angular.module('surveyApp')
           });
           break;
         case type['multimedia'].val:
+            ngDialog.open({
+              template: 'app/editor/upload/upload.html',
+              controller: 'UploadCtrl'
+            });
           break;
       }
     };

@@ -7,6 +7,10 @@
     <input type="text" class="form-control" ng-model="option.name">
     <button class="btn btn-danger" ng-show="$last" ng-click="removeLast()">刪除</button>
   </div>
+  <div class="input-group">
+    <input type="radio" ng-model="options.typeName" value="radio"> 單選題
+    <input type="radio" ng-model="options.typeName" value="multi"> 多選題
+  </div>
   <input type="checkbox" ng-model="options.otherOption"> 增加「其他」選項供填答者輸入
 </div>
 <div class="modal-footer">

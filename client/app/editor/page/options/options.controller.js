@@ -3,6 +3,7 @@
 angular.module('surveyApp')
   .controller('OptionsCtrl', function ($scope, $modalInstance, options) {
     $scope.options = options;
+    $scope.options.typeName = options.typeName || '';
 
     $scope.add = function() {
       var newIndex = $scope.options.length + 1;

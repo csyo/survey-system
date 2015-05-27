@@ -18,7 +18,7 @@
           <th class="order">順序</th>
           <th class="must">必填</th>
           <th class="type">類型</th>
-          <th class="content">內容</th>
+          <th class="content"><a href="#" tooltip-trigger tooltip-placement="top" tooltip="{{tips}}">內容</a></th>
           <th class="tableBtn">量表尺度</th>
           <th class="tableBtn">編輯項目</th>
         </tr>
@@ -33,27 +33,32 @@
             </span>
           </td>
           <td>
-            <span editable-text="row.content" e-name="content" e-form="rowform" e-cols="100" e-ng-hide="checkGroup(row)">
-              {{ row.content }}
-            </span>
-            <span editable-textarea="row.multicontent" e-name="multicontent" e-form="rowform" e-rows="5" e-cols="100" e-ng-show="checkGroup(row)">
-              {{ row.multicontent }}
-            </span>
+            <div ng-include="checkGroup(row)"></div>
           </td>
           <td>
-            <span editable-select="row.options" e-name="scaleOption" e-form="rowform" e-ng-options="s.val for s in scaleOptions" e-ng-show="checkScale(row.itemType)">
-              {{ row.options.val }}
+            <span editable-select="row.options" e-name="scaleOption" e-form="rowform" e-ng-options="s.scaleVal for s in scaleOptions" e-ng-show="checkScale(row.itemType)">
+              {{ row.options.scaleVal }}
             </span>
           </td>
           <td style="white-space: nowrap">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
-              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">儲存</button>
-              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">取消</button>
+              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-info">
+                <i class="glyphicon glyphicon-ok"></i>
+              </button>
+              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
-              <button class="btn btn-info" ng-show="checkChoice(row.itemType)" ng-click="editOptions(row)">選項</button>
-              <button class="btn btn-primary" ng-click="rowform.$show()">編輯</button>
-              <button class="btn btn-danger" ng-click="removeItem($index)">刪除</button>
+              <button class="btn btn-info" ng-show="checkChoice(row.itemType)" ng-click="editOptions(row)">
+                <i class="glyphicon glyphicon-list"></i>
+              </button>
+              <button class="btn btn-primary" ng-click="format(row) && rowform.$show()">
+                <i class="glyphicon glyphicon-edit"></i>
+              </button>
+              <button class="btn btn-danger" ng-click="removeItem($index)">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
             </div>
           </td>
         </tr>
@@ -62,3 +67,11 @@
     </div>
   </div>
 </div>
+<script type="text/ng-template" id="text-input.html">
+<span editable-text="row.content" e-name="content" e-form="rowform" ng-bind="row.content">
+</span>
+</script>
+<script type="text/ng-template" id="text-area.html">
+<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5" onaftersave="format(row, true)" ng-bind-html="row.content">
+</span>
+</script>

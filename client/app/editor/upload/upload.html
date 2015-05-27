@@ -1,0 +1,9 @@
+<div class="ngdialog-message">
+  <div ngf-select ng-model="files" class="btn" ngf-drag-over-class="dragover" ngf-accept="'image/*'">
+    上傳圖片
+  </div>
+  <img class="thumbnail" ngf-src="files[0]" ngf-default-src="'/thumb.jpg'" ngf-accept="'image/*'">
+</div>
+<div class="ngdialog-buttons mt">
+  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="done()">完成</button>
+</div>

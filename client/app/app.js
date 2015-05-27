@@ -9,7 +9,8 @@ angular.module('surveyApp', [
   'smart-table',
   'ngDialog',
   'xeditable',
-  'textAngular'
+  'textAngular',
+  'ngFileUpload'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

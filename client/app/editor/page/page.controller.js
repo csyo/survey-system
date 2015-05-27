@@ -3,14 +3,13 @@
 angular.module('surveyApp')
   .controller('PageCtrl', function ($scope, $state, $modal, surveydata) {
     var currentPage = $scope.currentPage = surveydata.getCurrentPage();
+    var itemType = surveydata.getItemType();
     $scope.itemTypes = surveydata.getItemType('arr');
-    $scope.scaleOptions = [
-        {val: 3},
-        {val: 4},
-        {val: 5},
-        {val: 6},
-        {val: 7}
-    ];
+    $scope.scaleOptions = [3,4,5,6,7].map(function(elem,i){
+      return elem = { scaleVal: elem};
+    });
+
+    $scope.tips = '';
 
     $scope.rowCollection = surveydata.getItems();
 
@@ -42,39 +41,38 @@ angular.module('surveyApp')
     };
 
     $scope.checkRow = function(row) {
-        var type = surveydata.getItemType();
+        // clean previous data
+        $scope.tips = '';
+        row.content = '';
+        if (row.options) row.options = undefined;
+        // add default value for scales
         switch (row.itemType.val) {
-            case type['likert'].val:
-            case type['semantic'].val:
-                row.multicontent = '';
-                break;
-            case type['likert-group'].val:
-            case type['semantic-group'].val:
-                row.content = '';
-            default:
-                row.multicontent = '';
-                row.options = undefined;
+            case itemType['semantic-group'].val:
+            case itemType['semantic'].val:
+              $scope.tips = '左右項目之間請以逗號隔開';
+            case itemType['likert-group'].val:
+            case itemType['likert'].val:
+              row.options = $scope.scaleOptions[4]; // set default scale to 7
+              break;
         }
     };
 
     $scope.checkGroup = function(row) {
-        var type = surveydata.getItemType();
         switch (row.itemType.val) {
-            case type['likert-group'].val:
-            case type['semantic-group'].val:
-                return true;
+            case itemType['likert-group'].val:
+            case itemType['semantic-group'].val:
+                return 'text-area.html';
             default:
-                return false;
+                return 'text-input.html';
         }
     };
 
     $scope.checkScale = function(item) {
-        var type = surveydata.getItemType();
         switch (item.val) {
-            case type['likert'].val:
-            case type['likert-group'].val:
-            case type['semantic'].val:
-            case type['semantic-group'].val:
+            case itemType['likert'].val:
+            case itemType['likert-group'].val:
+            case itemType['semantic'].val:
+            case itemType['semantic-group'].val:
                 return true;
             default:
                 return false;
@@ -82,14 +80,21 @@ angular.module('surveyApp')
     };
 
     $scope.checkChoice = function(item) {
-      var type = surveydata.getItemType();
       switch (item.val) {
-        case type['choice'].val:
+        case itemType['choice'].val:
           return true;
         default:
           return false;
       }
-    }
+    };
+
+    $scope.format = function (row, flag) {
+      if (row.itemType && row.itemType.val.search(/group/g)) {
+        if (flag) row.content = row.content.replace(/\n/g,"<br>");
+        else row.content = row.content.replace(/<br>/g, "\n");
+      }
+      return true;
+    };
 
     $scope.addItem = function() {
         $scope.inserted = {
