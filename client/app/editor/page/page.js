@@ -6,6 +6,7 @@ angular.module('surveyApp')
       .state('page', {
         url: '/editor/page',
         templateUrl: 'app/editor/page/page.html',
-        controller: 'PageCtrl'
+        controller: 'PageCtrl',
+        controllerAs: 'page'
       });
   });

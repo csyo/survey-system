@@ -1,18 +1,17 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($scope, $state, ngDialog, surveydata) {
-    $scope.currentSurvey = surveydata.getCurrentSurvey();
-    $scope.pageTypes = surveydata.getPageType('arr');
-    $scope.theme = 'ngdialog-theme-default custom-width';
+  .controller('EditorCtrl', function ($state, ngDialog, surveydata) {
+    var editor = this;
+    this.currentSurvey = surveydata.getCurrentSurvey();
+    this.pageTypes = surveydata.getPageType('arr');
+    this.theme = 'ngdialog-theme-default custom-width';
 
-    $scope.rowCollection = surveydata.getPages();
+    this.rows = surveydata.getPages();
+    this.displayed = [].concat(this.rows);
 
-    $scope.displayedCollection = [].concat($scope.rowCollection);
-
-    $scope.saveAll = function () {
-      surveydata.setSurveys($scope.currentSurvey, function (err) {
-        if (err) throw Error('error on saving survey');
+    this.saveAll = function () {
+      surveydata.setSurveys(this.currentSurvey, function (err) {
         // clear tmpSurvey data
         surveydata.reset();
         // change route
@@ -20,15 +19,15 @@ angular.module('surveyApp')
       });
     };
 
-    $scope.addPage = function () {
-      $scope.inserted = {
+    this.add = function () {
+      this.inserted = {
         pageOrder: surveydata.getPageIndex() + 1,
         pageCount: 0,
         pageType: ''
       };
-      $scope.rowCollection.push($scope.inserted);
+      this.rows.push(this.inserted);
     };
-    $scope.editPage = function (row) {
+    this.edit = function (row) {
       console.log(row);
       // update current page info
       var targetPage = surveydata.getCurrentPage();
@@ -45,7 +44,8 @@ angular.module('surveyApp')
           ngDialog.open({
             template: 'app/editor/text/text.html',
             className: 'ngdialog-theme-default custom-width',
-            controller: 'TextCtrl'
+            controller: 'TextCtrl',
+            controllerAs: 'text'
           });
           break;
         case type['multimedia'].val:
@@ -56,8 +56,8 @@ angular.module('surveyApp')
           break;
       }
     };
-    $scope.removePage = function (index) {
-      $scope.rowCollection.splice(index, 1);
+    this.remove = function (index) {
+      this.rows.splice(index, 1);
     };
 
   });

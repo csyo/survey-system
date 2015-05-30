@@ -1,62 +1,72 @@
 <div class="container">
   <div class="row">
     <div class="page-header">
-      <h1>順序{{currentPage.pageOrder}}－{{currentPage.pageType.name}}</h1>
+      <h1>順序{{page.current.pageOrder}}－{{page.current.pageType.name}}</h1>
     </div>
     <div class="col-md-12">
-      <button type="button" ng-click="addItem()" class="btn btn-sm btn-primary">
+      <button type="button" ng-click="page.add()" class="btn btn-sm btn-primary">
         <i class="glyphicon glyphicon-plus">
         </i> 新增項目
       </button>
-      <button type="button" ng-click="saveAll()" class="btn btn-sm btn-warning">
+      <button type="button" ng-click="page.saveAll()" class="btn btn-sm btn-warning">
         <i class="glyphicon glyphicon-save">
         </i> 儲存頁面
       </button>
-      <table st-table="displayedCollection" st-safe-src="rowCollection" class="item-table table table-striped">
+      <table st-table="page.displayed" st-safe-src="page.rows" class="item-table table table-striped">
         <thead>
         <tr>
           <th class="order">順序</th>
           <th class="must">必填</th>
           <th class="type">類型</th>
-          <th class="content"><a href="#" tooltip-trigger tooltip-placement="top" tooltip="{{tips}}">內容</a></th>
+          <th class="content">
+            <a href="#" tooltip-trigger tooltip-placement="top" tooltip="{{page.tips}}">內容</a>
+          </th>
           <th class="tableBtn">量表尺度</th>
           <th class="tableBtn">編輯項目</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in rowCollection">
+        <tr ng-repeat="row in page.rows">
           <td>{{row.itemOrder}}</td>
           <td><input type="checkbox" ng-model="row.must"></td>
           <td>
-            <span editable-select="row.itemType" e-name="itemType" buttons="no" e-ng-options="t.name for t in itemTypes" onaftersave="checkRow(row)">
+            <span editable-select="row.itemType" e-name="itemType" buttons="no"
+                  e-ng-options="t.name for t in page.itemTypes"
+                  onaftersave="page.checkRow(row)">
               {{ row.itemType.name || '選擇'}}
             </span>
           </td>
           <td>
-            <div ng-include="checkGroup(row)"></div>
+            <div ng-include="page.checkGroup(row)"></div>
           </td>
           <td>
-            <span editable-select="row.options" e-name="scaleOption" e-form="rowform" e-ng-options="s.scaleVal for s in scaleOptions" e-ng-show="checkScale(row.itemType)">
+            <span editable-select="row.options" e-name="scaleOption" e-form="rowform"
+                  e-ng-options="s.scaleVal for s in page.scaleOptions"
+                  e-ng-show="page.checkScale(row.itemType)">
               {{ row.options.scaleVal }}
             </span>
           </td>
           <td style="white-space: nowrap">
-            <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == row">
+            <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
+                  shown="page.inserted == row">
               <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-info">
                 <i class="glyphicon glyphicon-ok"></i>
               </button>
-              <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+              <button type="button" class="btn btn-default"
+                      ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" >
                 <i class="glyphicon glyphicon-remove"></i>
               </button>
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
-              <button class="btn btn-info" ng-show="checkChoice(row.itemType)" ng-click="editOptions(row)">
+              <button class="btn btn-info"
+                      ng-show="page.checkChoice(row.itemType)"
+                      ng-click="page.editOptions(row)">
                 <i class="glyphicon glyphicon-list"></i>
               </button>
-              <button class="btn btn-primary" ng-click="format(row) && rowform.$show()">
+              <button class="btn btn-primary" ng-click="page.format(row) && rowform.$show()">
                 <i class="glyphicon glyphicon-edit"></i>
               </button>
-              <button class="btn btn-danger" ng-click="removeItem($index)">
+              <button class="btn btn-danger" ng-click="page.remove($index)">
                 <i class="glyphicon glyphicon-remove"></i>
               </button>
             </div>
@@ -72,6 +82,7 @@
 </span>
 </script>
 <script type="text/ng-template" id="text-area.html">
-<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5" onaftersave="format(row, true)" ng-bind-html="row.content">
+<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
+      onaftersave="page.format(row, true)" ng-bind-html="row.content">
 </span>
 </script>

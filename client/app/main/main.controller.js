@@ -1,50 +1,56 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($scope, $http, $state, surveydata) {
-    // $scope.awesomeThings = [];
-    // $http.get('/api/things').success(function(awesomeThings) {
-    //   $scope.awesomeThings = awesomeThings;
-    // });
+  .controller('MainCtrl', function ($state, surveydata) {
+  // $scope.awesomeThings = [];
+  // $http.get('/api/things').success(function(awesomeThings) {
+  //   $scope.awesomeThings = awesomeThings;
+  // });
+  var main = this;
 
-    $scope.rowCollection = surveydata.getSurveys();
+  this.rows = surveydata.getSurveys();
 
-    $scope.displayedCollection = [].concat($scope.rowCollection);
+  this.fetchData = function () {
+    surveydata.fetchSurveys(function(){
+      main.rows = surveydata.getSurveys();
+    });
+  };
 
-    $scope.toggleStatus = function(row) {
-      row.status = !row.status;
-    };
+  this.displayed = [].concat(this.rows);
 
-    $scope.addSurvey = function() {
-      $state.go('editor'); // change to editor view to create survey
-    };
+  this.toggleStatus = function(row) {
+    row.status = !row.status;
+  };
 
-    $scope.editSurvey = function(row) {
-      console.log(row);
-      // update current page info
-      surveydata.setCurrentSurvey(row);
-      // change route to editing state
-      $state.go('editor');
-    };
+  this.add = function() {
+    $state.go('editor'); // change to editor view to create survey
+  };
 
-    $scope.previewSurvey = function() {
-      // TODO: generate the whole survey for preview
-      console.log(surveydata.getUserData());
-    };
+  this.edit = function(row) {
+    // update current page info
+    surveydata.setCurrentSurvey(row);
+    // change route to editing state
+    $state.go('editor');
+  };
 
-    $scope.generateUrl = function() {
-      // TODO: generate a url for the survey with database communication
-    };
+  this.preview = function(row) {
+    console.log(row);
+    // TODO: generate the whole survey for preview
+  };
 
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
-      }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
+  this.generateUrl = function() {
+    // TODO: generate a url for the survey with database communication
+  };
 
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
-    };
-  });
+//  this.addThing = function() {
+//    if(main.newThing === '') {
+//      return;
+//    }
+//    $http.post('/api/things', { name: $scope.newThing });
+//    $scope.newThing = '';
+//  };
+//
+//  this.deleteThing = function(thing) {
+//    $http.delete('/api/things/' + thing._id);
+//  };
+});

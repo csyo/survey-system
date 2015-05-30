@@ -3,31 +3,31 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <h1>Login</h1>
-      <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code></p>
-      <p>Admin account is <code>admin@admin.com</code> / <code>admin</code></p>
+      <h1>登入</h1>
+      <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test(test@test.com)</code> / <code>test</code></p>
+      <p>Admin account is <code>admin(admin@admin.com)</code> / <code>admin</code></p>
     </div>
     <div class="col-sm-12">
       <form class="form" name="form" ng-submit="login(form)" novalidate>
 
         <div class="form-group">
-          <label>Name</label>
+          <label>帳號</label>
 
           <input type="text" name="name" class="form-control" ng-model="user.name" required/>
         </div>
 
         <div class="form-group">
-          <label>Password</label>
+          <label>密碼</label>
 
           <input type="password" name="password" class="form-control" ng-model="user.password" required>
         </div>
 
         <div class="form-group has-error">
           <p class="help-block" ng-show="form.name.$error.required && form.password.$error.required && submitted">
-             Please enter your name and password.
+             請輸入帳號和密碼.
           </p>
           <p class="help-block" ng-show="form.name.$error.required && submitted">
-             Please enter a valid name.
+             請輸入正確的帳號.
           </p>
 
           <p class="help-block">{{ errors.other }}</p>
@@ -35,10 +35,10 @@
 
         <div>
           <button class="btn btn-inverse btn-lg btn-login" type="submit">
-            Login
+            登入
           </button>
           <a class="btn btn-default btn-lg btn-register" href="/signup">
-            Register
+            註冊
           </a>
         </div>
 

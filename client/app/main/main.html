@@ -17,11 +17,13 @@
       <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
         <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
       </ul> -->
-      <button type="button" ng-click="addSurvey()" class="btn btn-sm btn-primary">
+      <button type="button" ng-click="main.add()" class="btn btn-sm btn-primary">
         <i class="glyphicon glyphicon-plus">
         </i> 新增問卷
       </button>
-      <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+      <table class="table table-striped"
+             st-pipe="main.fetchData"
+             st-table="main.displayed" st-safe-src="main.rows" >
         <thead>
         <tr>
           <th>編號</th>
@@ -34,30 +36,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in rowCollection">
+        <tr ng-repeat="row in main.rows">
           <td>{{row.serialNo}}</td>
           <td>{{row.title || '無標題'}}</td>
           <td>{{row.account}}</td>
           <td>
-          <button type="button" ng-click="toggleStatus(row)" class="btn btn-sm btn-default">
+          <button type="button" ng-click="main.toggleStatus(row)" class="btn btn-sm btn-default">
             <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="editSurvey(row)" class="btn btn-sm btn-info">
+          <button type="button" ng-click="main.edit(row)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="previewSurvey(row)" class="btn btn-sm btn-success">
+          <button type="button" ng-click="main.preview(row)" class="btn btn-sm btn-success">
             <i class="glyphicon glyphicon-file">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="generateUrl(row)" class="btn btn-sm btn-link">
+          <button type="button" ng-click="main.generateUrl(row)" class="btn btn-sm btn-link">
             開啟
           </button>
           </td>

@@ -5,8 +5,8 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://csyo:csyopass@ds061711.mongolab.com:61711/questionary'
+    uri: process.env.MONGOLAB_URI
   },
 
-  seedDB: true
+  seedDB: false
 };

@@ -1,6 +1,9 @@
 # 'main' route
+[-] implement: preview survey
 [v] differ add and edit mode when entering editor
 [v] implement edit survey
+
+# 'survey' route
 
 # 'editor' route
 [-] implement: colorpicker in textAngular
@@ -23,8 +26,10 @@
 [v] settings for scales
 
 # 'surveydata' service
+[-] refactor setSurveys() for survey removal
 [v] reset temporary data
 [v] fix the object reference bug for saving survey
 
 # server
+[-] save the survey data to db
 [-] upload img with db connection

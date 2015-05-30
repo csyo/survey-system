@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./thing.controller');
+var controller = require('./survey.controller');
 
 var router = express.Router();
 
