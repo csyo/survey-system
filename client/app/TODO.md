@@ -14,6 +14,9 @@
 [v] implement multimedia page
 
 ## 'page' route
+[-] adjustment：語意差異量表的題目與選項
+[-] enhancement：顯示選擇題選項清單於內容處
+[-] feature：調整項目順序
 [-] change text color in the text-editor
 [v] tooltip for semantic scale item
 [v] item content field width problem
