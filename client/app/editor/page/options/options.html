@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
   <button class="btn btn-info" ng-click="add()">新增項目</button>
-  <div class="options" ng-repeat="option in options">
+  <div class="options" ng-repeat="option in options.data">
     <input type="text" class="form-control" ng-model="option.name">
     <button class="btn btn-danger" ng-show="$last" ng-click="removeLast()">刪除</button>
   </div>

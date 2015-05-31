@@ -5,9 +5,7 @@ angular.module('surveyApp')
   var page = this;
   page.current = surveydata.getCurrentPage();
   page.itemTypes = surveydata.getItemType('arr');
-  page.scaleOptions = [3,4,5,6,7].map(function(elem,i){
-    return elem = { scaleVal: elem};
-  });
+  page.scaleOptions = [3,4,5,6,7];
 
   page.tips = '';
 
@@ -28,7 +26,7 @@ angular.module('surveyApp')
       templateUrl: 'app/editor/page/options/options.html',
       controller: 'OptionsCtrl',
       resolve: {
-        options: function () { return row.options ? row.options : [{index: 1}, {index: 2}]; }
+        options: function () { return row.options ? row.options : {data: [{index: 1}, {index: 2}]}; }
       }
     });
 
@@ -44,7 +42,7 @@ angular.module('surveyApp')
       // clean previous data
       page.tips = '';
       row.content = '';
-      if (row.options) row.options = undefined;
+      if (row.options) delete row.options;
       // add default value for scales
       switch (row.itemType.val) {
           case item_types['semantic-group'].val:
@@ -52,7 +50,9 @@ angular.module('surveyApp')
             page.tips = '左右項目之間請以逗號隔開';
           case item_types['likert-group'].val:
           case item_types['likert'].val:
-            row.options = page.scaleOptions[4]; // set default scale to 7
+            row.options = {
+              scales: page.scaleOptions[4] // set default scale to 7
+            };
             break;
       }
   };

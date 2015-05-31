@@ -6,13 +6,13 @@ angular.module('surveyApp')
     $scope.options.typeName = options.typeName || '';
 
     $scope.add = function() {
-      var newIndex = $scope.options.length + 1;
-      $scope.options.push({id: newIndex});
+      var newIndex = $scope.options.data.length + 1;
+      $scope.options.data.push({index: newIndex});
     };
 
     $scope.removeLast = function() {
-      var lastIndex = $scope.options.length - 1;
-      $scope.options.splice(lastIndex);
+      var lastIndex = $scope.options.data.length - 1;
+      $scope.options.data.splice(lastIndex);
     };
 
     $scope.ok = function() {

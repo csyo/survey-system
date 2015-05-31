@@ -40,10 +40,10 @@
             <div ng-include="page.checkGroup(row)"></div>
           </td>
           <td>
-            <span editable-select="row.options" e-name="scaleOption" e-form="rowform"
-                  e-ng-options="s.scaleVal for s in page.scaleOptions"
+            <span editable-select="row.options.scales" e-name="scaleOption" e-form="rowform"
+                  e-ng-options="s for s in page.scaleOptions"
                   e-ng-show="page.checkScale(row.itemType)">
-              {{ row.options.scaleVal }}
+              {{ row.options.scales }}
             </span>
           </td>
           <td style="white-space: nowrap">
