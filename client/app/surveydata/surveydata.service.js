@@ -51,6 +51,9 @@ angular.module('surveyApp')
     reset: function () {
       var state = $state.current.name;
       switch (state) {
+        case 'login':
+        case 'singup':
+          surveydata.surveys = [];
         case 'page':
           tmpPage.pageOrder = 0;
           tmpPage.pageCount = 0;
@@ -101,7 +104,12 @@ angular.module('surveyApp')
         survey.index = data.index || (parseInt(data.serialNo) - 1);
         survey._id = data._id;
         surveydata.surveys[survey.index] = survey;
-        $http.put('/api/surveys/:id', survey)
+        $http({
+          method: 'PUT',
+          url: '/api/surveys/:id',
+          data: survey,
+          params: { id: data._id }
+        })
           .success(function(data, status, headers, config){
             console.log(data);
           })
@@ -110,7 +118,8 @@ angular.module('surveyApp')
           });
       } else { // add mode
         survey.index = surveydata.surveys.length;
-        var pad = '000', n = parseInt(surveydata.surveys[survey.index-1].serialNo) + 1;
+        var lastNo = survey.index ? surveydata.surveys[survey.index-1].serialNo : '0';
+        var pad = '000', n = parseInt(lastNo) + 1;
         survey.serialNo = (pad+n).slice(-pad.length);
         surveydata.surveys.push(survey);
         $http.post('/api/surveys', survey)

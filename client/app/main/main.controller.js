@@ -2,10 +2,7 @@
 
 angular.module('surveyApp')
   .controller('MainCtrl', function ($state, surveydata) {
-  // $scope.awesomeThings = [];
-  // $http.get('/api/things').success(function(awesomeThings) {
-  //   $scope.awesomeThings = awesomeThings;
-  // });
+
   var main = this;
 
   this.rows = surveydata.getSurveys();

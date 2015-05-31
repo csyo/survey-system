@@ -30,14 +30,12 @@ exports.create = function(req, res) {
 
 // Updates an existing survey in the DB.
 exports.update = function(req, res) {
-  Survey.findById(req.body._id, function (err, survey) {
-    if (err) { return handleError(res, err); }
-    if(!survey) { return res.send(404); }
-    var updated = _.merge(survey, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, survey);
-    });
+  var surveyId = req.body._id;
+  delete req.body._id;
+
+  Survey.findOneAndUpdate({ _id: surveyId }, req.body, function(err){
+    if(err) { return handleError(res, err); }
+    return res.send(200);
   });
 };
 
