@@ -1,0 +1,25 @@
+<div>
+  <p ng-repeat="item in survey.currentPage.items" ng-include="survey.showItem(item)">
+  </p>
+</div>
+
+<script type="text/ng-template" id="text.html">
+  <div ng-bind-html="item.content"></div>
+</script>
+
+<script type="text/ng-template" id="choice.html">
+  <div ng-bind-html="item.content"></div>
+  <li ng-repeat="option in item.options" ng-bind-html="option.name"></li>
+</script>
+
+<script type="text/ng-template" id="fill-in-blank.html">
+  <div ng-bind-html="item.content"></div>
+</script>
+
+<script type="text/ng-template" id="likert.html">
+  <div ng-bind-html="item.content"></div>
+</script>
+
+<script type="text/ng-template" id="semantic.html">
+  <div ng-bind-html="item.content"></div>
+</script>

@@ -1,3 +1,13 @@
-<div class="col-md-12">
-This is the survey view.
+<div class="container">
+  <div class="row">
+    <div id="survey" ng-include="survey.page"></div>
+    <div class="text-center">
+      <div class="btn-group" role="group" aria-label="...">
+        <button class="btn btn-default" ng-disabled="survey.showPrev()" ng-click="survey.prevPage()">往前</button>
+        <button class="btn btn-default" ng-click="survey.returnToList()">返回列表</button>
+        <button class="btn btn-default" ng-disabled="survey.showNext()" ng-click="survey.nextPage()">下一步</button>
+      </div>
+    </div>
+    <!-- <pre>{{survey.data}}</pre> -->
+  </div>
 </div>
