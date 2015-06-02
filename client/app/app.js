@@ -9,6 +9,7 @@ angular.module('surveyApp', [
   'smart-table',
   'ngDialog',
   'xeditable',
+  'colorpicker.module',
   'textAngular',
   'ngFileUpload'
 ])

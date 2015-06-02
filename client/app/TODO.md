@@ -14,10 +14,10 @@
 [v] implement multimedia page
 
 ## 'page' route
-[-] adjustment：語意差異量表的題目與選項
-[-] enhancement：顯示選擇題選項清單於內容處
-[-] feature：調整項目順序
-[-] change text color in the text-editor
+[-] feature: 自訂項目內容的文字格式
+[v] adjustment：語意差異量表的題目與選項
+[v] enhancement：顯示選擇題選項清單於內容處
+[v] feature：調整項目順序
 [v] tooltip for semantic scale item
 [v] item content field width problem
 [v] show the default scale metric (if not chosen)
@@ -34,5 +34,5 @@
 [v] fix the object reference bug for saving survey
 
 # server
-[-] save the survey data to db
+[v] save the survey data to db
 [-] upload img with db connection

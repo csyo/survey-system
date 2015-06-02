@@ -1,17 +1,9 @@
-.order {
-  width: 5%;
+.black {
+  color: black;
 }
 
-.count {
-  width: 5%;
-}
-
-.type {
-  width: 10%;
-}
-
-.tableBtn {
-  width: 10%;
+.editor-btns {
+  padding-top: 20px;
 }
 
 .number {

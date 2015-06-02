@@ -6,6 +6,7 @@ angular.module('surveyApp')
   this.currentSurvey = surveydata.getCurrentSurvey();
   this.pageTypes = surveydata.getPageType('arr');
   this.theme = 'ngdialog-theme-default custom-width';
+  this.showTextEditor = false;
 
   this.rows = surveydata.getPages();
   this.displayed = [].concat(this.rows);
@@ -13,8 +14,11 @@ angular.module('surveyApp')
   this.saveAll = saveAll;
   this.add = add;
   this.edit = edit;
+  this.done = done;
+  this.cancel = cancel;
   this.remove = remove;
   this.movePage = movePage;
+  this.toggleTextEditor = toggleTextEditor;
 
   function saveAll() {
     surveydata.setSurveys(this.currentSurvey, function (err) {
@@ -48,12 +52,13 @@ angular.module('surveyApp')
         $state.go('page');
         break;
       case type['description'].val:
-        ngDialog.open({
-          template: 'app/editor/text/text.html',
-          className: 'ngdialog-theme-default custom-width',
-          controller: 'TextCtrl',
-          controllerAs: 'text'
-        });
+        editor.toggleTextEditor();
+//        ngDialog.open({
+//          template: 'app/editor/text/text.html',
+//          className: 'ngdialog-theme-default custom-width',
+//          controller: 'TextCtrl',
+//          controllerAs: 'text'
+//        });
         break;
       case type['multimedia'].val:
         ngDialog.open({
@@ -62,6 +67,16 @@ angular.module('surveyApp')
         });
         break;
     }
+  }
+
+  function done() {
+    editor.toggleTextEditor();
+    surveydata.setHtmlText(editor.htmlContent);
+  }
+
+  function cancel() {
+    editor.toggleTextEditor();
+    editor.htmlContent = '';
   }
 
   function remove(index) {
@@ -79,5 +94,9 @@ angular.module('surveyApp')
         row.pageOrder = index + 1;
       });
     }
+  }
+
+  function toggleTextEditor() {
+    editor.showTextEditor = !editor.showTextEditor;
   }
 });
