@@ -21,16 +21,20 @@
       <table st-table="editor.displayed" st-safe-src="editor.rows" class="table table-striped">
         <thead>
         <tr>
-          <th class="order">順序</th>
-          <th class="type">類型</th>
-          <th class="count">讀秒</th>
-          <th class="tableBtn">編輯</th>
-          <th class="tableBtn">刪除</th>
+          <th style="width:15%;">順序</th>
+          <th style="width:45%;">類型</th>
+          <th style="width:10%;">讀秒</th>
+          <th style="width:15%;">編輯</th>
+          <th style="width:15%;">刪除</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="row in editor.rows">
-          <td>{{row.pageOrder}}</td>
+          <td>
+            <span editable-number="row.pageOrder" e-min="1" e-max="{{editor.rows.length}}"
+                  onaftersave="editor.movePage(row.pageOrder-1, $index, row)">
+              {{row.pageOrder}}
+            </span></td>
           <td>
               <span editable-select="row.pageType" buttons="no" e-ng-options="t.name for t in editor.pageTypes">
               {{ row.pageType.name || '選擇'}}

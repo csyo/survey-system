@@ -15,19 +15,22 @@
       <table st-table="page.displayed" st-safe-src="page.rows" class="item-table table table-striped">
         <thead>
         <tr>
-          <th class="order">順序</th>
-          <th class="must">必填</th>
-          <th class="type">類型</th>
-          <th class="content">
-            <a href="#" tooltip-trigger tooltip-placement="top" tooltip="{{page.tips}}">內容</a>
-          </th>
-          <th class="tableBtn">量表尺度</th>
-          <th class="tableBtn">編輯項目</th>
+          <th style="width:5%;">順序</th>
+          <th style="width:5%;">必填</th>
+          <th style="width:15%;">類型</th>
+          <th style="width:50%;">內容</th>
+          <th style="width:10%;">量表尺度</th>
+          <th style="width:15%;">編輯項目</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="row in page.rows">
-          <td>{{row.itemOrder}}</td>
+          <td>
+            <span editable-number="row.itemOrder" e-min="1" e-max="{{page.rows.length}}"
+                  onaftersave="page.moveItem(row.itemOrder-1, $index, row)">
+              {{row.itemOrder}}
+            </span>
+          </td>
           <td><input type="checkbox" ng-model="row.must"></td>
           <td>
             <span editable-select="row.itemType" e-name="itemType" buttons="no"
@@ -37,19 +40,19 @@
             </span>
           </td>
           <td>
-            <div ng-include="page.checkGroup(row)"></div>
+            <div ng-include="page.showInputField(row)"></div>
           </td>
           <td>
-            <span editable-select="row.options.scales" e-name="scaleOption" e-form="rowform"
+            <span editable-select="row.options.scales" buttons="no"
                   e-ng-options="s for s in page.scaleOptions"
-                  e-ng-show="page.checkScale(row.itemType)">
-              {{ row.options.scales }}
+                  e-ng-show="page.showScale(row.itemType)">
+              {{ row.options.scales}}
             </span>
           </td>
           <td style="white-space: nowrap">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
                   shown="page.inserted == row">
-              <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-info">
+              <button type="submit" ng-disabled="rowform.$waiting" ng-click="page.log(row)" class="btn btn-info">
                 <i class="glyphicon glyphicon-ok"></i>
               </button>
               <button type="button" class="btn btn-default"
@@ -59,8 +62,8 @@
             </form>
             <div class="buttons" ng-show="!rowform.$visible">
               <button class="btn btn-info"
-                      ng-show="page.checkChoice(row.itemType)"
-                      ng-click="page.editOptions(row)">
+                      ng-show="page.showOptionList(row.itemType)"
+                      ng-click="page.editOptionList(row)">
                 <i class="glyphicon glyphicon-list"></i>
               </button>
               <button class="btn btn-primary" ng-click="page.format(row) && rowform.$show()">
@@ -77,12 +80,40 @@
     </div>
   </div>
 </div>
-<script type="text/ng-template" id="text-input.html">
-<span editable-text="row.content" e-name="content" e-form="rowform" ng-bind="row.content">
+<script type="text/ng-template" id="text.html">
+<span editable-text="row.content" e-name="content" e-form="rowform"
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="row.content">
 </span>
 </script>
-<script type="text/ng-template" id="text-area.html">
-<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
-      onaftersave="page.format(row, true)" ng-bind-html="row.content">
+<script type="text/ng-template" id="likert.html">
+<span editable-text="row.content" e-name="content" e-form="rowform"
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="row.content">
 </span>
+</script>
+<script type="text/ng-template" id="likert-group.html">
+<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
+      e-placeholder="{{row.tips}}"
+      onaftersave="page.format(row)" ng-bind-html="row.content">
+</span>
+</script>
+<script type="text/ng-template" id="semantic.html">
+<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="2"
+      e-placeholder="{{row.tips}}"
+      onaftersave="page.format(row)" ng-bind-html="row.content">
+</span>
+</script>
+<script type="text/ng-template" id="semantic-group.html">
+<span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
+      e-placeholder="{{row.tips}}"
+      onaftersave="page.format(row)" ng-bind-html="row.content">
+</span>
+</script>
+<script type="text/ng-template" id="question.html">
+<span editable-text="row.content" e-name="content" e-form="rowform"
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="row.content">
+</span>
+<p ng-bind-html="row.preview"></p>
 </script>

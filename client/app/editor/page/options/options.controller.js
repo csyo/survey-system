@@ -1,24 +1,33 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('OptionsCtrl', function ($scope, $modalInstance, options) {
-    $scope.options = options;
-    $scope.options.typeName = options.typeName || '';
+  .controller('OptionsCtrl', function ($modalInstance, optionList) {
+    var options = this;
 
-    $scope.add = function() {
-      var newIndex = $scope.options.data.length + 1;
-      $scope.options.data.push({index: newIndex});
+    var data = this.data = {};
+    data.list = optionList.list || optionList;
+    data.typeName = optionList.typeName || '';
+
+    this.add = add;
+    this.removeLast = removeLast;
+    this.ok = ok;
+    this.cancel = cancel;
+
+    function add() {
+      var newIndex = data.list.length + 1;
+      data.list.push({index: newIndex});
     };
 
-    $scope.removeLast = function() {
-      var lastIndex = $scope.options.data.length - 1;
-      $scope.options.data.splice(lastIndex);
+    function removeLast() {
+      var lastIndex = data.list.length - 1;
+      data.list.splice(lastIndex);
     };
 
-    $scope.ok = function() {
-      $modalInstance.close($scope.options);
+    function ok() {
+      $modalInstance.close(options.data);
     };
-    $scope.cancel = function() {
+
+    function cancel() {
       $modalInstance.dismiss('cancel');
     };
   });

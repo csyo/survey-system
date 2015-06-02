@@ -57,4 +57,5 @@ angular.module('surveyApp', [
     });
     // Set theme for angular-editable
     editableOptions.theme = 'bs3';
+    editableOptions.blur = 'submit';
   });

@@ -2,18 +2,18 @@
   <h3 class="modal-title">編輯項目</h3>
 </div>
 <div class="modal-body">
-  <button class="btn btn-info" ng-click="add()">新增項目</button>
-  <div class="options" ng-repeat="option in options.data">
+  <button class="btn btn-info" ng-click="options.add()">新增項目</button>
+  <div class="options" ng-repeat="option in options.data.list">
     <input type="text" class="form-control" ng-model="option.name">
-    <button class="btn btn-danger" ng-show="$last" ng-click="removeLast()">刪除</button>
+    <button class="btn btn-danger" ng-show="$last" ng-click="options.removeLast()">刪除</button>
   </div>
   <div class="input-group">
-    <input type="radio" ng-model="options.typeName" value="radio"> 單選題
-    <input type="radio" ng-model="options.typeName" value="multi"> 多選題
+    <input type="radio" ng-model="options.data.typeName" value="radio"> 單選題
+    <input type="radio" ng-model="options.data.typeName" value="multi"> 多選題
   </div>
   <input type="checkbox" ng-model="options.otherOption"> 增加「其他」選項供填答者輸入
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="ok()">完成</button>
-  <button class="btn btn-warning" ng-click="cancel()">取消</button>
+  <button class="btn btn-primary" ng-click="options.ok()">完成</button>
+  <button class="btn btn-warning" ng-click="options.cancel()">取消</button>
 </div>
