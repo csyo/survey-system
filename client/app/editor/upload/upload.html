@@ -1,9 +1,15 @@
 <div class="ngdialog-message">
-  <div ngf-select ng-model="files" class="btn" ngf-drag-over-class="dragover" ngf-accept="'image/*'">
-    上傳圖片
+  <div ngf-select ng-model="upload.files" class="btn btn-default" ngf-accept="'image/*'">
+    選擇檔案
   </div>
-  <img class="thumbnail" ngf-src="files[0]" ngf-default-src="'/thumb.jpg'" ngf-accept="'image/*'">
+  <div class="thumbnail throbber-loader" ng-show="upload.isLoading">
+    Loading…
+  </div>
+  <img class="thumbnail" ng-show="upload.files[0] || !upload.preview.data"
+       ngf-src="upload.files[0]" ngf-default-src="/thumb.jpg" ngf-accept="'image/*'">
+  <img class="thumbnail" ng-if="upload.preview.data" ng-hide="upload.files[0]"
+       data-ng-src="data:{{upload.preview.type}};base64,{{upload.preview.data}}">
 </div>
 <div class="ngdialog-buttons mt">
-  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="done()">完成</button>
+  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="upload.done()">完成</button>
 </div>

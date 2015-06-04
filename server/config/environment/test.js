@@ -5,6 +5,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/survey-test'
+    uri: process.env.MONGOLAB_TEST_URI
   }
 };

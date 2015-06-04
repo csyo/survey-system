@@ -57,7 +57,7 @@ angular.module('surveyApp')
     });
   }
 
-  var item_types = surveydata.getItemType();
+  var itemType = surveydata.getItemType();
 
   function checkRow(row) {
     // clean previous data
@@ -65,10 +65,10 @@ angular.module('surveyApp')
     if(row.options) row.options = null;
     // add default value for scales
     switch (row.itemType.val) {
-      case item_types['semantic-group'].val:
-      case item_types['semantic'].val:
-      case item_types['likert-group'].val:
-      case item_types['likert'].val:
+      case itemType['semantic-group'].val:
+      case itemType.semantic.val:
+      case itemType['likert-group'].val:
+      case itemType.likert.val:
         row.options = {
           scales: page.scaleOptions[4] // set default scale to 7
         };
@@ -80,20 +80,20 @@ angular.module('surveyApp')
 
   function showInputField(row) {
     switch (row.itemType.val) {
-      case item_types['likert'].val:
+      case itemType.likert.val:
         row.tips = '題目';
         return 'likert.html';
-      case item_types['likert-group'].val:
+      case itemType['likert-group'].val:
         row.tips = '題目一\n題目二\n題目三\n題目四\n題目五';
         return 'likert-group.html';
-      case item_types['semantic'].val:
+      case itemType.semantic.val:
         row.tips = '題目\n左選項 , 右選項';
         return 'semantic.html';
-      case item_types['semantic-group'].val:
+      case itemType['semantic-group'].val:
         row.tips = '左選項 , 右選項\n左選項 , 右選項';
         return 'semantic-group.html';
-      case item_types['choice'].val:
-      case item_types['fill-in-blank'].val:
+      case itemType.choice.val:
+      case itemType['fill-in-blank'].val:
         row.tips = '題目';
         return 'question.html';
       default:
@@ -104,10 +104,10 @@ angular.module('surveyApp')
 
   function showScale(item) {
     switch (item.val) {
-      case item_types['likert'].val:
-      case item_types['likert-group'].val:
-      case item_types['semantic'].val:
-      case item_types['semantic-group'].val:
+      case itemType.likert.val:
+      case itemType['likert-group'].val:
+      case itemType.semantic.val:
+      case itemType['semantic-group'].val:
         return true;
       default:
         return false;
@@ -116,7 +116,7 @@ angular.module('surveyApp')
 
   function showOptionList(item) {
     switch (item.val) {
-      case item_types['choice'].val:
+      case itemType.choice.val:
         return true;
       default:
         return false;
@@ -124,8 +124,8 @@ angular.module('surveyApp')
   }
 
   function format(row) {
-    if (row.content.match(/\n/g)) row.content = row.content.replace(/\n/g,"<br>");
-    if (row.content.match(/<br>/g)) row.content = row.content.replace(/<br>/g, "\n");
+    if (row.content.match(/\n/g)) row.content = row.content.replace(/\n/g,'<br>');
+    if (row.content.match(/<br>/g)) row.content = row.content.replace(/<br>/g, '\n');
     return true;
   }
 
