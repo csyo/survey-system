@@ -36,7 +36,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in main.rows">
+        <tr ng-repeat="row in main.rows track by $index">
           <td>{{row.serialNo}}</td>
           <td>{{row.title || '無標題'}}</td>
           <td>{{row.account}}</td>

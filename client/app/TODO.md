@@ -6,14 +6,18 @@
 # 'survey' route
 
 # 'editor' route
-[-] implement: colorpicker in textAngular
+[-] refactor: 上傳圖片畫面內嵌
+[-] bug: 文字編輯完後，編輯器沒有清除
+[-] bug: 開啟檔案上傳時，進度條顯示異常
 [-] feature: copy a page
+[v] implement: colorpicker in textAngular
 [v] editable survey title
 [v] editable page content
 [v] implement description page
 [v] implement multimedia page
 
 ## 'page' route
+[-] bug: 題組題編輯後預覽沒有換行
 [-] feature: 自訂項目內容的文字格式
 [v] adjustment：語意差異量表的題目與選項
 [v] enhancement：顯示選擇題選項清單於內容處

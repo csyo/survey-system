@@ -24,7 +24,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in page.rows">
+        <tr ng-repeat="row in page.rows track by $index">
           <td>
             <span editable-number="row.itemOrder" e-min="1" e-max="{{page.rows.length}}"
                   onaftersave="page.moveItem(row.itemOrder-1, $index, row)">
@@ -66,7 +66,7 @@
                       ng-click="page.editOptionList(row)">
                 <i class="glyphicon glyphicon-list"></i>
               </button>
-              <button class="btn btn-primary" ng-click="page.format(row) && rowform.$show()">
+              <button class="btn btn-primary" ng-click="rowform.$show()">
                 <i class="glyphicon glyphicon-edit"></i>
               </button>
               <button class="btn btn-danger" ng-click="page.remove($index)">
@@ -94,20 +94,17 @@
 </script>
 <script type="text/ng-template" id="likert-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
-      e-placeholder="{{row.tips}}"
-      onaftersave="page.format(row)" ng-bind-html="row.content">
+      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
 </span>
 </script>
 <script type="text/ng-template" id="semantic.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="2"
-      e-placeholder="{{row.tips}}"
-      onaftersave="page.format(row)" ng-bind-html="row.content">
+      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
 </span>
 </script>
 <script type="text/ng-template" id="semantic-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
-      e-placeholder="{{row.tips}}"
-      onaftersave="page.format(row)" ng-bind-html="row.content">
+      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
 </span>
 </script>
 <script type="text/ng-template" id="question.html">

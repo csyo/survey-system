@@ -9,13 +9,19 @@
       </button>
       </h1>
     </div>
-    <div ng-show="editor.showTextEditor">
+    <!-- textAngular editor -->
+    <div ng-if="editor.showTextEditor">
       <div text-angular ng-model="editor.htmlContent"></div>
       <div class="editor-btns">
         <button type="button" class="btn btn-primary" ng-click="editor.done()">完成</button>
         <button type="button" class="btn btn-default" ng-click="editor.cancel()">取消</button>
       </div>
     </div>
+    <!-- file upload -->
+    <div ng-if="editor.showFileUpload">
+      <div ng-include="'app/editor/upload/upload.html'" ng-controller="UploadCtrl as upload"></div>
+    </div>
+    <!-- show pages here -->
     <div class="col-md-12" ng-hide="editor.showTextEditor">
       <button type="button" ng-click="editor.add()" class="btn btn-sm btn-primary">
         <i class="glyphicon glyphicon-plus">
@@ -36,7 +42,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in editor.rows">
+        <tr ng-repeat="row in editor.rows track by $index">
           <td>
             <span editable-number="row.pageOrder" e-min="1" e-max="{{editor.rows.length}}"
                   onaftersave="editor.movePage(row.pageOrder-1, $index, row)">

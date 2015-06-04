@@ -52,12 +52,14 @@ angular.module('surveyApp')
     setPage : setPage,
     getPages : getPages,
     getPageIndex : getPageIndex,
+    setCurrentPage: setCurrentPage,
     getCurrentPage : getCurrentPage,
     setItems : setItems,
     getItems : getItems,
     getItemIndex : getItemIndex,
     setHtmlText : setHtmlText,
     getHtmlText : getHtmlText,
+    setFileId : setFileId,
     getFile : getFile
   };
   return surveydataService;
@@ -163,11 +165,17 @@ angular.module('surveyApp')
   function getCurrentSurvey() { return tmpSurvey; }
 
   function setPage(data) { tmpSurvey.pages.push(data); }
-  function getCurrentPage(page) {
-    tmpPage.pageOrder = page.pageOrder;
-    tmpPage.pageCount = page.pageCount;
-    tmpPage.pageType = page.pageType;
-    tmpPage.fileId = page.fileId || null;
+
+  function setCurrentPage(page) {
+    if (page) {
+      tmpPage.pageOrder = page.pageOrder;
+      tmpPage.pageCount = page.pageCount;
+      tmpPage.pageType = page.pageType;
+      tmpPage.fileId = page.fileId || null;
+      return tmpPage;
+    } else return null;
+  }
+  function getCurrentPage() {
     return tmpPage;
   }
 
@@ -195,6 +203,10 @@ angular.module('surveyApp')
 
   function getHtmlText() {
     return tmpSurvey.pages[tmpPage.pageOrder-1].content || '';
+  }
+
+  function setFileId(fileId) {
+    tmpPage.fileId = fileId;
   }
 
   function getFile(fileId) {

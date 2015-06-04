@@ -7,6 +7,7 @@ angular.module('surveyApp')
     var data = this.data = {};
     data.list = optionList.list || optionList;
     data.typeName = optionList.typeName || '';
+    data.otherOption = optionList.otherOption || false;
 
     this.add = add;
     this.removeLast = removeLast;

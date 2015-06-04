@@ -7,6 +7,7 @@ angular.module('surveyApp')
   this.pageTypes = surveydata.getPageType('arr');
   this.theme = 'ngdialog-theme-default custom-width';
   this.showTextEditor = false;
+  this.showFileUpload = false;
 
   this.rows = surveydata.getPages();
   this.displayed = [].concat(this.rows);
@@ -19,6 +20,7 @@ angular.module('surveyApp')
   this.remove = remove;
   this.movePage = movePage;
   this.toggleTextEditor = toggleTextEditor;
+  this.toggleFileUpload = toggleFileUpload;
 
   function saveAll() {
     surveydata.setPages(editor.currentSurvey, function () {
@@ -41,7 +43,7 @@ angular.module('surveyApp')
   function edit(row) {
     console.log(row);
     // update current page info
-    var targetPage = surveydata.getCurrentPage(row);
+    var targetPage = surveydata.setCurrentPage(row);
     // change route
     var type = surveydata.getPageType();
     switch (targetPage.pageType.val) {
@@ -49,6 +51,7 @@ angular.module('surveyApp')
         $state.go('page');
         break;
       case type.description.val:
+        editor.htmlContent = row.content;
         editor.toggleTextEditor();
         break;
       case type.multimedia.val:
@@ -62,16 +65,18 @@ angular.module('surveyApp')
             }
           }
         });
+        uploadDialog.closePromise.then(function(dialog){
+          if (!row.fileId) row.fileId = dialog.value;
+        })
+//        editor.toggleFileUpload();
         break;
     }
-    uploadDialog.closePromise.then(function(dialog){
-      if (!row.fileId) row.fileId = dialog.value;
-    })
   }
 
   function done() {
     editor.toggleTextEditor();
     surveydata.setHtmlText(editor.htmlContent);
+    editor.htmlContent = '';
   }
 
   function cancel() {
@@ -98,5 +103,9 @@ angular.module('surveyApp')
 
   function toggleTextEditor() {
     editor.showTextEditor = !editor.showTextEditor;
+  }
+
+  function toggleFileUpload() {
+    editor.showFileUpload = !editor.showFileUpload;
   }
 });

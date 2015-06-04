@@ -26,7 +26,7 @@ angular.module('surveyApp')
   /*** Implementations ***/
 
   function saveAll() {
-    page.rows.forEach(function(row){ row.tips = null; });
+    page.rows.forEach(function(row){ delete row.tips; });
     surveydata.setItems(page.rows);
     // clear tmpPage data
     surveydata.reset();
@@ -49,10 +49,12 @@ angular.module('surveyApp')
 
     options.result.then(function (optionList){
       row.options = optionList;
-      row.preview = optionList.typeName === 'radio' ? '(單選題)' :'(多選題)';
+      row.preview = optionList.typeName === 'radio' ? '(單選題)' :
+        optionList.typeName === 'multi' ? '(多選題)' : '(---)';
       optionList.list.forEach(function(option){
         row.preview += '<li>'+ option.name + '</li>';
       });
+      row.preview += optionList.otherOption ? '<li>其他</li>' : '';
       console.log(row);
     });
   }
@@ -123,10 +125,13 @@ angular.module('surveyApp')
     }
   }
 
-  function format(row) {
-    if (row.content.match(/\n/g)) row.content = row.content.replace(/\n/g,'<br>');
-    if (row.content.match(/<br>/g)) row.content = row.content.replace(/<br>/g, '\n');
-    return true;
+  /**
+   * Format the content with html line break
+   * @param   {Object}  row  Item data
+   * @returns {String} formatted content
+   */
+  function format(content) {
+    return (content.match(/\n/g)) ? content.replace(/\n/g, '<br/>'): content;
   }
 
   function add() {
