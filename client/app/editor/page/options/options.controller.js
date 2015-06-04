@@ -16,18 +16,18 @@ angular.module('surveyApp')
     function add() {
       var newIndex = data.list.length + 1;
       data.list.push({index: newIndex});
-    };
+    }
 
     function removeLast() {
       var lastIndex = data.list.length - 1;
       data.list.splice(lastIndex);
-    };
+    }
 
     function ok() {
       $modalInstance.close(options.data);
-    };
+    }
 
     function cancel() {
       $modalInstance.dismiss('cancel');
-    };
+    }
   });

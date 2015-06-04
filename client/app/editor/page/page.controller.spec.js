@@ -8,18 +8,15 @@ describe('Controller: PageCtrl', function () {
   var PageCtrl, scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    PageCtrl = $controller('PageCtrl', {
-      $scope: scope
-    });
+  beforeEach(inject(function ($controller) {
+    PageCtrl = $controller('PageCtrl');
   }));
 
   it('should have a page title', function () {
-    expect(scope.currentPage.title).toBeDefined();
+    expect(PageCtrl.currentPage.title).toBeDefined();
   });
 
-  it("should have display items", function() {
-    expect(scope.displayedCollection.length).not.toBe(0);
+  it('should have display items', function() {
+    expect(PageCtrl.displayed.length).not.toBe(0);
   });
 });

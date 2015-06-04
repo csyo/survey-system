@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .factory('surveydata', function (Auth, $state, $http) {
+  .factory('surveydata', function (Auth, $state, $http, $resource) {
 
   var surveydata = {};
   surveydata.surveys = [];
@@ -40,15 +40,15 @@ angular.module('surveyApp')
   }, {});
 
   var surveydataService = {
-    getUserName : Auth.getUserData,
+    getUserName : Auth.getCurrentUser,
     getPageType : getPageType,
     getItemType : getItemType,
     reset : reset,
     fetchSurveys : fetchSurveys,
-    setSurveys : setSurveys,
     getSurveys : getSurveys,
     setCurrentSurvey : setCurrentSurvey,
     getCurrentSurvey : getCurrentSurvey,
+    setPages : setPages,
     setPage : setPage,
     getPages : getPages,
     getPageIndex : getPageIndex,
@@ -57,7 +57,8 @@ angular.module('surveyApp')
     getItems : getItems,
     getItemIndex : getItemIndex,
     setHtmlText : setHtmlText,
-    getHtmlText : getHtmlText
+    getHtmlText : getHtmlText,
+    getFile : getFile
   };
   return surveydataService;
 
@@ -77,6 +78,7 @@ angular.module('surveyApp')
       case 'login':
       case 'singup':
         surveydata.surveys = [];
+        break;
       case 'page':
         tmpPage.pageOrder = 0;
         tmpPage.pageCount = 0;
@@ -95,12 +97,12 @@ angular.module('surveyApp')
     if (!surveydata.surveys.length) {
       Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn) {
-          var name = Auth.getCurrentUser().name;
+          var name = surveydataService.getUserName().name;
           $http({
             method: 'GET',
             url: '/api/surveys',
             params: { account: name }
-          }).success(function(data, status){
+          }).success(function(data){
             data.sort(function(a, b){
               if (a.serialNo < b.serialNo) return -1;
               else if (a.serialNo > b.serialNo) return 1;
@@ -117,13 +119,13 @@ angular.module('surveyApp')
     }
   }
 
-  function setSurveys(data, callback) {
+  function setPages(data, callback) {
     var survey = {};
     survey.title = data.title;
     survey.serialNo = data.serialNo;
     survey.status = data.status || false;
     survey.pages = data.pages;
-    survey.account = data.account || Auth.getCurrentUser().name;
+    survey.account = data.account || surveydataService.getUserName().name;
     if (survey.serialNo) { // edit mode
       survey.index = data.index || (parseInt(data.serialNo) - 1);
       survey._id = data._id;
@@ -133,9 +135,9 @@ angular.module('surveyApp')
         url: '/api/surveys/:id',
         data: survey,
         params: { id: data._id }
-      }).success(function(data, status, headers, config){
+      }).success(function(data){
         console.log(data);
-      }).error(function(err, status, headers, config){
+      }).error(function(err){
         if (err) throw Error(err);
       });
     } else { // add mode
@@ -145,10 +147,10 @@ angular.module('surveyApp')
       survey.serialNo = (pad+n).slice(-pad.length);
       surveydata.surveys.push(survey);
       $http.post('/api/surveys', survey)
-        .success(function(data, status, headers, config){
+        .success(function(data){
           console.log(data);
           surveydata.surveys[survey.index]._id = data._id;
-        }).error(function(err, status, headers, config){
+        }).error(function(err){
           if (err) throw Error(err);
         });
     }
@@ -156,12 +158,21 @@ angular.module('surveyApp')
   }
 
   function getSurveys() { return surveydata.surveys; }
+
   function setCurrentSurvey(data) { tmpSurvey = data; }
   function getCurrentSurvey() { return tmpSurvey; }
+
   function setPage(data) { tmpSurvey.pages.push(data); }
+  function getCurrentPage(page) {
+    tmpPage.pageOrder = page.pageOrder;
+    tmpPage.pageCount = page.pageCount;
+    tmpPage.pageType = page.pageType;
+    tmpPage.fileId = page.fileId || null;
+    return tmpPage;
+  }
+
   function getPages() { return tmpSurvey.pages; }
   function getPageIndex() { return tmpSurvey.pages.length; }
-  function getCurrentPage() { return tmpPage; }
 
   function setItems(items) {
     tmpSurvey.pages[tmpPage.pageOrder - 1].items = items;
@@ -184,6 +195,14 @@ angular.module('surveyApp')
 
   function getHtmlText() {
     return tmpSurvey.pages[tmpPage.pageOrder-1].content || '';
+  }
+
+  function getFile(fileId) {
+    if (!fileId) return;
+    var Upload = $resource('/api/uploads/:id', {id:'@id'}, {
+      query:  { method: 'GET', isArray:false }
+    });
+    return Upload.query({ id: fileId });
   }
 
 });

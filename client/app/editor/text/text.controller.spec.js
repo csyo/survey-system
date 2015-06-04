@@ -5,14 +5,11 @@ describe('Controller: TextCtrl', function () {
   // load the controller's module
   beforeEach(module('surveyApp'));
 
-  var TextCtrl, scope;
+  var TextCtrl;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    TextCtrl = $controller('TextCtrl', {
-      $scope: scope
-    });
+  beforeEach(inject(function ($controller) {
+    TextCtrl = $controller('TextCtrl');
   }));
 
   it('should ...', function () {

@@ -37,6 +37,13 @@ module.exports = function (grunt) {
       options: {
         port: process.env.PORT || 9000
       },
+      theseus: {
+        options: {
+          cmd: 'node-theseus',
+          script: 'server/app.js',
+          port: 3000
+        }
+      },
       dev: {
         options: {
           script: 'server/app.js',
@@ -213,6 +220,23 @@ module.exports = function (grunt) {
     wiredep: {
       target: {
         src: '<%= yeoman.client %>/index.html',
+        ignorePath: '<%= yeoman.client %>/',
+        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/']
+      },
+      test: {
+        devDependencies: true,
+        src: 'karma.conf.js',
+        fileTypes:{
+          js: {
+            block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
+            detect: {
+              js: /'(.*\.js)'/gi
+            },
+            replace: {
+              js: '\'{{filePath}}\','
+            }
+          }
+        },
         ignorePath: '<%= yeoman.client %>/',
         exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/']
       }
@@ -448,7 +472,7 @@ module.exports = function (grunt) {
       prod: {
         NODE_ENV: 'production'
       },
-      all: localConfig
+      all: require('./server/config/local.env')
     },
 
     injector: {
@@ -541,6 +565,23 @@ module.exports = function (grunt) {
       'open',
       'watch'
     ]);
+  });
+
+  grunt.registerTask('theseus',
+    'Use with theseus. Build project and restart server with node-theseus as files changed.',
+    function () {
+
+      grunt.task.run([
+        'clean:server',
+        'env:all',
+        'concurrent:server',
+        'injector',
+        'wiredep',
+        'autoprefixer',
+        'express:theseus',
+        'wait',
+        'watch'
+      ])
   });
 
   grunt.registerTask('server', function () {

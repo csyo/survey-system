@@ -17,7 +17,7 @@ angular.module('surveyApp')
   this.movePage = movePage;
 
   function saveAll() {
-    surveydata.setSurveys(this.currentSurvey, function (err) {
+    surveydata.setPages(editor.currentSurvey, function () {
       // clear tmpSurvey data
       surveydata.reset();
       // change route
@@ -26,28 +26,25 @@ angular.module('surveyApp')
   }
 
   function add() {
-    this.inserted = {
+    editor.inserted = {
       pageOrder: surveydata.getPageIndex() + 1,
       pageCount: 0,
       pageType: ''
     };
-    this.rows.push(this.inserted);
+    editor.rows.push(editor.inserted);
   }
 
   function edit(row) {
     console.log(row);
     // update current page info
-    var targetPage = surveydata.getCurrentPage();
-    targetPage.pageOrder = row.pageOrder;
-    targetPage.pageCount = row.pageCount;
-    targetPage.pageType = row.pageType;
+    var targetPage = surveydata.getCurrentPage(row);
     // change route
     var type = surveydata.getPageType();
     switch (targetPage.pageType.val) {
-      case type['questionary'].val:
+      case type.questionary.val:
         $state.go('page');
         break;
-      case type['description'].val:
+      case type.description.val:
         ngDialog.open({
           template: 'app/editor/text/text.html',
           className: 'ngdialog-theme-default custom-width',
@@ -55,13 +52,22 @@ angular.module('surveyApp')
           controllerAs: 'text'
         });
         break;
-      case type['multimedia'].val:
-        ngDialog.open({
+      case type.multimedia.val:
+        var uploadDialog = ngDialog.open({
           template: 'app/editor/upload/upload.html',
-          controller: 'UploadCtrl'
+          controller: 'UploadCtrl',
+          controllerAs: 'upload',
+          resolve: {
+            fileId: function () {
+              return row.fileId ? row.fileId : null;
+            }
+          }
         });
         break;
     }
+    uploadDialog.closePromise.then(function(dialog){
+      if (!row.fileId) row.fileId = dialog.value;
+    })
   }
 
   function remove(index) {
@@ -80,4 +86,5 @@ angular.module('surveyApp')
       });
     }
   }
+
 });

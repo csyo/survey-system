@@ -4,9 +4,14 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var UploadSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+  file: {
+    buffer: Buffer,
+    name: String,
+    originalname: String,
+    size: Number,
+    mimetype: String
+  },
+  account: String
 });
 
 module.exports = mongoose.model('Upload', UploadSchema);
