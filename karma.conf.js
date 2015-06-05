@@ -34,6 +34,7 @@ module.exports = function(config) {
       'client/bower_components/textAngular/src/textAngular-sanitize.js',
       'client/bower_components/textAngular/src/textAngularSetup.js',
       'client/bower_components/ng-file-upload/ng-file-upload.js',
+      'client/bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
       'client/app/app.js',
       // 'client/app/app.coffee',
       'client/app/**/*.js',

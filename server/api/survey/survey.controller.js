@@ -5,8 +5,7 @@ var Survey = require('./survey.model');
 
 // Get list of surveys
 exports.index = function(req, res) {
-  if(!req.query.account) { return res.send(404); }
-  Survey.find({ account: req.query.account }, function (err, surveys) {
+  Survey.find({ account: req.user._doc.name }, function (err, surveys) {
     if(err) { return handleError(res, err); }
     return res.json(200, surveys);
   });

@@ -3,6 +3,7 @@
 angular.module('surveyApp')
   .config(function ($provide) {
     $provide.decorator('taOptions', function ($delegate, taRegisterTool) {
+      /*jshint -W109*/
       // $delegate is the taOptions we are decorating
       $delegate.toolbar = [
         ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
@@ -16,7 +17,7 @@ angular.module('surveyApp')
         action: function (deferred) {
           var self = this;
           this.$editor().wrapSelection('backgroundColor', this.backgroundColor);
-          if (typeof self.listener == 'undefined') {
+          if (typeof self.listener === 'undefined') {
             self.listener = self.$watch('backgroundColor', function (newValue) {
               self.$editor().wrapSelection('backColor', newValue);
             });
@@ -36,7 +37,7 @@ angular.module('surveyApp')
         display: "<button colorpicker type='button' class='btn btn-default ng-scope' title='Font Color'  colorpicker-close-on-select colorpicker-position='bottom' ng-model='fontColor' style='color: {{fontColor}}'><i class='fa fa-font '></i></button>",
         action: function (deferred) {
           var self = this;
-          if (typeof self.listener == 'undefined') {
+          if (typeof self.listener === 'undefined') {
             self.listener = self.$watch('fontColor', function (newValue) {
               self.$editor().wrapSelection('forecolor', newValue);
             });
@@ -54,7 +55,7 @@ angular.module('surveyApp')
 
 
       taRegisterTool('colorBlack', {
-        iconclass: "fa fa-square black",
+        iconclass: 'fa fa-square black',
         action: function(){
           this.$editor().wrapSelection('forecolor', 'black');
         }

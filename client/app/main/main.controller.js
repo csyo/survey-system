@@ -17,10 +17,7 @@ angular.module('surveyApp')
   /* fetch data only when loading the first time */
   if (!vm.rows.length) {
     vm.isLoading = true;
-    Auth.isLoggedInAsync(function(loggedIn){
-      if (loggedIn) activate();
-      else vm.isLoading = false;
-    });
+    activate();
   }
 
   ////////////

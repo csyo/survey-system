@@ -5,25 +5,23 @@ describe('Controller: MainCtrl', function () {
   // load the controller's module
   beforeEach(module('surveyApp'));
 
-  var MainCtrl,
-      scope;
-      // $httpBackend;
+  var MainCtrl, mockDataSvc, mockAuth;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_$httpBackend_, $controller, $rootScope) {
-    // $httpBackend = _$httpBackend_;
-    // $httpBackend.expectGET('/api/things')
-    //   .respond(['HTML5 Boilerplate', 'AngularJS', 'Karma', 'Express']);
-
-    scope = $rootScope.$new();
+  beforeEach(inject(function (_surveydata_, _Auth_, $controller) {
+    mockDataSvc = _surveydata_;
+    mockAuth = _Auth_;
+    spyOn(mockAuth, 'isLoggedInAsync').andCallThrough();
+    spyOn(mockDataSvc,'fetchSurveys').andCallThrough();
     MainCtrl = $controller('MainCtrl', {
-      $scope: scope
+      surveydata: mockDataSvc
     });
   }));
 
-  // it('should attach a list of things to the scope', function () {
-  //   $httpBackend.flush();
-  //   expect(scope.awesomeThings.length).toBe(4);
-  // });
+    it('should fetch surveys when the table rows are empty', function () {
+      expect(MainCtrl.rows.length).toBe(0);
+      expect(mockAuth.isLoggedInAsync).toHaveBeenCalled();
+      expect(mockDataSvc.fetchSurveys).toHaveBeenCalled();
+    });
 
 });

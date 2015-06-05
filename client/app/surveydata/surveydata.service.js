@@ -77,9 +77,7 @@ angular.module('surveyApp')
   }
 
   function fetchSurveys() {
-    return $http.get('/api/surveys', {
-      params: { account: Auth.getCurrentUser().name }
-    })
+    return $http.get('/api/surveys')
       .then(fetchSurveysComplete)
       .catch(fetchSurveysFailed);
 
