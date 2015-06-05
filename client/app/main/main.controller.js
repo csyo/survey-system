@@ -1,53 +1,68 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($state, surveydata) {
+  .controller('MainCtrl', function ($state, Auth, surveydata) {
 
-  var main = this;
-
-  this.rows = surveydata.getSurveys();
-
-  this.fetchData = function () {
-    surveydata.fetchSurveys(function(){
-      main.rows = surveydata.getSurveys();
-    });
-  };
+  var vm = this;
+  this.add = add;
+  this.edit = edit;
+  this.preview = preview;
+  this.generateUrl = generateUrl;
+  this.toggleStatus = toggleStatus;
 
   this.displayed = [].concat(this.rows);
+  this.rows = surveydata.getSurveys();
+  this.isLoading = false;
 
-  this.toggleStatus = function(row) {
+  /* fetch data only when loading the first time */
+  if (!vm.rows.length) {
+    vm.isLoading = true;
+    Auth.isLoggedInAsync(function(loggedIn){
+      if (loggedIn) activate();
+      else vm.isLoading = false;
+    });
+  }
+
+  ////////////
+
+  function activate() {
+    return fetchSurveys()
+      .then(function(){
+        console.info('Activated Main View');
+        vm.isLoading = false;
+      });
+  }
+
+  function fetchSurveys() {
+    return surveydata.fetchSurveys()
+      .then(function(surveys){
+        vm.rows = surveys;
+        return vm.rows;
+      });
+  }
+
+  function toggleStatus(row) {
     row.status = !row.status;
-  };
+  }
 
-  this.add = function() {
+  function add() {
     $state.go('editor'); // change to editor view to create survey
-  };
+  }
 
-  this.edit = function(row) {
+  function edit(row) {
     // update current page info
     surveydata.setCurrentSurvey(row);
     // change route to editing state
     $state.go('editor');
-  };
+  }
 
-  this.preview = function(row) {
+  function preview(row) {
     console.log(row);
     // TODO: generate the whole survey for preview
-  };
+  }
 
-  this.generateUrl = function() {
+  function generateUrl() {
     // TODO: generate a url for the survey with database communication
-  };
+  }
 
-//  this.addThing = function() {
-//    if(main.newThing === '') {
-//      return;
-//    }
-//    $http.post('/api/things', { name: $scope.newThing });
-//    $scope.newThing = '';
-//  };
-//
-//  this.deleteThing = function(thing) {
-//    $http.delete('/api/things/' + thing._id);
-//  };
 });

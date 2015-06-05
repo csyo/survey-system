@@ -3,76 +3,57 @@
 angular.module('surveyApp')
   .factory('surveydata', function (Auth, $state, $http, $resource) {
 
-  var surveydata = {};
-  surveydata.surveys = [];
+  var surveydata = {
+    surveys: [],
+    user: ''
+  };
 
   // currently editting survey data
   var tmpSurvey = { serialNo: '', title: '', pages: []},
     tmpPage = { pageOrder: 0, pageCount: 0 , pageType: '', items: []};
 
   // different types for a single page of a survey
-  var pageTypes = {};
-  pageTypes.arr = [
-    { val: 'questionary', name: '問卷頁面'},
-    { val: 'description', name: '文字說明頁面'},
-    { val: 'multimedia', name: '多媒體頁面'}
-  ];
-  pageTypes.obj = pageTypes.arr.reduce(function(o, v){ // access types by val
-    o[v.val] = v;
-    return o;
-  }, {});
+  var pageType = {
+    questionary: { val: 'questionary', name: '問卷頁面'},
+    description: { val: 'description', name: '文字說明頁面'},
+    multimedia: { val: 'multimedia', name: '多媒體頁面'}
+  };
 
   // different types for a single item of a page
-  var itemTypes = {};
-  itemTypes.arr = [
-    { val: 'title', name: '標題'},
-    { val: 'caption', name: '說明'},
-    { val: 'likert', name: '李克特量表'},
-    { val: 'likert-group', name: '李克特量表題組'},
-    { val: 'semantic', name: '語意差異量表'},
-    { val: 'semantic-group', name: '語意差異量表題組'},
-    { val: 'choice', name: '選擇題'},
-    { val: 'fill-in-blank', name: '問答題'}
-  ];
-  itemTypes.obj = itemTypes.arr.reduce(function(o, v){ // access types by val
-    o[v.val] = v;
-    return o;
-  }, {});
+  var itemType = {
+    title: { val: 'title', name: '標題'},
+    caption: { val: 'caption', name: '說明'},
+    likert: { val: 'likert', name: '李克特量表'},
+    likerts: { val: 'likerts', name: '李克特量表題組'},
+    semantic: { val: 'semantic', name: '語意差異量表'},
+    semantics: { val: 'semantics', name: '語意差異量表題組'},
+    choice: { val: 'choice', name: '選擇題'},
+    blank : { val: 'blank', name: '填答題'}
+  };
 
   var surveydataService = {
-    getUserName : Auth.getCurrentUser,
-    getPageType : getPageType,
-    getItemType : getItemType,
+    getPageType : function() { return pageType; },
+    getItemType : function() { return itemType; },
     reset : reset,
+    getSurveys : function() { return surveydata.surveys; },
     fetchSurveys : fetchSurveys,
-    getSurveys : getSurveys,
-    setCurrentSurvey : setCurrentSurvey,
-    getCurrentSurvey : getCurrentSurvey,
+    setCurrentSurvey : function(data) { tmpSurvey = data; },
+    getCurrentSurvey : function() { return tmpSurvey; },
     setPages : setPages,
-    setPage : setPage,
-    getPages : getPages,
-    getPageIndex : getPageIndex,
+    getPages : function() { return tmpSurvey.pages; },
+    getPageIndex : function() { return tmpSurvey.pages.length; },
     setCurrentPage: setCurrentPage,
-    getCurrentPage : getCurrentPage,
+    getCurrentPage : function() { return tmpPage; },
     setItems : setItems,
     getItems : getItems,
-    getItemIndex : getItemIndex,
+    getItemIndex : function() { return tmpPage.items.length; },
     setHtmlText : setHtmlText,
     getHtmlText : getHtmlText,
-    setFileId : setFileId,
     getFile : getFile
   };
   return surveydataService;
 
-  function getPageType(type) {
-    if (type === 'arr') return pageTypes.arr;
-    else return pageTypes.obj;
-  }
-
-  function getItemType(type) {
-    if (type === 'arr') return itemTypes.arr;
-    else return itemTypes.obj;
-  }
+  /*** Implementations ***/
 
   function reset() {
     var state = $state.current.name;
@@ -95,29 +76,29 @@ angular.module('surveyApp')
     }
   }
 
-  function fetchSurveys(callback) {
-    if (!surveydata.surveys.length) {
-      Auth.isLoggedInAsync(function(loggedIn){
-        if (loggedIn) {
-          var name = surveydataService.getUserName().name;
-          $http({
-            method: 'GET',
-            url: '/api/surveys',
-            params: { account: name }
-          }).success(function(data){
-            data.sort(function(a, b){
-              if (a.serialNo < b.serialNo) return -1;
-              else if (a.serialNo > b.serialNo) return 1;
-              else return 0;
-            });
-            data.forEach(function(survey, index){
-              survey.index = index;
-            });
-            surveydata.surveys = [].concat(data);
-            if (callback) callback();
-          });
-        }
+  function fetchSurveys() {
+    return $http.get('/api/surveys', {
+      params: { account: Auth.getCurrentUser().name }
+    })
+      .then(fetchSurveysComplete)
+      .catch(fetchSurveysFailed);
+
+    function fetchSurveysComplete(response) {
+      var data = response.data;
+      data.sort(function(a, b){ // sort the data by serial number
+        if (a.serialNo < b.serialNo) return -1;
+        else if (a.serialNo > b.serialNo) return 1;
+        else return 0;
       });
+      data.forEach(function(survey, index){ // add index for sorted data
+        survey.index = index;
+      });
+      surveydata.surveys = [].concat(data);
+      return data;
+    }
+
+    function fetchSurveysFailed(error) {
+      console.error('XHR Failed for fetchSurveys.', error.data)
     }
   }
 
@@ -127,17 +108,13 @@ angular.module('surveyApp')
     survey.serialNo = data.serialNo;
     survey.status = data.status || false;
     survey.pages = data.pages;
-    survey.account = data.account || surveydataService.getUserName().name;
+    survey.account = data.account || Auth.getCurrentUser().name;
     if (survey.serialNo) { // edit mode
       survey.index = data.index || (parseInt(data.serialNo) - 1);
       survey._id = data._id;
       surveydata.surveys[survey.index] = survey;
-      $http({
-        method: 'PUT',
-        url: '/api/surveys/:id',
-        data: survey,
-        params: { id: data._id }
-      }).success(function(data){
+      $http.put('/api/surveys/' + data._id, survey)
+        .success(function(data){
         console.log(data);
       }).error(function(err){
         if (err) throw Error(err);
@@ -159,13 +136,6 @@ angular.module('surveyApp')
     if (callback) callback();
   }
 
-  function getSurveys() { return surveydata.surveys; }
-
-  function setCurrentSurvey(data) { tmpSurvey = data; }
-  function getCurrentSurvey() { return tmpSurvey; }
-
-  function setPage(data) { tmpSurvey.pages.push(data); }
-
   function setCurrentPage(page) {
     if (page) {
       tmpPage.pageOrder = page.pageOrder;
@@ -175,17 +145,10 @@ angular.module('surveyApp')
       return tmpPage;
     } else return null;
   }
-  function getCurrentPage() {
-    return tmpPage;
-  }
-
-  function getPages() { return tmpSurvey.pages; }
-  function getPageIndex() { return tmpSurvey.pages.length; }
 
   function setItems(items) {
     tmpSurvey.pages[tmpPage.pageOrder - 1].items = items;
   }
-
   function getItems() {
     var items = tmpSurvey.pages.length ? tmpSurvey.pages[tmpPage.pageOrder - 1].items : '';
     if (!items) return tmpPage.items;
@@ -195,18 +158,12 @@ angular.module('surveyApp')
     }
   }
 
-  function getItemIndex() { return tmpPage.items.length; }
-
   function setHtmlText(data) {
     tmpSurvey.pages[tmpPage.pageOrder-1].content = data;
   }
 
   function getHtmlText() {
     return tmpSurvey.pages[tmpPage.pageOrder-1].content || '';
-  }
-
-  function setFileId(fileId) {
-    tmpPage.fileId = fileId;
   }
 
   function getFile(fileId) {

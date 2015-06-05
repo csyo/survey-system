@@ -1,8 +1,12 @@
-.thing-form {
+.blank {
+  display: inline-block;
+  margin-right: 20px;
+}
+/*.thing-form {
     margin: 20px 0;
 }
 
-/*#banner {
+#banner {
     border-bottom: none;
     margin-top: -20px;
 }

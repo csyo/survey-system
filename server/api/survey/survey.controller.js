@@ -5,6 +5,7 @@ var Survey = require('./survey.model');
 
 // Get list of surveys
 exports.index = function(req, res) {
+  if(!req.query.account) { return res.send(404); }
   Survey.find({ account: req.query.account }, function (err, surveys) {
     if(err) { return handleError(res, err); }
     return res.json(200, surveys);
@@ -30,12 +31,18 @@ exports.create = function(req, res) {
 
 // Updates an existing survey in the DB.
 exports.update = function(req, res) {
-  var surveyId = req.body._id;
-  delete req.body._id;
-
-  Survey.findOneAndUpdate({ _id: surveyId }, req.body, function(err){
-    if(err) { return handleError(res, err); }
-    return res.send(200);
+  if(req.body._id) { delete req.body._id; }
+  Survey.findById(req.params.id, function (err, survey) {
+    if (err) { return handleError(res, err); }
+    if(!survey) { return res.send(404); }
+    var updated = _.merge(survey, req.body, function(a,b){
+      if (_.isArray(a)) return b; // discard previous pages
+    });
+    updated.markModified('pages');
+    updated.save(function (err, result) {
+      if (err) { return handleError(res, err); }
+      return res.json(200, result);
+    });
   });
 };
 

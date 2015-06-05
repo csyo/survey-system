@@ -2,71 +2,73 @@
 
 angular.module('surveyApp')
   .controller('PageCtrl', function ($state, $modal, surveydata) {
-  var page = this;
-  this.current = surveydata.getCurrentPage();
-  this.itemTypes = surveydata.getItemType('arr');
-  this.scaleOptions = [3,4,5,6,7];
+    var page = this;
+    this.current = surveydata.getCurrentPage();
+    this.itemTypes = surveydata.getItemType('arr');
+    this.scaleOptions = [3, 4, 5, 6, 7];
 
-  this.rows = surveydata.getItems();
-  this.displayed = [].concat(this.rows);
+    this.rows = surveydata.getItems();
+    this.displayed = [].concat(this.rows);
 
-  /*** Declarsion ***/
+    /*** Declarsion ***/
 
-  this.add = add;
-  this.remove = remove;
-  this.format = format;
-  this.saveAll = saveAll;
-  this.checkRow = checkRow;
-  this.editOptionList = editOptionList;
-  this.showOptionList = showOptionList;
-  this.showInputField = showInputField;
-  this.showScale = showScale;
-  this.moveItem = moveItem;
+    this.add = add;
+    this.remove = remove;
+    this.format = format;
+    this.saveAll = saveAll;
+    this.checkRow = checkRow;
+    this.editOptionList = editOptionList;
+    this.showOptionList = showOptionList;
+    this.showInputField = showInputField;
+    this.showScale = showScale;
+    this.moveItem = moveItem;
 
-  /*** Implementations ***/
+    /*** Implementations ***/
 
-  function saveAll() {
-    page.rows.forEach(function(row){ delete row.tips; });
-    surveydata.setItems(page.rows);
-    // clear tmpPage data
-    surveydata.reset();
-    // change route
-    $state.go('editor');
-  }
-
-  function editOptionList(row) {
-    var options = $modal.open({
-      animation: true,
-      templateUrl: 'app/editor/page/options/options.html',
-      controller: 'OptionsCtrl',
-      controllerAs: 'options',
-      resolve: {
-        optionList: function () {
-          return row.options ? row.options : { list: [{index: 0}, {index: 1}] };
-        }
-      }
-    });
-
-    options.result.then(function (optionList){
-      row.options = optionList;
-      row.preview = optionList.typeName === 'radio' ? '(單選題)' :
-        optionList.typeName === 'multi' ? '(多選題)' : '(---)';
-      optionList.list.forEach(function(option){
-        row.preview += '<li>'+ option.name + '</li>';
+    function saveAll() {
+      page.rows.forEach(function (row) {
+        delete row.tips;
       });
-      row.preview += optionList.otherOption ? '<li>其他</li>' : '';
-      console.log(row);
-    });
-  }
+      surveydata.setItems(page.rows);
+      // clear tmpPage data
+      surveydata.reset();
+      // change route
+      $state.go('editor');
+    }
 
-  var itemType = surveydata.getItemType();
+    function editOptionList(row) {
+      var options = $modal.open({
+        animation: true,
+        templateUrl: 'app/editor/page/options/options.html',
+        controller: 'OptionsCtrl',
+        controllerAs: 'options',
+        resolve: {
+          optionList: function () {
+            return row.options ? row.options : { list: [{ index: 0 }, { index: 1 }] };
+          }
+        }
+      });
 
-  function checkRow(row) {
-    // clean previous data
-    row.content = '';
-    if(row.options) row.options = null;
-    // add default value for scales
-    switch (row.itemType.val) {
+      options.result.then(function (optionList) {
+        row.options = optionList;
+        row.preview = optionList.typeName === 'radio' ? '(單選題)' :
+          optionList.typeName === 'multi' ? '(多選題)' : '(---)';
+        optionList.list.forEach(function (option) {
+          row.preview += '<li>' + option.name + '</li>';
+        });
+        row.preview += optionList.otherOption ? '<li>其他</li>' : '';
+        console.log(row);
+      });
+    }
+
+    var itemType = surveydata.getItemType();
+
+    function checkRow(row) {
+      // clean previous data
+      row.content = '';
+      if (row.options) row.options = null;
+      // add default value for scales
+      switch (row.itemType.val) {
       case itemType['semantic-group'].val:
       case itemType.semantic.val:
       case itemType['likert-group'].val:
@@ -77,11 +79,11 @@ angular.module('surveyApp')
         break;
       default:
         break;
+      }
     }
-  }
 
-  function showInputField(row) {
-    switch (row.itemType.val) {
+    function showInputField(row) {
+      switch (row.itemType.val) {
       case itemType.likert.val:
         row.tips = '題目';
         return 'likert.html';
@@ -101,11 +103,11 @@ angular.module('surveyApp')
       default:
         row.tips = '輸入文字';
         return 'text.html';
+      }
     }
-  }
 
-  function showScale(item) {
-    switch (item.val) {
+    function showScale(item) {
+      switch (item.val) {
       case itemType.likert.val:
       case itemType['likert-group'].val:
       case itemType.semantic.val:
@@ -113,51 +115,51 @@ angular.module('surveyApp')
         return true;
       default:
         return false;
+      }
     }
-  }
 
-  function showOptionList(item) {
-    switch (item.val) {
+    function showOptionList(item) {
+      switch (item.val) {
       case itemType.choice.val:
         return true;
       default:
         return false;
+      }
     }
-  }
 
-  /**
-   * Format the content with html line break
-   * @param   {Object}  row  Item data
-   * @returns {String} formatted content
-   */
-  function format(content) {
-    return (content.match(/\n/g)) ? content.replace(/\n/g, '<br/>'): content;
-  }
+    /**
+     * Format the content with html line break
+     * @param   {Object}  row  Item data
+     * @returns {String} formatted content
+     */
+    function format(content) {
+      return (content.match(/\n/g)) ? content.replace(/\n/g, '<br/>') : content;
+    }
 
-  function add() {
-    page.inserted = {
-      itemOrder: surveydata.getItemIndex() + 1,
-      itemType: '',
-      must: false,
-      content: ''
-    };
-    page.rows.push(page.inserted);
-  }
+    function add() {
+      page.inserted = {
+        itemOrder: surveydata.getItemIndex() + 1,
+        itemType: '',
+        must: false,
+        content: ''
+      };
+      page.rows.push(page.inserted);
+    }
 
-  function remove(index) {
-    page.rows.splice(index, 1);
-    page.rows.forEach(function(row, index){
-      row.itemOrder = index + 1;
-    });
-  }
-
-  function moveItem(newIndex, oldIndex, row) {
-    if (newIndex <= page.rows.length) {
-      page.rows.splice(oldIndex, 1);
-      page.rows.splice(newIndex, 0, row);
-      page.rows.forEach(function(row, index){
+    function remove(index) {
+      page.rows.splice(index, 1);
+      page.rows.forEach(function (row, index) {
         row.itemOrder = index + 1;
       });
     }
-  }
-});
+
+    function moveItem(newIndex, oldIndex, row) {
+      if (newIndex <= page.rows.length) {
+        page.rows.splice(oldIndex, 1);
+        page.rows.splice(newIndex, 0, row);
+        page.rows.forEach(function (row, index) {
+          row.itemOrder = index + 1;
+        });
+      }
+    }
+  });
