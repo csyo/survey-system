@@ -3,8 +3,8 @@
 angular.module('surveyApp')
   .controller('PageCtrl', function ($state, $modal, surveydata) {
     var page = this;
+    var itemType = this.itemTypes = surveydata.getItemType();
     this.current = surveydata.getCurrentPage();
-    this.itemTypes = surveydata.getItemType('arr');
     this.scaleOptions = [3, 4, 5, 6, 7];
 
     this.rows = surveydata.getItems();
@@ -61,17 +61,15 @@ angular.module('surveyApp')
       });
     }
 
-    var itemType = surveydata.getItemType();
-
     function checkRow(row) {
       // clean previous data
       row.content = '';
       if (row.options) row.options = null;
       // add default value for scales
       switch (row.itemType.val) {
-      case itemType['semantic-group'].val:
+      case itemType.semantics.val:
       case itemType.semantic.val:
-      case itemType['likert-group'].val:
+      case itemType.likerts.val:
       case itemType.likert.val:
         row.options = {
           scales: page.scaleOptions[4] // set default scale to 7
@@ -87,17 +85,17 @@ angular.module('surveyApp')
       case itemType.likert.val:
         row.tips = '題目';
         return 'likert.html';
-      case itemType['likert-group'].val:
+      case itemType.likerts.val:
         row.tips = '題目一\n題目二\n題目三\n題目四\n題目五';
         return 'likert-group.html';
       case itemType.semantic.val:
         row.tips = '題目\n左選項 , 右選項';
         return 'semantic.html';
-      case itemType['semantic-group'].val:
+      case itemType.semantics.val:
         row.tips = '左選項 , 右選項\n左選項 , 右選項';
         return 'semantic-group.html';
       case itemType.choice.val:
-      case itemType['fill-in-blank'].val:
+      case itemType.blank.val:
         row.tips = '題目';
         return 'question.html';
       default:
@@ -109,9 +107,9 @@ angular.module('surveyApp')
     function showScale(item) {
       switch (item.val) {
       case itemType.likert.val:
-      case itemType['likert-group'].val:
+      case itemType.likerts.val:
       case itemType.semantic.val:
-      case itemType['semantic-group'].val:
+      case itemType.semantics.val:
         return true;
       default:
         return false;

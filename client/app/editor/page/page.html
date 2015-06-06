@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="page-header">
-      <h1>順序{{page.current.pageOrder}}－{{page.current.pageType.name}}</h1>
+      <h1>順序{{::page.current.pageOrder}}－{{::page.current.pageType.name}}</h1>
     </div>
     <div class="col-md-12">
       <button type="button" ng-click="page.add()" class="btn btn-primary">
@@ -32,7 +32,7 @@
           <td><input type="checkbox" ng-model="row.must"></td>
           <td>
             <span editable-select="row.itemType" e-name="itemType" buttons="no"
-                  e-ng-options="t.name for t in page.itemTypes"
+                  e-ng-options="type as type.name for (k,type) in page.itemTypes"
                   onaftersave="page.checkRow(row)">
               {{ row.itemType.name || '選擇'}}
             </span>
