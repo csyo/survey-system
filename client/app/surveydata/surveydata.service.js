@@ -4,8 +4,7 @@ angular.module('surveyApp')
   .factory('surveydata', function (Auth, $state, $http, $resource) {
 
   var surveydata = {
-    surveys: [],
-    user: ''
+    surveys: []
   };
 
   // currently editting survey data
@@ -35,6 +34,7 @@ angular.module('surveyApp')
     getPageType : function() { return pageType; },
     getItemType : function() { return itemType; },
     reset : reset,
+    setSurveys : function(data) { surveydata.surveys = data; },
     getSurveys : function() { return surveydata.surveys; },
     fetchSurveys : fetchSurveys,
     setCurrentSurvey : function(data) { tmpSurvey = data; },
@@ -96,7 +96,7 @@ angular.module('surveyApp')
     }
 
     function fetchSurveysFailed(error) {
-      console.error('XHR Failed for fetchSurveys.', error.data)
+      console.error('XHR Failed for fetchSurveys.', error.data);
     }
   }
 
