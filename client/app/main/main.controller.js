@@ -55,7 +55,10 @@ angular.module('surveyApp')
 
   function preview(row) {
     logger.info(row);
-    // TODO: generate the whole survey for preview
+    // set current survey
+    surveydata.setCurrentSurvey(row);
+    // change route to survey preview
+    $state.go('survey');
   }
 
   function generateUrl() {
