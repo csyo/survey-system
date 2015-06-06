@@ -46,8 +46,9 @@ describe('Controller: MainCtrl', function () {
   });
 
   it('should update current page info before going to editor', function () {
+    mockDataSvc.setSurveys([mockData]);
     var MainCtrl = createController();
-    MainCtrl.edit(mockData);
+    MainCtrl.edit(0);
     expect(mockDataSvc.setCurrentSurvey).toHaveBeenCalled();
     expect(mockDataSvc.getCurrentSurvey().title).toBe('test');
   });

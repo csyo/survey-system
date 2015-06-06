@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($state, Auth, surveydata) {
+  .controller('MainCtrl', function ($state, surveydata, logger) {
 
   var vm = this;
   this.add = add;
@@ -25,7 +25,7 @@ angular.module('surveyApp')
   function activate() {
     return fetchSurveys()
       .then(function(){
-        console.info('Activated Main View');
+        logger.info('Activated Main View');
         vm.isLoading = false;
       });
   }
@@ -46,15 +46,15 @@ angular.module('surveyApp')
     $state.go('editor'); // change to editor view to create survey
   }
 
-  function edit(row) {
+  function edit(index) {
     // update current page info
-    surveydata.setCurrentSurvey(row);
+    surveydata.setCurrentSurvey(index);
     // change route to editing state
     $state.go('editor');
   }
 
   function preview(row) {
-    console.log(row);
+    logger.info(row);
     // TODO: generate the whole survey for preview
   }
 

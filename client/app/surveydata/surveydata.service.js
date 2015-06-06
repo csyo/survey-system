@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .factory('surveydata', function (Auth, $state, $http, $resource) {
+  .factory('surveydata', function (Auth, $state, $http, logger) {
 
   var surveydata = {
     surveys: []
@@ -37,11 +37,10 @@ angular.module('surveyApp')
     setSurveys : function(data) { surveydata.surveys = data; },
     getSurveys : function() { return surveydata.surveys; },
     fetchSurveys : fetchSurveys,
-    setCurrentSurvey : function(data) { tmpSurvey = data; },
+    setCurrentSurvey : function(index) { tmpSurvey = surveydata.surveys[index]; },
     getCurrentSurvey : function() { return tmpSurvey; },
     setPages : setPages,
     getPages : function() { return tmpSurvey.pages; },
-    getPageIndex : function() { return tmpSurvey.pages.length; },
     setCurrentPage: setCurrentPage,
     getCurrentPage : function() { return tmpPage; },
     setItems : setItems,
@@ -58,7 +57,7 @@ angular.module('surveyApp')
   function reset() {
     var state = $state.current.name;
     switch (state) {
-      case 'login':
+      case 'infoin':
       case 'singup':
         surveydata.surveys = [];
         break;
@@ -96,7 +95,7 @@ angular.module('surveyApp')
     }
 
     function fetchSurveysFailed(error) {
-      console.error('XHR Failed for fetchSurveys.', error.data);
+      logger.error('XHR Failed for fetchSurveys.', error.data);
     }
   }
 
@@ -113,7 +112,7 @@ angular.module('surveyApp')
       surveydata.surveys[survey.index] = survey;
       $http.put('/api/surveys/' + data._id, survey)
         .success(function(data){
-        console.log(data);
+        logger.info(data);
       }).error(function(err){
         if (err) throw Error(err);
       });
@@ -125,7 +124,7 @@ angular.module('surveyApp')
       surveydata.surveys.push(survey);
       $http.post('/api/surveys', survey)
         .success(function(data){
-          console.log(data);
+          logger.info(data);
           surveydata.surveys[survey.index]._id = data._id;
         }).error(function(err){
           if (err) throw Error(err);
@@ -166,10 +165,17 @@ angular.module('surveyApp')
 
   function getFile(fileId) {
     if (!fileId) return;
-    var Upload = $resource('/api/uploads/:id', {id:'@id'}, {
-      query:  { method: 'GET', isArray:false }
-    });
-    return Upload.query({ id: fileId });
+    return $http.get('/api/uploads/' + fileId)
+            .then(getFileComplete)
+            .catch(getFileFailed);
+
+    function getFileComplete(response) {
+      return response.data;
+    }
+
+    function getFileFailed(error) {
+      logger.error('XHR Failed for fetchSurveys.', error.data);
+    }
   }
 
 });

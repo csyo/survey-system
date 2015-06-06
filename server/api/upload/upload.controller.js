@@ -13,7 +13,6 @@ exports.index = function(req, res) {
 
 // Get a single upload
 exports.show = function(req, res) {
-  console.log(req.params);
   Upload.findById(req.params.id, function (err, upload) {
     if(err) { return handleError(res, err); }
     if(!upload) { return res.send(404); }
@@ -26,9 +25,8 @@ exports.show = function(req, res) {
 
 // Creates a new upload in the DB.
 exports.create = function(req, res) {
-  console.log(req.body); console.log(req.files);
   var file = {
-    account: req.body.account,
+    account: req.user._doc.name,
     file: req.files.file
   };
   Upload.create(file, function(err, upload) {

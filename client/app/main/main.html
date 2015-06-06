@@ -25,9 +25,9 @@
         </thead>
         <tbody>
         <tr ng-repeat="row in main.rows track by $index">
-          <td>{{row.serialNo}}</td>
-          <td>{{row.title || '無標題'}}</td>
-          <td>{{row.account}}</td>
+          <td>{{::row.serialNo}}</td>
+          <td>{{::row.title || '無標題'}}</td>
+          <td>{{::row.account}}</td>
           <td>
           <button type="button" ng-click="main.toggleStatus(row)" class="btn btn-sm btn-default">
             <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">
@@ -35,7 +35,7 @@
           </button>
           </td>
           <td>
-          <button type="button" ng-click="main.edit(row)" class="btn btn-sm btn-info">
+          <button type="button" ng-click="main.edit($index)" class="btn btn-sm btn-info">
             <i class="glyphicon glyphicon-edit">
             </i>
           </button>

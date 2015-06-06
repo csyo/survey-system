@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($state, $modal, surveydata) {
-    var editor = this;
+  .controller('EditorCtrl', function ($state, $modal, surveydata, logger) {
+    var vm = this;
     this.currentSurvey = surveydata.getCurrentSurvey();
     this.pageTypes = surveydata.getPageType();
+
     this.theme = 'ngdialog-theme-default custom-width';
     this.showTextEditor = false;
 
@@ -20,8 +21,10 @@ angular.module('surveyApp')
     this.movePage = movePage;
     this.toggleTextEditor = toggleTextEditor;
 
+    ////////////////
+
     function saveAll() {
-      surveydata.setPages(editor.currentSurvey, function () {
+      surveydata.setPages(vm.currentSurvey, function () {
         // clear tmpSurvey data
         surveydata.reset();
         // change route
@@ -30,16 +33,16 @@ angular.module('surveyApp')
     }
 
     function add() {
-      editor.inserted = {
-        pageOrder: surveydata.getPageIndex() + 1,
+      vm.inserted = {
+        pageOrder: vm.rows.length + 1,
         pageCount: 0,
         pageType: ''
       };
-      editor.rows.push(editor.inserted);
+      vm.rows.push(vm.inserted);
     }
 
     function edit(row) {
-      console.log(row);
+      logger.info(row);
       // update current page info
       var targetPage = surveydata.setCurrentPage(row);
       // change route
@@ -49,8 +52,8 @@ angular.module('surveyApp')
         $state.go('page');
         break;
       case type.description.val:
-        editor.htmlContent = row.content;
-        editor.toggleTextEditor();
+        vm.htmlContent = row.content;
+        vm.toggleTextEditor();
         break;
       case type.multimedia.val:
         var upload = $modal.open({
@@ -71,35 +74,35 @@ angular.module('surveyApp')
     }
 
     function done() {
-      editor.toggleTextEditor();
-      surveydata.setHtmlText(editor.htmlContent);
-      editor.htmlContent = '';
+      vm.toggleTextEditor();
+      surveydata.setHtmlText(vm.htmlContent);
+      vm.htmlContent = '';
     }
 
     function cancel() {
-      editor.toggleTextEditor();
-      editor.htmlContent = '';
+      vm.toggleTextEditor();
+      vm.htmlContent = '';
     }
 
     function remove(index) {
-      editor.rows.splice(index, 1);
-      editor.rows.forEach(function (row, index) {
+      vm.rows.splice(index, 1);
+      vm.rows.forEach(function (row, index) {
         row.pageOrder = index + 1;
       });
     }
 
     function movePage(newIndex, oldIndex, row) {
-      if (newIndex <= editor.rows.length) {
-        editor.rows.splice(oldIndex, 1);
-        editor.rows.splice(newIndex, 0, row);
-        editor.rows.forEach(function (row, index) {
+      if (newIndex <= vm.rows.length) {
+        vm.rows.splice(oldIndex, 1);
+        vm.rows.splice(newIndex, 0, row);
+        vm.rows.forEach(function (row, index) {
           row.pageOrder = index + 1;
         });
       }
     }
 
     function toggleTextEditor() {
-      editor.showTextEditor = !editor.showTextEditor;
+      vm.showTextEditor = !vm.showTextEditor;
     }
 
   });

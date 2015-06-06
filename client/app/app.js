@@ -47,7 +47,7 @@ angular.module('surveyApp', [
     };
   })
 
-  .run(function ($rootScope, $location, Auth, editableOptions) {
+  .run(function ($rootScope, $location, Auth, editableOptions, logger) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
@@ -56,6 +56,35 @@ angular.module('surveyApp', [
         }
       });
     });
+    /**
+     * Route cancellation:
+     * On routing error, go to the dashboard.
+     * Provide an exit clause if it tries to do it twice.
+     */
+    var handlingRouteChangeError = false;
+    $rootScope.$on('$stateChangeError',
+        function(event, current, previous, rejection) {
+            if (handlingRouteChangeError) { return; }
+            handlingRouteChangeError = true;
+            var destination = (current && (current.title ||
+                current.name || current.loadedTemplateUrl)) ||
+                'unknown target';
+            var msg = 'Error routing to ' + destination + '. ' +
+                (rejection.msg || '');
+
+            /**
+             * Optionally log using a custom service or $log.
+             * (Don't forget to inject custom service)
+             */
+            logger.warning(msg, [current]);
+
+            /**
+             * On routing error, go to another route/state.
+             */
+            $location.path('/');
+
+        }
+    );
     // Set theme for angular-editable
     editableOptions.theme = 'bs3';
     editableOptions.blur = 'submit';

@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('UploadCtrl', function (Upload, $modalInstance, surveydata, fileId) {
-    var upload = this;
+  .controller('UploadCtrl', function (fileId, surveydata, Upload, $modalInstance, logger) {
+    var vm = this;
     this.done = done;
     this.cancel = cancel;
     this.start = start;
     this.update = update;
     this.files = [];
     this.preview = {};
+    this.fileId = fileId;
     this.isLoading = false;
 
     activate();
@@ -16,30 +17,34 @@ angular.module('surveyApp')
     /*** Implementations ***/
 
     function activate() {
-      var request = surveydata.getFile(fileId);
+      var request = surveydata.getFile(vm.fileId);
       if (request) {
-        upload.isLoading = true;
-        request.$promise.then(function (data) {
-          upload.isLoading = false;
-          upload.preview.data = data.file.img;
-          upload.preview.type = data.file.mimetype;
+        vm.isLoading = true;
+        request.then(function (data) {
+          vm.isLoading = false;
+          if (data && data.file) {
+            vm.preview.data = data.file.img;
+            vm.preview.type = data.file.mimetype;
+          }
         });
       }
     }
 
     function done() {
-      upload.isLoading = true;
-      if (fileId) {
-        upload.update(upload.files[0], function (id) {
-          if (fileId !== id) console.err('Something goes wrong!');
-          upload.isLoading = false;
-          $modalInstance.close();
-        });
+      vm.isLoading = true;
+      if (vm.fileId) {
+        return vm.update(vm.files[0])
+          .then(function(data){
+            if (vm.fileId !== data._id) logger.error('Something goes wrong!');
+            vm.isLoading = false;
+            $modalInstance.close();
+          });
       } else {
-        upload.start(upload.files[0], function (fileId) {
-          upload.isLoading = false;
-          $modalInstance.close(fileId);
-        });
+        return vm.start(vm.files[0])
+          .then(function(data){
+            vm.isLoading = false;
+            $modalInstance.close(data._id);
+          });
       }
     }
 
@@ -47,33 +52,40 @@ angular.module('surveyApp')
       $modalInstance.dismiss('cancel');
     }
 
-    function start(file, callback) {
+    function start(file) {
       if (file) {
-        Upload.upload({
+        return Upload.upload({
           url: '/api/uploads',
-          fields: {
-            'account': surveydata.getUserName().name
-          },
           file: file
-        }).progress(function (evt) {
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-        }).success(function (data, status, headers, config) {
-          console.log('file ' + config.file.name + ' uploaded. Response: ', data);
-          if (callback) callback(data._id); // add file id to the specific row of page
-        });
+        }).progress(uploadProgress)
+          .then(uploadComplete)
+          .catch(uploadFailed);
       }
     }
 
-    function update(file, callback) {
+    function update(file) {
       if (file) {
-        Upload.upload({
+        return Upload.upload({
           method: 'PUT',
-          url: '/api/uploads/' + fileId,
+          url: '/api/uploads/' + vm.fileId,
           file: file
-        }).success(function (data) {
-          if (callback) callback(data._id);
-        });
+        }).progress(uploadProgress)
+          .then(uploadComplete)
+          .catch(uploadFailed);
       }
+    }
+
+    function uploadProgress (evt) {
+      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      logger.info('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+    }
+
+    function uploadComplete (response) {
+      logger.info('file ' + response.config.file.name + ' uploaded.');
+      return response.data;
+    }
+
+    function uploadFailed (error) {
+      logger.error(error.data);
     }
   });
