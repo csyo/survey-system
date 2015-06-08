@@ -15,7 +15,7 @@ angular.module('surveyApp')
     this.cancel = cancel;
 
     function add() {
-      var newIndex = data.list.length + 1;
+      var newIndex = data.list.length;
       data.list.push({index: newIndex});
     }
 

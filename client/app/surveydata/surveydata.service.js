@@ -38,7 +38,7 @@ angular.module('surveyApp')
     getSurveys : function() { return surveydata.surveys; },
     fetchSurveys : fetchSurveys,
     setCurrentSurvey : function(index) { tmpSurvey = surveydata.surveys[index]; },
-    getCurrentSurvey : function() { return tmpSurvey; },
+    getCurrentSurvey : getCurrentSurvey,
     setPages : setPages,
     getPages : function() { return tmpSurvey.pages; },
     setCurrentPage: setCurrentPage,
@@ -141,6 +141,23 @@ angular.module('surveyApp')
       tmpPage.fileId = page.fileId || null;
       return tmpPage;
     } else return null;
+  }
+  function getCurrentSurvey(surveyId, callback) {
+    if (!surveyId) { callback(tmpSurvey); }
+    else {
+      $http.get('/api/surveys/'+ surveyId)
+        .then(getSurveyComplete)
+        .catch(getSurveyFailed);
+
+      function getSurveyComplete(response) {
+        tmpSurvey = response.data;
+        callback(response.data);
+      }
+      function getSurveyFailed(err) {
+        logger.error('XHR Failed for getSurvey.')
+        callback(null);
+      }
+    }
   }
 
   function setItems(items) {

@@ -1,5 +1,5 @@
 #survey {
-  padding: 5% 0;
+  padding: 8%;
 }
 
 #description {
@@ -7,3 +7,91 @@
   margin: auto;
   padding: 10% 0;
 }
+
+.others {
+  width: auto;
+  display: inline-block;
+}
+
+.item-order {
+  padding: 0;
+}
+
+.choice-option {
+  height: 20px;
+}
+
+ol.likert-item-order {
+/*  counter-reset: order;*/
+  padding: 0;
+/*  list-style: none;*/
+}
+
+span.likert-item-order {
+  margin-left: -23px;
+}
+/*
+
+  li.likert-item-order {
+    display: block;
+    position: relative;
+  }
+
+  li.likert-item-order:before {
+    content: counters(order, ".") " ";
+    counter-increment: order;
+  }
+*/
+
+.likert.likert-content {
+  width: 50%;
+  vertical-align: middle;
+}
+
+.likert.likert-option {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.likert.likert-header-content {
+  width: 50%;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.likert.likert-header-option {
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.semantic {
+  width: 100%;
+}
+
+  .semantic-content-left {
+    width: 33%;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  .semantic-content-right {
+    width: 33%;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .semantic-option {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .semantic-header-content {
+    width: 33%;
+    text-align: center;
+    vertical-align: bottom;
+  }
+
+  .semantic-header-option {
+    text-align: center;
+    vertical-align: bottom;
+  }

@@ -1,25 +1,98 @@
 <div>
-  <p ng-repeat="item in survey.currentPage.items" ng-include="survey.showItem(item)">
+  <p bindonce ng-repeat-start="item in survey.currentPage.items">
+    <div bindonce ng-repeat-end bo-switch="survey.showItem(item)">
+
+      <!-- 標題, 說明 -->
+      <div bo-switch-when="text.html">
+        <div bo-html="item.content"></div>
+      </div>
+
+      <!-- 選擇題 -->
+      <div bo-switch-when="choice.html">
+        <label></label>
+        <ol class="item-order" start="{{item.viewOrder}}">
+          <li><div bo-html="item.content"></div></li>
+        </ol>
+        <div ng-repeat="option in item.options.list">
+          <label bo-class="item.options.typeName">
+            <input ng-model="item.options.selected" ng-if="item.options.typeName === 'radio'"
+                   type="radio" ng-value="option">
+            <input ng-model="item.options.option[$index]" ng-if="item.options.typeName === 'checkbox'"
+                   type="checkbox" ng-value="option">
+            <span bo-html="option.name"></span>
+            <span ng-if="option.name ==='其他'">
+              <span>：&nbsp;</span>
+              <input type="text" class="others"
+                     ng-model="option.input">
+            </span>
+            <br/>
+          </label>
+        </div>
+      </div>
+
+      <!-- 李克特量表 -->
+      <div bo-switch-when="likert.html">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="likert likert-header-content">&nbsp;</th>
+              <th class="likert likert-header-option"
+                  bindonce ng-repeat="field in item.headers" bo-html="field.name"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr bindonce ng-repeat="question in item.questions">
+              <td class="likert likert-content">
+                <ol class="likert-item-order" start="{{item.viewOrder + question.order - 1}}">
+                  <li><span bo-html="question.content"></span></li>
+                </ol>
+              </td>
+              <td class="likert likert-option"
+                  ng-repeat="option in question.options">
+                <input type="radio" ng-model="question.selected" ng-value="option">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 語意差異量表 -->
+      <div bo-switch-when="semantic.html">
+        <ol class="item-order" start="{{item.viewOrder}}" ng-if="item.title">
+          <li bo-html="item.title"></li>
+        </ol>
+        <br/>
+        <table class="semantic table">
+          <thead>
+            <th class="semantic-header-content">&nbsp;</th>
+            <th class="semantic-header-option"
+                bindonce ng-repeat="field in item.headers" bo-html="field.name"></th>
+            <th class="semantic-header-content">&nbsp;</th>
+          </thead>
+          <tbody>
+            <tr bindonce ng-repeat="question in item.questions">
+              <td class="semantic-content-left" bo-html="question.content[0]"></td>
+              <td class="semantic-option"
+                  ng-repeat="option in question.options">
+                <input type="radio" ng-model="question.selected" ng-value="option">
+              </td>
+              <td class="semantic-content-right" bo-html="question.content[1]"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 填答題 -->
+      <div bo-switch-when="blank.html">
+        <label></label>
+        <ol class="item-order" start="{{item.viewOrder}}">
+          <li><div bo-html="item.content"></div></li>
+        </ol>
+        <br/>
+        <input type="text" class="form-control" ng-model="item.input">
+      </div>
+
+      <div bo-switch-default>---</div>
+    </div>
   </p>
 </div>
-
-<script type="text/ng-template" id="text.html">
-  <div ng-bind-html="item.content"></div>
-</script>
-
-<script type="text/ng-template" id="choice.html">
-  <div ng-bind-html="item.content"></div>
-  <li ng-repeat="option in item.options" ng-bind-html="option.name"></li>
-</script>
-
-<script type="text/ng-template" id="fill-in-blank.html">
-  <div ng-bind-html="item.content"></div>
-</script>
-
-<script type="text/ng-template" id="likert.html">
-  <div ng-bind-html="item.content"></div>
-</script>
-
-<script type="text/ng-template" id="semantic.html">
-  <div ng-bind-html="item.content"></div>
-</script>

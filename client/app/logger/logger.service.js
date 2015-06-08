@@ -55,7 +55,7 @@
      * @memberOf Factories.Logger
      */
     function logWarning(msg) {
-      $log.waring(msg);
+      $log.warn(msg);
     }
 
   }

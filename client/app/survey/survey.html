@@ -1,5 +1,8 @@
 <div class="container">
   <div class="row">
+    <div class="alert alert-danger" role="alert" ng-if="survey.showError">
+      抱歉！你所輸入的網址無效，沒有內容可以顯示。
+    </div>
     <div id="survey" ng-include="survey.page"></div>
     <div class="text-center">
       <div class="btn-group" role="group" aria-label="...">
@@ -8,6 +11,5 @@
         <button class="btn btn-default" ng-disabled="survey.showNext()" ng-click="survey.nextPage()">下一步</button>
       </div>
     </div>
-    <!-- <pre>{{survey.data}}</pre> -->
   </div>
 </div>

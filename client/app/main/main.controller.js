@@ -53,10 +53,9 @@ angular.module('surveyApp')
     $state.go('editor');
   }
 
-  function preview(row) {
-    logger.info(row);
+  function preview(index) {
     // set current survey
-    surveydata.setCurrentSurvey(row);
+    surveydata.setCurrentSurvey(index);
     // change route to survey preview
     $state.go('survey');
   }

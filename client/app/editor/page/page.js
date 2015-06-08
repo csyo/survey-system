@@ -7,6 +7,7 @@ angular.module('surveyApp')
         url: '/editor/page',
         templateUrl: 'app/editor/page/page.html',
         controller: 'PageCtrl',
-        controllerAs: 'page'
+        controllerAs: 'page',
+        authenticate: true
       });
   });

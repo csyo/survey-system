@@ -41,13 +41,13 @@
           </button>
           </td>
           <td>
-          <button type="button" ng-click="main.preview(row)" class="btn btn-sm btn-success">
+          <button type="button" ng-click="main.preview($index)" class="btn btn-sm btn-success">
             <i class="glyphicon glyphicon-file">
             </i>
           </button>
           </td>
           <td>
-          <button type="button" ng-click="main.generateUrl(row)" class="btn btn-sm btn-link">
+          <button type="button" ng-click="main.generateUrl(row)" ng-disabled="!row.status" class="btn btn-sm btn-link">
             開啟
           </button>
           </td>

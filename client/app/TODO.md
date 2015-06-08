@@ -1,9 +1,10 @@
 # 'main' route
-- [ ] implement: preview survey
+- [x] implement: preview survey
 - [x] differ add and edit mode when entering editor
 - [x] implement edit survey
 
 # 'survey' route
+- [ ] implement: 頁面讀秒
 
 # 'editor' route
 - [ ] feature: copy a page

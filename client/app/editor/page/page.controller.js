@@ -52,7 +52,7 @@ angular.module('surveyApp')
       options.result.then(function (optionList) {
         row.options = optionList;
         row.preview = optionList.typeName === 'radio' ? '(單選題)' :
-          optionList.typeName === 'multi' ? '(多選題)' : '(---)';
+          optionList.typeName === 'checkbox' ? '(多選題)' : '(---)';
         optionList.list.forEach(function (option) {
           row.preview += '<li>' + option.name + '</li>';
         });

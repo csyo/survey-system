@@ -3,14 +3,13 @@
 angular.module('surveyApp')
   .controller('EditorCtrl', function ($state, $modal, surveydata, logger) {
     var vm = this;
-    this.currentSurvey = surveydata.getCurrentSurvey();
     this.pageTypes = surveydata.getPageType();
-
     this.theme = 'ngdialog-theme-default custom-width';
     this.showTextEditor = false;
 
-    this.rows = surveydata.getPages();
-    this.displayed = [].concat(this.rows);
+    this.currentSurvey;
+    this.rows;
+    this.displayed;
 
     this.saveAll = saveAll;
     this.add = add;
@@ -21,7 +20,18 @@ angular.module('surveyApp')
     this.movePage = movePage;
     this.toggleTextEditor = toggleTextEditor;
 
+    activate();
+
     ////////////////
+
+    function activate() {
+      surveydata.getCurrentSurvey(null, function(data){
+        if (!data) { $state.go('main'); }
+        vm.currentSurvey = data;
+        vm.rows = surveydata.getPages();
+        vm.displayed = [].concat(vm.rows);
+      });
+    }
 
     function saveAll() {
       surveydata.setPages(vm.currentSurvey, function () {
