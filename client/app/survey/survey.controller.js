@@ -47,7 +47,7 @@ angular.module('surveyApp')
           break;
         case page_type.multimedia.val:
           vm.page = 'app/survey/templates/multimedia.html';
-          if (false && currentPage.fileId) {
+          if (currentPage.fileId) {
             vm.getFile(currentPage.fileId)
               .then(function (data) {
                 if (data && data.file) {

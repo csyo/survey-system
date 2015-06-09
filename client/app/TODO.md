@@ -1,10 +1,14 @@
 # 'main' route
+- [ ] implement: 刪除問卷
+- [ ] implement: 開啟問卷填寫網址
+- [x] bug: 登出後沒有刪除現有資料
 - [x] implement: preview survey
 - [x] differ add and edit mode when entering editor
 - [x] implement edit survey
 
 # 'survey' route
 - [ ] implement: 頁面讀秒
+- [ ] feature: 檔案載入圖示
 
 # 'editor' route
 - [ ] feature: copy a page

@@ -57,10 +57,6 @@ angular.module('surveyApp')
   function reset() {
     var state = $state.current.name;
     switch (state) {
-      case 'infoin':
-      case 'singup':
-        surveydata.surveys = [];
-        break;
       case 'page':
         tmpPage.pageOrder = 0;
         tmpPage.pageCount = 0;
@@ -72,6 +68,8 @@ angular.module('surveyApp')
         tmpSurvey.title = '';
         tmpSurvey.pages = [];
         break;
+      default:
+        surveydata.surveys = [];
     }
   }
 

@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <h1>Sign up</h1>
+      <h1>註冊</h1>
     </div>
     <div class="col-sm-12">
       <form class="form" name="form" ng-submit="register(form)" novalidate>
@@ -13,9 +13,13 @@
           <label>帳號</label>
 
           <input type="text" name="name" class="form-control" ng-model="user.name"
-                 required/>
+                 required
+                 mongoose-error/>
           <p class="help-block" ng-show="form.name.$error.required && submitted">
             必填
+          </p>
+          <p class="help-block" ng-show="form.name.$error.mongoose">
+            {{ errors.name }}
           </p>
         </div>
 
@@ -39,7 +43,7 @@
 
         <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
                                             'has-error': form.password.$invalid && submitted }">
-          <label>Password</label>
+          <label>密碼</label>
 
           <input type="password" name="password" class="form-control" ng-model="user.password"
                  ng-minlength="3"

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+  .controller('NavbarCtrl', function ($scope, $location, Auth, surveydata) {
     $scope.menu = [{
       'title': '首頁',
       'link': '/'
@@ -13,6 +13,7 @@ angular.module('surveyApp')
     $scope.getCurrentUser = Auth.getCurrentUser;
 
     $scope.logout = function() {
+      surveydata.reset();
       Auth.logout();
       $location.path('/login');
     };

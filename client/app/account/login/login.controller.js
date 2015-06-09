@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('LoginCtrl', function ($scope, Auth, $state, surveydata) {
+  .controller('LoginCtrl', function ($scope, Auth, $state) {
     $scope.user = {};
     $scope.errors = {};
 
@@ -15,7 +15,6 @@ angular.module('surveyApp')
         })
         .then( function() {
           // Logged in, redirect to home
-          surveydata.reset();
           $state.go('main');
         })
         .catch( function(err) {

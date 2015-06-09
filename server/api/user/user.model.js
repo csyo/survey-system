@@ -59,14 +59,29 @@ UserSchema
   .path('email')
   .validate(function(email) {
     return email.length;
-  }, 'Email cannot be blank');
+  }, '郵件欄位必填');
 
 // Validate empty password
 UserSchema
   .path('hashedPassword')
   .validate(function(hashedPassword) {
     return hashedPassword.length;
-  }, 'Password cannot be blank');
+  }, '密碼欄位必填');
+
+// Validate name is not taken
+UserSchema
+  .path('name')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({name: value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, '該帳號已經有人使用');
 
 // Validate email is not taken
 UserSchema
@@ -81,7 +96,7 @@ UserSchema
       }
       respond(true);
     });
-}, 'The specified email address is already in use.');
+}, '該郵件已經有人使用');
 
 var validatePresenceOf = function(value) {
   return value && value.length;
@@ -95,7 +110,7 @@ UserSchema
     if (!this.isNew) return next();
 
     if (!validatePresenceOf(this.hashedPassword))
-      next(new Error('Invalid password'));
+      next(new Error('無效的密碼'));
     else
       next();
   });
