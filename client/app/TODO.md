@@ -1,6 +1,7 @@
 # 'main' route
 - [ ] implement: 刪除問卷
 - [ ] implement: 開啟問卷填寫網址
+- [ ] implement: 問卷開放狀態更新至資料庫
 - [x] bug: 登出後沒有刪除現有資料
 - [x] implement: preview survey
 - [x] differ add and edit mode when entering editor
@@ -9,6 +10,7 @@
 # 'survey' route
 - [ ] implement: 頁面讀秒
 - [ ] feature: 檔案載入圖示
+- [ ] implement: 儲存問卷結果到資料庫
 
 # 'editor' route
 - [ ] feature: copy a page
@@ -20,6 +22,9 @@
 - [x] editable page content
 - [x] implement description page
 - [x] implement multimedia page
+
+# 'upload' route
+- [ ] feature: 嵌入YouTube影片
 
 ## 'page' route
 - [ ] feature: 自訂項目內容的文字格式
@@ -35,12 +40,3 @@
 - [x] edit choice options, including a optional input field for user-defined option
 - [x] editable item content
 - [x] settings for scales
-
-# 'surveydata' service
-- [ ] refactor setSurveys() for survey removal
-- [x] reset temporary data
-- [x] fix the object reference bug for saving survey
-
-# server
-- [x] save the survey data to db
-- [x] upload img with db connection
