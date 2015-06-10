@@ -39,6 +39,7 @@ angular.module('surveyApp')
     fetchSurveys : fetchSurveys,
     setCurrentSurvey : function(index) { tmpSurvey = surveydata.surveys[index]; },
     getCurrentSurvey : getCurrentSurvey,
+    removeSurvey: removeSurvey,
     setPages : setPages,
     getPages : function() { return tmpSurvey.pages; },
     setCurrentPage: setCurrentPage,
@@ -155,6 +156,20 @@ angular.module('surveyApp')
         logger.error('XHR Failed for getSurvey.')
         callback(null);
       }
+    }
+  }
+
+  function removeSurvey(surveyId) {
+    return $http.delete('/api/surveys/'+ surveyId)
+            .then(deleted).catch(notDeleted);
+
+    function deleted(data, status) {
+      logger.info(data.status);
+      return data;
+    }
+
+    function notDeleted(error) {
+      logger.waring(error);
     }
   }
 

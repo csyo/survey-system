@@ -29,16 +29,20 @@
           <td>{{::row.title || '無標題'}}</td>
           <td>{{::row.account}}</td>
           <td>
-          <button type="button" ng-click="main.toggleStatus(row)" class="btn btn-sm btn-default">
-            <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">
-            </i>
-          </button>
+            <button type="button" ng-click="main.toggleStatus(row)" class="btn btn-sm btn-default">
+              <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">
+              </i>
+            </button>
           </td>
           <td>
-          <button type="button" ng-click="main.edit($index)" class="btn btn-sm btn-info">
-            <i class="glyphicon glyphicon-edit">
-            </i>
-          </button>
+            <button type="button" ng-click="main.edit($index)" class="btn btn-sm btn-info">
+              <i class="glyphicon glyphicon-edit">
+              </i>
+            </button>
+            <button type="button" ng-click="main.remove($index)" class="btn btn-sm btn-danger">
+              <i class="glyphicon glyphicon-remove">
+              </i>
+            </button>
           </td>
           <td>
           <button type="button" ng-click="main.preview($index)" class="btn btn-sm btn-success">

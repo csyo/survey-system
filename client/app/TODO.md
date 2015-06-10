@@ -1,5 +1,5 @@
 # 'main' route
-- [ ] implement: 刪除問卷
+- [x] implement: 刪除問卷
 - [ ] implement: 開啟問卷填寫網址
 - [ ] implement: 問卷開放狀態更新至資料庫
 - [x] bug: 登出後沒有刪除現有資料
