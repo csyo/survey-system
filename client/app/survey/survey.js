@@ -9,11 +9,5 @@ angular.module('surveyApp')
         controller: 'SurveyCtrl',
         controllerAs: 'survey',
         authenticate: true
-      })
-      .state('survey.view', {
-        url: '/{id}',
-        templateUrl: 'app/survey/survey.html',
-        controller: 'SurveyCtrl',
-        controllerAs: 'survey'
       });
   });

@@ -1,3 +1,10 @@
 <div>
-<img class="thumbnail" data-ng-src="data:{{survey.file.type}};base64,{{survey.file.data}}">
+  <div class="spinner-container" ng-if="survey.isLoading">
+    <div class="spinner-display">
+      <div class="throbber-loader">
+        Loading…
+      </div>
+    </div>
+  </div>
+  <img ng-show="!survey.isLoading" class="thumbnail" data-ng-src="data:{{survey.file.type}};base64,{{survey.file.data}}">
 </div>

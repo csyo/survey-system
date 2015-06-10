@@ -1,28 +1,32 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('SurveyCtrl', function ($state, surveydata, logger, $stateParams) {
+  .controller('SurveyCtrl', function ($state, surveydata, logger, $timeout) {
     var vm = this;
     var page_type = surveydata.getPageType();
     var item_type = this.itemType = surveydata.getItemType();
 
-    this.data = {};
+    this.data = { pages: [] };
 
     this.currentPage = surveydata.getCurrentPage();
     this.page = '';
     this.file = {};
     this.showError = false;
+    this.isLoading = false;
+    this.nextEnabled = true;
+    this.isEnd = false;
+    this.counterDisplay = '';
+    this.counter = 0;
 
+    this.saveResult = saveResult;
     this.showPage = showPage;
     this.showItem = showItem;
     this.getFile = surveydata.getFile;
-    this.getNumber = getNumber;
     this.nextPage = nextPage;
     this.showNext = showNext;
     this.returnToList = returnToList;
     this.prevPage = prevPage;
     this.showPrev = showPrev;
-    this.getWidth = getWidth;
     this.log = logger.info;
 
     activate();
@@ -30,26 +34,95 @@ angular.module('surveyApp')
     //////////////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey($stateParams.surveyId, function(data){
+      surveydata.getCurrentSurvey(null, function(data){
         if (!data) { this.showError = true;}
         vm.data = data;
         showPage();
       });
     }
 
+    function saveResult() {
+      var results = [];
+      vm.data.pages.forEach(function(page) {
+        if (page.pageType.val === page_type.questionary.val) {
+          page.items && page.items.forEach(function(item) {
+            switch (item.itemType.val) {
+              case item_type.blank.val:
+                results.push({
+                  order: page.pageOrder +'-'+ item.viewOrder,
+                  question: item.content,
+                  answer: item.input
+                });
+                break;
+              case item_type.choice.val:
+                results.push({
+                  order: page.pageOrder +'-'+ item.viewOrder,
+                  question: item.content,
+                  answer: choiceAnswer(item, item.options.typeName)
+                });
+                break;
+              case item_type.likert.val:
+              case item_type.likerts.val:
+              case item_type.semantic.val:
+              case item_type.semantics.val:
+                item.questions.forEach(function(question) {
+                  results.push({
+                    order: page.pageOrder +'-'+ item.viewOrder,
+                    question: question.content.toString(),
+                    answer: question.selected
+                  });
+                });
+                break;
+              default:
+                break;
+            }
+          });
+        }
+      });
+      logger.info(results);
+      /**
+      $http.post('/api/results/', results)
+        .then(savedComplete)
+        .catch(savedFailed);
+
+      function savedComplete(responce) {
+        vm.showSuccessMsg = true;
+      }
+      function savedFailed(error) {
+        vm.showErrorMsg = true;
+      }
+      */
+    }
+
+    function choiceAnswer(item, typeName) {
+      if (typeName === 'radio') {
+        return item.options.selected;
+      } else if (typeName === 'checkbox') {
+        var answers = [];
+        for (var key in item.options.option) {
+          if (item.options.option[key]) answers.push(item.options.list[key]);
+        }
+        return answers;
+      }
+    }
+
     function showPage(index) {
       if (vm.data.pages.length) {
         var currentPage = vm.data.pages[index || 0];
         vm.currentPage = currentPage;
+        vm.nextEnabled = true;
+        vm.isEnd = vm.currentPage.pageOrder === vm.data.pages.length;
         switch (currentPage.pageType.val) {
         case page_type.description.val:
           vm.page = 'app/survey/templates/description.html';
           break;
         case page_type.multimedia.val:
           vm.page = 'app/survey/templates/multimedia.html';
-          if (currentPage.fileId) {
+          if (currentPage.fileId && !vm.file.data) {
+            vm.isLoading = true;
             vm.getFile(currentPage.fileId)
               .then(function (data) {
+                vm.isLoading = false;
                 if (data && data.file) {
                   vm.file.data = data.file.img;
                   vm.file.type = data.file.mimetype;
@@ -66,7 +139,7 @@ angular.module('surveyApp')
                 case item_type.caption.val:
                   break;
                 case item_type.semantics.val:
-                  ++viewOrder;
+                  item.viewOrder = ++viewOrder;
                   break;
                 case item_type.likerts.val:
                   item.viewOrder = ++viewOrder;
@@ -80,6 +153,8 @@ angular.module('surveyApp')
           vm.page = 'app/survey/templates/questionary.html';
           break;
         }
+        vm.counter = vm.currentPage.pageCount;
+        vm.showNext();
       } else {
         logger.waring('No pages to render, returning to main route.');
         $state.go('main');
@@ -94,7 +169,7 @@ angular.module('surveyApp')
       case item_type.choice.val:
         if (item.options.otherOption && (_.last(item.options.list).name !== '其他')) {
           item.options.list.push({ index: item.options.list.length, name: '其他' });
-        };
+        }
         return 'choice.html';
       case item_type.blank.val:
       case 'fill-in-blank':
@@ -112,16 +187,27 @@ angular.module('surveyApp')
       }
     }
 
-    function getNumber(num) {
-      return new Array(num);
-    }
-
     function nextPage() {
       vm.showPage(vm.currentPage.pageOrder);
     }
 
+    var counterPromise;
     function showNext() {
-      return (vm.currentPage.pageOrder === vm.data.pages.length);
+      if (vm.counter === 0) { vm.nextEnabled = vm.isEnd; }
+      counterPromise = $timeout(countdown, 1500);
+    }
+
+    function countdown() {
+      if (vm.counter === 0) {
+        $timeout.cancel(counterPromise);
+        vm.counterDisplay = '';
+        vm.nextEnabled = vm.isEnd;
+      } else {
+        vm.counter--;
+        vm.counterDisplay = '(' + vm.counter + ')';
+        counterPromise = $timeout(countdown, 1500);
+      }
+
     }
 
     function returnToList() {
@@ -217,10 +303,6 @@ angular.module('surveyApp')
         case 3: // 3,5,6
           return data.slice(2,-2);
       }
-    }
-
-    function getWidth(scales) {
-      return 50/scales + '%';
     }
 
   });

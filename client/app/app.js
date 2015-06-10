@@ -12,7 +12,8 @@ angular.module('surveyApp', [
   'colorpicker.module',
   'textAngular',
   'ngFileUpload',
-  'pasvaz.bindonce'
+  'pasvaz.bindonce',
+  'anguFixedHeaderTable'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

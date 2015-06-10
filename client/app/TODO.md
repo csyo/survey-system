@@ -8,8 +8,8 @@
 - [x] implement edit survey
 
 # 'survey' route
-- [ ] implement: 頁面讀秒
-- [ ] feature: 檔案載入圖示
+- [x] implement: 頁面讀秒
+- [x] feature: 檔案載入圖示
 - [ ] implement: 儲存問卷結果到資料庫
 
 # 'editor' route

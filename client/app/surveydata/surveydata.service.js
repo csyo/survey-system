@@ -195,7 +195,7 @@ angular.module('surveyApp')
 
   function getFile(fileId) {
     if (!fileId) return;
-    return $http.get('/api/uploads/' + fileId)
+    return $http.get('/api/uploads/' + fileId, { cache: true })
             .then(getFileComplete)
             .catch(getFileFailed);
 
