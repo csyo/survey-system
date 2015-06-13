@@ -72,7 +72,8 @@ angular.module('surveyApp')
         tmpSurvey.pages = [];
         break;
       case 'survey':
-        this.surveyId = '';
+        surveydataService.surveyId = '';
+        break;
       default:
         surveydata.surveys = [];
     }
@@ -150,28 +151,26 @@ angular.module('surveyApp')
     tmpSurvey = surveydata.surveys[index];
   }
 
-  function getCurrentSurvey(callback) {
-    if (this.surveyId) {
-      $http.get('/api/surveys/'+ this.surveyId)
+  function getCurrentSurvey() {
+    if (surveydataService.surveyId) {
+      return $http.get('/api/surveys/'+ surveydataService.surveyId)
         .then(getSurveyComplete)
         .catch(getSurveyFailed);
+    } else return tmpSurvey;
 
-      function getSurveyComplete(response) {
-        tmpSurvey = response.data;
-        callback(response.data);
-      }
-      function getSurveyFailed(err) {
-        logger.error('XHR Failed for getSurvey.')
-        callback(null);
-      }
-    } else callback(tmpSurvey);
+    function getSurveyComplete(response) {
+      return response.data;
+    }
+    function getSurveyFailed(err) {
+      logger.error(err);
+    }
   }
 
   function removeSurvey(surveyId) {
     return $http.delete('/api/surveys/'+ surveyId)
             .then(deleted).catch(notDeleted);
 
-    function deleted(data, status) {
+    function deleted(data) {
       logger.info(data.status);
       return data;
     }

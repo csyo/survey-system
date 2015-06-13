@@ -74,7 +74,7 @@ angular.module('surveyApp')
     });
   }
 
-  function preview(index) {
+  function preview(surveyId) {
     surveydata.surveyId = surveyId;
     // change route to survey preview
     $state.go('survey');

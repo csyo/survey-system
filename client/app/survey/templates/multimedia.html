@@ -6,5 +6,7 @@
       </div>
     </div>
   </div>
-  <img ng-show="!survey.isLoading" class="thumbnail" data-ng-src="data:{{survey.file.type}};base64,{{survey.file.data}}">
+  <img ng-show="survey.file" class="thumbnail" data-ng-src="{{survey.file}}">
 </div>
+<div ng-include="'app/survey/templates/pagination.html'"></div>
+

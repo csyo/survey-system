@@ -8,10 +8,11 @@ angular.module('surveyApp')
 
 
     this.page = '';
-    this.file = {};
-    this.pages;
-    this.currentPage;
+    this.file = '';
+    this.pages = [];
+    this.currentPage = {};
     this.showError = false;
+    this.showWaring = false;
     this.isLoading = false;
     this.nextEnabled = true;
     this.isEnd = false;
@@ -34,17 +35,24 @@ angular.module('surveyApp')
     //////////////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey(function(data){
-        if (!data) { vm.showError = true;}
-        vm.pages = data.pages;
-        showPage();
-      });
+      try {
+        surveydata.getCurrentSurvey()
+          .then(function(data){
+            if (!data) { vm.showError = true;}
+            vm.pages = data.pages;
+            showPage();
+          });
+      } catch (e) {
+        logger.error(e);
+        $state.go('main');
+      }
     }
 
     function saveResult() {
       var results = [];
       vm.pages.forEach(function(page) {
         if (page.pageType.val === page_type.questionary.val) {
+          /*jshint -W030*/
           page.items && page.items.forEach(function(item) {
             switch (item.itemType.val) {
               case item_type.blank.val:
@@ -110,24 +118,23 @@ angular.module('surveyApp')
       if (vm.pages.length) {
         vm.currentPage = vm.pages[index || 0];
         vm.nextEnabled = true;
-        vm.isEnd = vm.currentPage.pageOrder === vm.data.pages.length;
-        switch (currentPage.pageType.val) {
+        vm.isEnd = vm.currentPage.pageOrder === vm.pages.length;
+        switch (vm.currentPage.pageType.val) {
         case page_type.description.val:
           vm.page = 'app/survey/templates/description.html';
           break;
         case page_type.multimedia.val:
           vm.page = 'app/survey/templates/multimedia.html';
-          if (currentPage.fileId && !vm.file.data) {
+          if (vm.currentPage.fileId) {
             vm.isLoading = true;
-            vm.getFile(currentPage.fileId)
+            vm.getFile(vm.currentPage.fileId)
               .then(function (data) {
                 vm.isLoading = false;
                 if (data && data.file) {
-                  vm.file.data = data.file.img;
-                  vm.file.type = data.file.mimetype;
+                  vm.file = 'data:'+ data.file.mimetype +';base64,'+ data.file.img;
                 }
               });
-          }
+          } else vm.file = '';
           break;
         case page_type.questionary.val:
           var viewOrder = 0;
@@ -186,8 +193,16 @@ angular.module('surveyApp')
       }
     }
 
-    function nextPage() {
-      vm.showPage(vm.currentPage.pageOrder);
+    function nextPage(invalid) {
+      if (invalid) {
+        vm.showWaring = true;
+      } else {
+        // clear current page data
+        vm.file = '';
+        vm.showWaring = false;
+        // go to next page
+        vm.showPage(vm.currentPage.pageOrder);
+      }
     }
 
     var counterPromise;

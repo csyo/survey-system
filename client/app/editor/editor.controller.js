@@ -25,12 +25,9 @@ angular.module('surveyApp')
     ////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey(function(data){
-        if (!data) { $state.go('main'); }
-        vm.currentSurvey = data;
-        vm.rows = surveydata.getPages();
-        vm.displayed = [].concat(vm.rows);
-      });
+      vm.currentSurvey = surveydata.getCurrentSurvey();
+      vm.rows = surveydata.getPages();
+      vm.displayed = [].concat(vm.rows);
     }
 
     function saveAll() {

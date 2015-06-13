@@ -1,16 +1,12 @@
 <div class="container">
   <div class="row">
-    <div class="alert alert-danger" role="alert" ng-if="survey.showError">
-      抱歉！你所輸入的網址無效，沒有內容可以顯示。
-    </div>
-    <div id="survey" ng-include="survey.page"></div>
-    <div class="text-center">
-      <div class="btn-group" role="group" aria-label="...">
-        <button class="btn btn-default" ng-disabled="survey.showPrev()" ng-click="survey.prevPage()">往前</button>
-        <button class="btn btn-default" ng-click="survey.returnToList()">返回列表</button>
-        <button class="btn btn-default" ng-disabled="survey.nextEnabled" ng-if="!survey.isEnd" ng-click="survey.nextPage()">下一步 {{survey.counterDisplay}}</button>
-        <button class="btn btn-primary" ng-click="survey.saveResult()" ng-if="survey.isEnd">儲存問卷結果</button>
+    <div class="spinner-container" ng-if="survey.isLoading">
+      <div class="spinner-display">
+        <div class="alert alert-danger" role="alert" ng-if="survey.showError">
+          抱歉！你所輸入的網址無效，沒有內容可以顯示。
+        </div>
       </div>
     </div>
+    <form novalidate id="survey" name="surveydata" ng-include="survey.page"></form>
   </div>
 </div>

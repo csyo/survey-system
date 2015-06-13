@@ -11,19 +11,21 @@
       <div bo-switch-when="choice.html">
         <label></label>
         <ol class="item-order" start="{{item.viewOrder}}">
-          <li><div bo-html="item.content"></div></li>
+          <li>
+            <span bo-html="item.content"></span>
+            <span style="color: red;" bo-if="item.must"> *</span>
+          </li>
         </ol>
         <div ng-repeat="option in item.options.list">
           <label bo-class="item.options.typeName">
-            <input ng-model="item.options.selected" ng-if="item.options.typeName === 'radio'"
-                   type="radio" ng-value="option">
-            <input ng-model="item.options.option[$index]" ng-if="item.options.typeName === 'checkbox'"
-                   type="checkbox" ng-value="option">
+            <input ng-model="item.options.selected" bo-if="item.options.typeName === 'radio'"
+                   type="radio" ng-value="option"  ng-required="item.must">
+            <input ng-model="item.options.option[$index]" bo-if="item.options.typeName === 'checkbox'"
+                   type="checkbox" ng-value="option"  ng-required="item.must">
             <span bo-html="option.name"></span>
-            <span ng-if="option.name ==='其他'">
+            <span bo-if="option.name ==='其他'">
               <span>：&nbsp;</span>
-              <input type="text" class="others"
-                     ng-model="option.input">
+              <input type="text" class="others" ng-model="option.input">
             </span>
             <br/>
           </label>
@@ -44,12 +46,16 @@
             <tr bindonce ng-repeat="question in item.questions">
               <td class="likert likert-content">
                 <ol class="likert-item-order" start="{{item.viewOrder + question.order - 1}}">
-                  <li><span bo-html="question.content"></span></li>
+                  <li>
+                    <span bo-html="question.content"></span>
+                    <span style="color: red;" bo-if="item.must"> *</span>
+                  </li>
                 </ol>
               </td>
               <td class="likert likert-option"
                   ng-repeat="option in question.options">
-                <input type="radio" ng-model="question.selected" ng-value="option">
+                <input type="radio" ng-model="question.selected" ng-value="option"
+                        ng-required="item.must">
               </td>
             </tr>
           </tbody>
@@ -58,8 +64,11 @@
 
       <!-- 語意差異量表 -->
       <div bo-switch-when="semantic.html">
-        <ol class="item-order" start="{{item.viewOrder}}" ng-if="item.title">
-          <li bo-html="item.title"></li>
+        <ol class="item-order" start="{{item.viewOrder}}" bo-if="item.title">
+          <li>
+            <span bo-html="item.title"></span>
+            <span style="color: red;" bo-if="item.must"> *</span>
+          </li>
         </ol>
         <br/>
         <table class="semantic table">
@@ -74,7 +83,8 @@
               <td class="semantic-content-left" bo-html="question.content[0]"></td>
               <td class="semantic-option"
                   ng-repeat="option in question.options">
-                <input type="radio" ng-model="question.selected" ng-value="option">
+                <input type="radio" ng-model="question.selected" ng-value="option"
+                        ng-required="item.must">
               </td>
               <td class="semantic-content-right" bo-html="question.content[1]"></td>
             </tr>
@@ -86,13 +96,19 @@
       <div bo-switch-when="blank.html">
         <label></label>
         <ol class="item-order" start="{{item.viewOrder}}">
-          <li><div bo-html="item.content"></div></li>
+          <li>
+            <span bo-html="item.content"></span>
+            <span style="color: red;" bo-if="item.must"> *</span>
+          </li>
         </ol>
         <br/>
-        <input type="text" class="form-control" ng-model="item.input">
+        <input type="text" class="form-control" ng-model="item.input"
+                ng-required="item.must">
       </div>
 
       <div bo-switch-default>---</div>
     </div>
   </p>
 </div>
+<p ng-show="survey.showWaring" class="alert alert-danger">請確保「必填」選項均已填寫！</p>
+<div ng-include="'app/survey/templates/pagination.html'"></div>
