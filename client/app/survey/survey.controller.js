@@ -6,11 +6,11 @@ angular.module('surveyApp')
     var page_type = surveydata.getPageType();
     var item_type = this.itemType = surveydata.getItemType();
 
-    this.data = { pages: [] };
 
-    this.currentPage = surveydata.getCurrentPage();
     this.page = '';
     this.file = {};
+    this.pages;
+    this.currentPage;
     this.showError = false;
     this.isLoading = false;
     this.nextEnabled = true;
@@ -34,16 +34,16 @@ angular.module('surveyApp')
     //////////////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey(null, function(data){
-        if (!data) { this.showError = true;}
-        vm.data = data;
+      surveydata.getCurrentSurvey(function(data){
+        if (!data) { vm.showError = true;}
+        vm.pages = data.pages;
         showPage();
       });
     }
 
     function saveResult() {
       var results = [];
-      vm.data.pages.forEach(function(page) {
+      vm.pages.forEach(function(page) {
         if (page.pageType.val === page_type.questionary.val) {
           page.items && page.items.forEach(function(item) {
             switch (item.itemType.val) {
@@ -107,9 +107,8 @@ angular.module('surveyApp')
     }
 
     function showPage(index) {
-      if (vm.data.pages.length) {
-        var currentPage = vm.data.pages[index || 0];
-        vm.currentPage = currentPage;
+      if (vm.pages.length) {
+        vm.currentPage = vm.pages[index || 0];
         vm.nextEnabled = true;
         vm.isEnd = vm.currentPage.pageOrder === vm.data.pages.length;
         switch (currentPage.pageType.val) {
@@ -211,6 +210,7 @@ angular.module('surveyApp')
     }
 
     function returnToList() {
+      surveydata.reset();
       $state.go('main');
     }
 

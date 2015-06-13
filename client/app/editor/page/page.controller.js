@@ -27,6 +27,7 @@ angular.module('surveyApp')
 
     function saveAll() {
       page.rows.forEach(function (row) {
+        delete row.preview;
         delete row.tips;
       });
       surveydata.setItems(page.rows);

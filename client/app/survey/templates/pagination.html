@@ -1,0 +1,8 @@
+<div class="text-center">
+  <div class="btn-group" role="group" aria-label="...">
+    <button class="btn btn-default" ng-disabled="survey.showPrev()" ng-click="survey.prevPage()">往前</button>
+    <button class="btn btn-default" ng-click="survey.returnToList()">返回列表</button>
+    <button bindonce class="btn btn-default" ng-disabled="survey.nextEnabled" ng-if="!survey.isEnd" ng-click="survey.nextPage(formData.$invalid)">下一步 {{survey.counterDisplay}}</button>
+    <button class="btn btn-primary" ng-click="survey.saveResult()" ng-if="survey.isEnd">儲存問卷結果</button>
+  </div>
+</div>

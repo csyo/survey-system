@@ -25,7 +25,7 @@ angular.module('surveyApp')
     ////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey(null, function(data){
+      surveydata.getCurrentSurvey(function(data){
         if (!data) { $state.go('main'); }
         vm.currentSurvey = data;
         vm.rows = surveydata.getPages();

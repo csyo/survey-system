@@ -9,7 +9,8 @@ angular.module('surveyApp')
 
   // currently editting survey data
   var tmpSurvey = { serialNo: '', title: '', pages: []},
-    tmpPage = { pageOrder: 0, pageCount: 0 , pageType: '', items: []};
+    tmpPage = { pageOrder: 0, pageCount: 0 , pageType: '', items: []},
+    tmpId;
 
   // different types for a single page of a survey
   var pageType = {
@@ -31,13 +32,14 @@ angular.module('surveyApp')
   };
 
   var surveydataService = {
+    surveyId: tmpId,
     getPageType : function() { return pageType; },
     getItemType : function() { return itemType; },
     reset : reset,
     setSurveys : function(data) { surveydata.surveys = data; },
     getSurveys : function() { return surveydata.surveys; },
     fetchSurveys : fetchSurveys,
-    setCurrentSurvey : function(index) { tmpSurvey = surveydata.surveys[index]; },
+    setCurrentSurvey : setCurrentSurvey,
     getCurrentSurvey : getCurrentSurvey,
     removeSurvey: removeSurvey,
     setPages : setPages,
@@ -69,6 +71,8 @@ angular.module('surveyApp')
         tmpSurvey.title = '';
         tmpSurvey.pages = [];
         break;
+      case 'survey':
+        this.surveyId = '';
       default:
         surveydata.surveys = [];
     }
@@ -137,14 +141,18 @@ angular.module('surveyApp')
       tmpPage.pageOrder = page.pageOrder;
       tmpPage.pageCount = page.pageCount;
       tmpPage.pageType = page.pageType;
-      tmpPage.fileId = page.fileId || null;
+      if (page.fileId) tmpPage.fileId = page.fileId;
       return tmpPage;
     } else return null;
   }
-  function getCurrentSurvey(surveyId, callback) {
-    if (!surveyId) { callback(tmpSurvey); }
-    else {
-      $http.get('/api/surveys/'+ surveyId)
+
+  function setCurrentSurvey(index) {
+    tmpSurvey = surveydata.surveys[index];
+  }
+
+  function getCurrentSurvey(callback) {
+    if (this.surveyId) {
+      $http.get('/api/surveys/'+ this.surveyId)
         .then(getSurveyComplete)
         .catch(getSurveyFailed);
 
@@ -156,7 +164,7 @@ angular.module('surveyApp')
         logger.error('XHR Failed for getSurvey.')
         callback(null);
       }
-    }
+    } else callback(tmpSurvey);
   }
 
   function removeSurvey(surveyId) {
