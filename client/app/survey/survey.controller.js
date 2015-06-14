@@ -18,7 +18,9 @@ angular.module('surveyApp')
     this.isEnd = false;
     this.counterDisplay = '';
     this.counter = 0;
+    this.checkedQueue = [];
 
+    this.watchCheckbox = watchCheckbox;
     this.saveResult = saveResult;
     this.showPage = showPage;
     this.showItem = showItem;
@@ -48,58 +50,57 @@ angular.module('surveyApp')
       }
     }
 
-    function saveResult() {
-      var results = [];
-      vm.pages.forEach(function(page) {
-        if (page.pageType.val === page_type.questionary.val) {
-          /*jshint -W030*/
-          page.items && page.items.forEach(function(item) {
-            switch (item.itemType.val) {
-              case item_type.blank.val:
-                results.push({
-                  order: page.pageOrder +'-'+ item.viewOrder,
-                  question: item.content,
-                  answer: item.input
-                });
-                break;
-              case item_type.choice.val:
-                results.push({
-                  order: page.pageOrder +'-'+ item.viewOrder,
-                  question: item.content,
-                  answer: choiceAnswer(item, item.options.typeName)
-                });
-                break;
-              case item_type.likert.val:
-              case item_type.likerts.val:
-              case item_type.semantic.val:
-              case item_type.semantics.val:
-                item.questions.forEach(function(question) {
+    function saveResult(valid) {
+      if (valid) {
+        vm.showWaring = false;
+        // generate results item
+        var results = [];
+        vm.pages.forEach(function(page) {
+          if (page.pageType.val === page_type.questionary.val) {
+            /*jshint -W030*/
+            page.items && page.items.forEach(function(item) {
+              switch (item.itemType.val) {
+                case item_type.blank.val:
                   results.push({
                     order: page.pageOrder +'-'+ item.viewOrder,
-                    question: question.content.toString(),
-                    answer: question.selected
+                    question: item.content,
+                    answer: item.input
                   });
-                });
-                break;
-              default:
-                break;
-            }
+                  break;
+                case item_type.choice.val:
+                  results.push({
+                    order: page.pageOrder +'-'+ item.viewOrder,
+                    question: item.content,
+                    answer: choiceAnswer(item, item.options.typeName)
+                  });
+                  break;
+                case item_type.likert.val:
+                case item_type.likerts.val:
+                case item_type.semantic.val:
+                case item_type.semantics.val:
+                  item.questions.forEach(function(question) {
+                    results.push({
+                      order: page.pageOrder +'-'+ item.viewOrder,
+                      question: question.content.toString(),
+                      answer: question.selected
+                    });
+                  });
+                  break;
+                default:
+                  break;
+              }
+            });
+          }
+        });
+        logger.info(results);
+        surveydata.saveResult(results)
+          .then(function(data){
+            logger.info(data);
+            vm.showSuccessMsg = true;
           });
-        }
-      });
-      logger.info(results);
-      /**
-      $http.post('/api/results/', results)
-        .then(savedComplete)
-        .catch(savedFailed);
-
-      function savedComplete(responce) {
-        vm.showSuccessMsg = true;
+      } else {
+        vm.showWaring = true;
       }
-      function savedFailed(error) {
-        vm.showErrorMsg = true;
-      }
-      */
     }
 
     function choiceAnswer(item, typeName) {
@@ -221,7 +222,14 @@ angular.module('surveyApp')
         vm.counterDisplay = '(' + vm.counter + ')';
         counterPromise = $timeout(countdown, 1500);
       }
+    }
 
+    function watchCheckbox(option) {
+      if (option) {
+        vm.checkedQueue.push(option);
+      } else {
+        vm.checkedQueue.pop();
+      }
     }
 
     function returnToList() {

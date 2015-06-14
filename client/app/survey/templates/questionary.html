@@ -21,7 +21,9 @@
             <input ng-model="item.options.selected" bo-if="item.options.typeName === 'radio'"
                    type="radio" ng-value="option"  ng-required="item.must">
             <input ng-model="item.options.option[$index]" bo-if="item.options.typeName === 'checkbox'"
-                   type="checkbox" ng-value="option"  ng-required="item.must">
+                   type="checkbox" ng-value="option"
+                   ng-click="survey.watchCheckbox(item.options.option[$index])"
+                   ng-required="item.must && survey.checkedQueue.length===0" >
             <span bo-html="option.name"></span>
             <span bo-if="option.name ==='其他'">
               <span>：&nbsp;</span>

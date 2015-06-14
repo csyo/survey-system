@@ -33,6 +33,7 @@ angular.module('surveyApp')
 
   var surveydataService = {
     surveyId: tmpId,
+    saveResult: saveResult,
     getPageType : function() { return pageType; },
     getItemType : function() { return itemType; },
     reset : reset,
@@ -56,6 +57,18 @@ angular.module('surveyApp')
   return surveydataService;
 
   /*** Implementations ***/
+
+  function saveResult(results) {
+    return $http.post('/api/results', results)
+      .then(savedComplete).catch(savedFailed);
+
+    function savedComplete(responce) {
+      return responce;
+    }
+    function savedFailed(error) {
+      logger.error(error);
+    }
+  }
 
   function reset() {
     var state = $state.current.name;
