@@ -59,7 +59,11 @@ angular.module('surveyApp')
   /*** Implementations ***/
 
   function saveResult(results) {
-    return $http.post('/api/results', results)
+    var result = {
+      surveyId: surveydataService.surveyId,
+      results: results
+    };
+    return $http.post('/api/results', result)
       .then(savedComplete).catch(savedFailed);
 
     function savedComplete(responce) {
