@@ -128,7 +128,7 @@ angular.module('surveyApp')
     survey.pages = data.pages;
     survey.account = data.account || Auth.getCurrentUser().name;
     if (survey.serialNo) { // edit mode
-      survey.index = data.index || (parseInt(data.serialNo) - 1);
+      survey.index = data.index;
       survey._id = data._id;
       surveydata.surveys[survey.index] = survey;
       $http.put('/api/surveys/' + data._id, survey)
