@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var ResultSchema = new Schema({
   surveyId: String,
+  clientIp: String,
   results: Array
 });
 

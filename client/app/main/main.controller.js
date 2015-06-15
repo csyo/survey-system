@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($state, surveydata, $modal, logger) {
+  .controller('MainCtrl', function ($state, surveydata, $modal, $window, logger) {
 
   var vm = this;
   this.add = add;
@@ -85,8 +85,9 @@ angular.module('surveyApp')
     $state.go('survey');
   }
 
-  function generateUrl() {
-    // TODO: generate a url for the survey with database communication
+  function generateUrl(row) {
+    var url = 'https://nckuba-survey.herokuapp.com/' + row._id;
+    $window.open(url, '_blank');
   }
 
 });
