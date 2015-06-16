@@ -5,10 +5,13 @@
     </div>
     <div class="col-md-12">
       <button type="button" ng-click="page.add()" class="btn btn-primary">
-        <i class="glyphicon glyphicon-plus"> 新增項目</i>
+        <i class="glyphicon glyphicon-plus"></i>&nbsp;新增項目
       </button>
       <button type="button" ng-click="page.saveAll()" class="btn btn-warning">
-        <i class="glyphicon glyphicon-save"> 儲存頁面</i>
+        <i class="glyphicon glyphicon-save"></i>&nbsp;儲存頁面
+      </button>
+      <button type="button" ng-click="page.goBack()" class="btn btn-default">
+        <i class="glyphicon glyphicon-remove"></i>
       </button>
       <table st-table="page.displayed" st-safe-src="page.rows" class="item-table table table-striped">
         <thead>
@@ -69,7 +72,7 @@
                 <i class="glyphicon glyphicon-edit"></i>
               </button>
               <button class="btn btn-danger" ng-click="page.remove($index)">
-                <i class="glyphicon glyphicon-remove"></i>
+                <i class="glyphicon glyphicon-trash"></i>
               </button>
             </div>
           </td>

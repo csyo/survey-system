@@ -16,6 +16,7 @@ angular.module('surveyApp')
     this.add = add;
     this.edit = edit;
     this.done = done;
+    this.goBack = goBack;
     this.cancel = cancel;
     this.remove = remove;
     this.movePage = movePage;
@@ -33,11 +34,13 @@ angular.module('surveyApp')
 
     function saveAll() {
       surveydata.setPages(vm.currentSurvey, function () {
-        // clear tmpSurvey data
-        surveydata.reset();
+        vm.goBack();
+      });
+    }
+
+    function goBack() {
         // change route
         $state.go('main');
-      });
     }
 
     function add() {

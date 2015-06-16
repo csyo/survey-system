@@ -16,6 +16,7 @@ angular.module('surveyApp')
     this.remove = remove;
     this.format = format;
     this.saveAll = saveAll;
+    this.goBack = goBack;
     this.checkRow = checkRow;
     this.editOptionList = editOptionList;
     this.showOptionList = showOptionList;
@@ -32,10 +33,15 @@ angular.module('surveyApp')
         delete row.tips;
       });
       surveydata.setItems(page.rows);
+      page.goBack();
+    }
+
+    function goBack() {
       // clear tmpPage data
       surveydata.reset();
       // change route
       $state.go('editor');
+
     }
 
     function editOptionList(row) {
