@@ -1,30 +1,35 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('SurveyCtrl', function ($state, surveydata, logger, $timeout) {
+  .controller('SurveyCtrl', function ($state, surveydata, scalesGenerator, logger, $timeout) {
     var vm = this;
     var page_type = surveydata.getPageType();
     var item_type = this.itemType = surveydata.getItemType();
 
-
+    /** page data storage **/
     this.page = '';
     this.file = '';
     this.pages = [];
     this.currentPage = {};
+
+    /** for page content **/
+    this.showPage = showPage;
     this.showError = false;
+    this.showItem = showItem;
     this.showWaring = false;
+    this.saveResult = saveResult;
+    this.getFile = surveydata.getFile;
     this.isLoading = false;
-    this.nextEnabled = true;
-    this.isEnd = false;
+
+    /** for page counter **/
     this.counterDisplay = '';
     this.counter = 0;
     this.checkedQueue = [];
-
     this.watchCheckbox = watchCheckbox;
-    this.saveResult = saveResult;
-    this.showPage = showPage;
-    this.showItem = showItem;
-    this.getFile = surveydata.getFile;
+
+    /** for page navigation**/
+    this.nextEnabled = true;
+    this.isEnd = false;
     this.nextPage = nextPage;
     this.showNext = showNext;
     this.returnToList = returnToList;
@@ -37,82 +42,12 @@ angular.module('surveyApp')
     //////////////////////////
 
     function activate() {
-      try {
-        surveydata.getCurrentSurvey()
-          .then(function(data){
-            if (!data) { vm.showError = true;}
-            vm.pages = data.pages;
-            showPage();
-          });
-      } catch (e) {
-        logger.error(e);
-        $state.go('main');
-      }
-    }
-
-    function saveResult(valid) {
-      if (valid) {
-        vm.showWaring = false;
-        // generate results item
-        var results = [];
-        vm.pages.forEach(function(page) {
-          if (page.pageType.val === page_type.questionary.val) {
-            /*jshint -W030*/
-            page.items && page.items.forEach(function(item) {
-              switch (item.itemType.val) {
-                case item_type.blank.val:
-                  results.push({
-                    order: page.pageOrder +'-'+ item.viewOrder,
-                    question: item.content,
-                    answer: item.input
-                  });
-                  break;
-                case item_type.choice.val:
-                  results.push({
-                    order: page.pageOrder +'-'+ item.viewOrder,
-                    question: item.content,
-                    answer: choiceAnswer(item, item.options.typeName)
-                  });
-                  break;
-                case item_type.likert.val:
-                case item_type.likerts.val:
-                case item_type.semantic.val:
-                case item_type.semantics.val:
-                  item.questions.forEach(function(question) {
-                    results.push({
-                      order: page.pageOrder +'-'+ item.viewOrder,
-                      question: question.content.toString(),
-                      answer: question.selected
-                    });
-                  });
-                  break;
-                default:
-                  break;
-              }
-            });
-          }
+      surveydata.getCurrentSurvey({ view: true })
+        .then(function(data){
+          if (!data) { vm.showError = true;}
+          vm.pages = data.pages;
+          showPage();
         });
-        logger.info(results);
-        surveydata.saveResult(results)
-          .then(function(data){
-            logger.info(data);
-            vm.showSuccessMsg = true;
-          });
-      } else {
-        vm.showWaring = true;
-      }
-    }
-
-    function choiceAnswer(item, typeName) {
-      if (typeName === 'radio') {
-        return item.options.selected;
-      } else if (typeName === 'checkbox') {
-        var answers = [];
-        for (var key in item.options.option) {
-          if (item.options.option[key]) answers.push(item.options.list[key]);
-        }
-        return answers;
-      }
     }
 
     function showPage(index) {
@@ -183,14 +118,79 @@ angular.module('surveyApp')
         return 'blank.html';
       case item_type.likert.val:
       case item_type.likerts.val:
-        if (!item.headers) item.headers = generateHeader(item.options.scales, 'likert');
-        if (!item.questions) item.questions = processLikertScale(item);
+        if (!item.headers) { item.headers = item.options.list ? item.options.list : scalesGenerator.getHeader(item.options.scales, 'likert'); }
+        if (!item.questions) item.questions = scalesGenerator.getLikerts(item);
         return 'likert.html';
       case item_type.semantic.val:
       case item_type.semantics.val:
-        if (!item.headers) item.headers = generateHeader(item.options.scales, 'semantic');
-        if (!item.questions) item.questions = processSemanticScale(item);
+        if (!item.headers) { item.headers = item.options.list ? item.options.list :scalesGenerator.getHeader(item.options.scales, 'semantic'); }
+        if (!item.questions) item.questions = scalesGenerator.getSemantics(item);
         return 'semantic.html';
+      }
+    }
+
+    function saveResult(valid) {
+      if (valid) {
+        vm.showWaring = false;
+        // generate results item
+        var results = [];
+        vm.pages.forEach(function(page) {
+          if (page.pageType.val === page_type.questionary.val) {
+            /*jshint -W030*/
+            page.items && page.items.forEach(function(item) {
+              switch (item.itemType.val) {
+                case item_type.blank.val:
+                  results.push({
+                    order: page.pageOrder +'-'+ item.viewOrder,
+                    question: item.content,
+                    answer: item.input
+                  });
+                  break;
+                case item_type.choice.val:
+                  results.push({
+                    order: page.pageOrder +'-'+ item.viewOrder,
+                    question: item.content,
+                    answer: choiceAnswer(item, item.options.typeName)
+                  });
+                  break;
+                case item_type.likert.val:
+                case item_type.likerts.val:
+                case item_type.semantic.val:
+                case item_type.semantics.val:
+                  item.questions.forEach(function(question) {
+                    results.push({
+                      order: page.pageOrder +'-'+ item.viewOrder,
+                      question: question.content.toString(),
+                      answer: question.selected
+                    });
+                  });
+                  break;
+                default:
+                  break;
+              }
+            });
+          }
+        });
+        logger.info(results);
+        surveydata.saveResult(results)
+          .then(function(data){
+            logger.info(data);
+            vm.showSuccessMsg = true;
+          });
+      } else {
+        vm.showWaring = true;
+      }
+    }
+
+    function choiceAnswer(item, typeName) {
+      if (typeName === 'radio') {
+        return item.options.selected;
+      } else if (typeName === 'checkbox') {
+        var answers = [];
+        for (var key in item.options.option) {
+          if (item.options.option[key]) answers.push(item.options.list[key]);
+        }
+        return answers;
       }
     }
 
@@ -245,87 +245,87 @@ angular.module('surveyApp')
       return (vm.currentPage.pageOrder - 2) < 0;
     }
 
-    function generateHeader(scales, type) {
-      var headers = generateScales(scales);
-      headers.forEach(function(scale, index){
-        var content = '';
-        if (type === 'likert') {
-          _.forEach(generateScaleOption(scale), function(char){ content += char +'<br>'; });
-        } else content = index + 1 + '';
-        headers[index] = { val: scale, name: content };
-      });
-      return headers;
-    }
-
-    function generateScaleOption(scale) {
-      switch(scale) {
-        case 1:
-          return '非常不同意';
-        case 2:
-          return '不同意';
-        case 3:
-          return '有點不同意';
-        case 4:
-          return '沒意見';
-        case 5:
-          return '有點同意';
-        case 6:
-          return '同意';
-        case 7:
-          return '非常同意';
-      }
-    }
-
-    function processLikertScale(item) {
-      var content = item.content,
-          scales = item.options.scales,
-          questions = content.split('\n');
-      questions.forEach(function(question, index){
-        questions[index] = {
-          order: index + 1,
-          content: question,
-          selected: '',
-          options: generateScales(scales)
-        };
-      });
-      return questions;
-    }
-
-    function processSemanticScale(item) {
-      var content = item.content,
-          scales = item.options.scales,
-          questions = content.split('\n');
-      if (questions[0].search(',') === -1) {
-        item.title = questions.shift();
-      }
-      questions.forEach(function(question, index){
-        questions[index] = {
-          order: index + 1,
-          content: question.split(','),
-          selected: '',
-          options: generateScales(scales)
-        };
-      });
-      return questions;
-    }
-
-    function generateScales(scales) {
-      var data = [1,2,3,4,5,6,7];
-      switch(scales) {
-        case 7:
-          return data;
-        case 6: // 1,2,3,5,6,7
-          data.splice(3,1);
-          return data;
-        case 5: // 2,3,4,5,6
-          return data.slice(1, -1);
-        case 4: // 2,3,5,6
-          data = data.slice(1, -1);
-          data.splice(2,1);
-          return data;
-        case 3: // 3,5,6
-          return data.slice(2,-2);
-      }
-    }
+//    function generateHeader(scales, type) {
+//      var headers = generateScales(scales);
+//      headers.forEach(function(scale, index){
+//        var content = '';
+//        if (type === 'likert') {
+//          _.forEach(generateScaleOption(scale), function(char){ content += char +'<br>'; });
+//        } else content = index + 1 + '';
+//        headers[index] = { val: scale, name: content };
+//      });
+//      return headers;
+//    }
+//
+//    function generateScaleOption(scale) {
+//      switch(scale) {
+//        case 1:
+//          return '非常不同意';
+//        case 2:
+//          return '不同意';
+//        case 3:
+//          return '有點不同意';
+//        case 4:
+//          return '沒意見';
+//        case 5:
+//          return '有點同意';
+//        case 6:
+//          return '同意';
+//        case 7:
+//          return '非常同意';
+//      }
+//    }
+//
+//    function processLikertScale(item) {
+//      var content = item.content,
+//          scales = item.options.scales,
+//          questions = content.split('\n');
+//      questions.forEach(function(question, index){
+//        questions[index] = {
+//          order: index + 1,
+//          content: question,
+//          selected: '',
+//          options: generateScales(scales)
+//        };
+//      });
+//      return questions;
+//    }
+//
+//    function processSemanticScale(item) {
+//      var content = item.content,
+//          scales = item.options.scales,
+//          questions = content.split('\n');
+//      if (questions[0].search(',') === -1) {
+//        item.title = questions.shift();
+//      }
+//      questions.forEach(function(question, index){
+//        questions[index] = {
+//          order: index + 1,
+//          content: question.split(','),
+//          selected: '',
+//          options: generateScales(scales)
+//        };
+//      });
+//      return questions;
+//    }
+//
+//    function generateScales(scales) {
+//      var data = [1,2,3,4,5,6,7];
+//      switch(scales) {
+//        case 7:
+//          return data;
+//        case 6: // 1,2,3,5,6,7
+//          data.splice(3,1);
+//          return data;
+//        case 5: // 2,3,4,5,6
+//          return data.slice(1, -1);
+//        case 4: // 2,3,5,6
+//          data = data.slice(1, -1);
+//          data.splice(2,1);
+//          return data;
+//        case 3: // 3,5,6
+//          return data.slice(2,-2);
+//      }
+//    }
 
   });

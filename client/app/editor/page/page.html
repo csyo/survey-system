@@ -43,7 +43,8 @@
           <td>
             <span editable-select="row.options.scales" buttons="no"
                   e-ng-options="s for s in page.scaleOptions"
-                  e-ng-show="page.showScale(row.itemType)">
+                  e-ng-show="page.showScale(row.itemType)"
+                  onaftersave="page.clearScales(row)">
               {{ row.options.scales}}
             </span>
           </td>
@@ -78,37 +79,46 @@
     </div>
   </div>
 </div>
+
 <script type="text/ng-template" id="text.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
       ng-bind-html="row.content">
 </span>
 </script>
+
 <script type="text/ng-template" id="likert.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
       ng-bind-html="row.content">
 </span>
 </script>
+
 <script type="text/ng-template" id="likert-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
-      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="page.format(row.content)">
 </span>
 </script>
+
 <script type="text/ng-template" id="semantic.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="2"
-      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="page.format(row.content)">
 </span>
 </script>
+
 <script type="text/ng-template" id="semantic-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
-      e-placeholder="{{row.tips}}" ng-bind-html="page.format(row.content)">
+      e-placeholder="{{row.tips}}"
+      ng-bind-html="page.format(row.content)">
 </span>
 </script>
+
 <script type="text/ng-template" id="question.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
       ng-bind-html="row.content">
 </span>
-<p ng-bind-html="row.preview"></p>
+<p ng-bind-html="row.options | optionsPreview"></p>
 </script>

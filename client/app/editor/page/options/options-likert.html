@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h3 class="modal-title">編輯李克特量表尺度</h3>
+</div>
+<div class="modal-body">
+  <div class="options" ng-repeat="option in options.data.list">
+    <label>{{option.val}}&nbsp;
+      <input type="text" class="form-control" ng-model="option.name">
+    </label>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="options.ok()">儲存</button>
+  <button class="btn btn-warning" ng-click="options.cancel()">取消</button>
+</div>

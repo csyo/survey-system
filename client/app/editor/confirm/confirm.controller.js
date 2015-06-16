@@ -1,11 +1,11 @@
-'use strick';
+'use strict';
 
 angular.module('surveyApp')
   .controller('ConfirmCtrl', function ($modalInstance, title) {
     var vm = this;
-    this.ok = ok;
-    this.cancel = cancel;
-    this.surveyTitle = title;
+    vm.ok = ok;
+    vm.cancel = cancel;
+    vm.surveyTitle = title;
 
     function ok() {
       $modalInstance.close(true);

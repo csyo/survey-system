@@ -41,7 +41,7 @@
             <tr>
               <th class="likert likert-header-content">&nbsp;</th>
               <th class="likert likert-header-option"
-                  bindonce ng-repeat="field in item.headers" bo-html="field.name"></th>
+                  bindonce ng-repeat="field in item.headers" bo-html="field.name | verticalText"></th>
             </tr>
           </thead>
           <tbody>
@@ -66,7 +66,7 @@
 
       <!-- 語意差異量表 -->
       <div bo-switch-when="semantic.html">
-        <ol class="item-order" start="{{item.viewOrder}}" bo-if="item.title">
+        <ol class="item-order" start="{{item.viewOrder}}">
           <li>
             <span bo-html="item.title"></span>
             <span style="color: red;" bo-if="item.must"> *</span>
@@ -112,5 +112,5 @@
     </div>
   </p>
 </div>
-<p ng-show="survey.showWaring" class="alert alert-danger">請確保「必填」選項均已填寫！</p>
+<p ng-show="survey.showWaring" class="alert alert-danger text-center">請確保「必填」選項均已填寫！</p>
 <div ng-include="'app/survey/templates/pagination.html'"></div>

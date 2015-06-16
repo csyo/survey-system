@@ -1,4 +1,4 @@
 <div id="description"
-    ng-bind-html="survey.currentPage.content">
+    ng-bind-html="survey.currentPage.content| toHtml">
 </div>
 <div ng-include="'app/survey/templates/pagination.html'"></div>

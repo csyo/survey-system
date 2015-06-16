@@ -21,6 +21,7 @@ angular.module('surveyApp')
     this.showOptionList = showOptionList;
     this.showInputField = showInputField;
     this.showScale = showScale;
+    this.clearScales = clearScales;
     this.moveItem = moveItem;
 
     /*** Implementations ***/
@@ -38,26 +39,39 @@ angular.module('surveyApp')
     }
 
     function editOptionList(row) {
+      var type = row.itemType.val;
+      type = type.match(/likert/) ? type.match(/likert/)[0] :
+        type.match(/semantic/) ? type.match(/semantic/)[0] : row.itemType.val;
       var options = $modal.open({
         animation: true,
-        templateUrl: 'app/editor/page/options/options.html',
+        templateUrl: 'app/editor/page/options/options-'+ type +'.html',
         controller: 'OptionsCtrl',
         controllerAs: 'options',
         resolve: {
           optionList: function () {
-            return row.options ? row.options : { list: [{ index: 0 }, { index: 1 }] };
+            switch (row.itemType.val) {
+              /*jshint -W086*/
+              case itemType.choice.val:
+                row.options = row.options || {};
+              case itemType.likert.val:
+              case itemType.likerts.val:
+              case itemType.semantic.val:
+              case itemType.semantics.val:
+                row.options.type = row.itemType.val;
+                return row.options ? row.options : null;
+            }
           }
         }
       });
 
       options.result.then(function (optionList) {
         row.options = optionList;
-        row.preview = optionList.typeName === 'radio' ? '(單選題)' :
-          optionList.typeName === 'checkbox' ? '(多選題)' : '(---)';
-        optionList.list.forEach(function (option) {
-          row.preview += '<li>' + option.name + '</li>';
-        });
-        row.preview += optionList.otherOption ? '<li>其他</li>' : '';
+//        row.preview = optionList.typeName === 'radio' ? '(單選題)' :
+//          optionList.typeName === 'checkbox' ? '(多選題)' : '(---)';
+//        optionList.list.forEach(function (option) {
+//          row.preview += '<li>' + option.name + '</li>';
+//        });
+//        row.preview += optionList.otherOption ? '<li>其他</li>' : '';
         console.log(row);
       });
     }
@@ -93,7 +107,7 @@ angular.module('surveyApp')
         row.tips = '題目\n左選項 , 右選項';
         return 'semantic.html';
       case itemType.semantics.val:
-        row.tips = '左選項 , 右選項\n左選項 , 右選項';
+        row.tips = '題目\n左選項 , 右選項\n左選項 , 右選項';
         return 'semantic-group.html';
       case itemType.choice.val:
       case itemType.blank.val:
@@ -120,10 +134,18 @@ angular.module('surveyApp')
     function showOptionList(item) {
       switch (item.val) {
       case itemType.choice.val:
+      case itemType.likert.val:
+      case itemType.likerts.val:
+      case itemType.semantic.val:
+      case itemType.semantics.val:
         return true;
       default:
         return false;
       }
+    }
+
+    function clearScales(row) {
+      row.options.list = null;
     }
 
     /**

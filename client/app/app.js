@@ -50,7 +50,7 @@ angular.module('surveyApp', [
     };
   })
 
-  .run(function ($rootScope, $location, Auth, editableOptions, logger, $state) {
+  .run(function ($rootScope, $location, Auth, editableOptions, logger) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {

@@ -126,7 +126,7 @@ angular.module('surveyApp')
     survey.status = data.status || false;
     survey.pages = data.pages;
     survey.account = data.account || Auth.getCurrentUser().name;
-    if (data.index) { // edit mode
+    if (typeof data.index === 'number') { // edit mode; index defined
       survey.index = data.index;
       survey._id = data._id;
       surveydata.surveys[survey.index] = survey;
@@ -136,7 +136,7 @@ angular.module('surveyApp')
       }).error(function(err){
         if (err) throw Error(err);
       });
-    } else { // add mode
+    } else { // add mode; index undefined
       survey.index = surveydata.surveys.length;
       surveydata.surveys.push(survey);
       $http.post('/api/surveys', survey)
@@ -164,12 +164,12 @@ angular.module('surveyApp')
     tmpSurvey = surveydata.surveys[index];
   }
 
-  function getCurrentSurvey() {
-    if (surveydataService.surveyId) {
-      return $http.get('/api/surveys/'+ surveydataService.surveyId)
+  function getCurrentSurvey(mode) {
+    if (mode.view) {
+      return $http.get('/api/surveys/'+ surveydataService.surveyId || 0)
         .then(getSurveyComplete)
         .catch(getSurveyFailed);
-    } else return tmpSurvey;
+    } else if (mode.edit) { return tmpSurvey; }
 
     function getSurveyComplete(response) {
       return response.data;

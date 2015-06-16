@@ -1,18 +1,23 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('OptionsCtrl', function ($modalInstance, optionList) {
+  .controller('OptionsCtrl', function ($modalInstance, scalesGenerator, optionList) {
     var options = this;
-
-    var data = this.data = {};
-    data.list = optionList.list || optionList;
-    data.typeName = optionList.typeName || '';
-    data.otherOption = optionList.otherOption || false;
 
     this.add = add;
     this.removeLast = removeLast;
     this.ok = ok;
     this.cancel = cancel;
+    var data = this.data = {};
+
+    if (optionList.type.match(/choice/)) {
+      data.typeName = optionList.typeName || '';
+      data.otherOption = optionList.otherOption || false;
+      data.list = optionList.list || [{ index: 0 }, { index: 1 }];
+    } else {
+      data.scales = optionList.scales;
+      data.list = optionList.list || scalesGenerator.getHeader(optionList.scales, optionList.type);
+    }
 
     function add() {
       var newIndex = data.list.length;

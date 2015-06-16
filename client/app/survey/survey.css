@@ -101,7 +101,6 @@ span.likert-item-order {
 }
 
 .likert.likert-header-option {
-  width: 7%;
   text-align: center;
   vertical-align: bottom;
 }
@@ -111,13 +110,11 @@ span.likert-item-order {
 }
 
   .semantic-content-left {
-    width: 33%;
     text-align: right;
     vertical-align: middle;
   }
 
   .semantic-content-right {
-    width: 33%;
     text-align: left;
     vertical-align: middle;
   }
@@ -128,12 +125,13 @@ span.likert-item-order {
   }
 
   .semantic-header-content {
-    width: 33%;
+/*    width: 24%;*/
     text-align: center;
     vertical-align: bottom;
   }
 
   .semantic-header-option {
+    width: 8%;
     text-align: center;
     vertical-align: bottom;
   }

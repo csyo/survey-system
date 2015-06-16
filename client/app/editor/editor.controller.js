@@ -7,6 +7,7 @@ angular.module('surveyApp')
     this.theme = 'ngdialog-theme-default custom-width';
     this.showTextEditor = false;
 
+    /*jshint -W030*/
     this.currentSurvey;
     this.rows;
     this.displayed;
@@ -25,7 +26,7 @@ angular.module('surveyApp')
     ////////////////
 
     function activate() {
-      vm.currentSurvey = surveydata.getCurrentSurvey();
+      vm.currentSurvey = surveydata.getCurrentSurvey({ edit: true });
       vm.rows = surveydata.getPages();
       vm.displayed = [].concat(vm.rows);
     }
