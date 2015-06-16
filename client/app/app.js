@@ -13,7 +13,7 @@ angular.module('surveyApp', [
   'textAngular',
   'ngFileUpload',
   'pasvaz.bindonce',
-  'anguFixedHeaderTable'
+  'toastr'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

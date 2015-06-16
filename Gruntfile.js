@@ -1,4 +1,4 @@
-// Generated on 2015-04-17 using generator-angular-fullstack 2.0.13
+/*jshint -W097,-W033*/
 'use strict';
 
 module.exports = function (grunt) {
@@ -208,7 +208,7 @@ module.exports = function (grunt) {
             // opens browser on initial server start
             nodemon.on('config:update', function () {
               setTimeout(function () {
-                require('open')('http://localhost:8080/debug?port=5858');
+                require('open')('http://localhost:8080/debug?port=5858', 'Google Chrome');
               }, 500);
             });
           }

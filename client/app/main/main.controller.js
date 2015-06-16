@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('MainCtrl', function ($state, surveydata, $modal, $window, logger) {
+  .controller('MainCtrl', function ($state, surveydata, $modal, $window, $http, logger) {
 
   var vm = this;
   this.add = add;
@@ -41,6 +41,14 @@ angular.module('surveyApp')
 
   function toggleStatus(row) {
     row.status = !row.status;
+    $http.patch('/api/surveys/'+ row._id, row)
+      .success(function(data){
+        if (data.status !== row.status) { logger.error('Status doesn\'t match!'); }
+        else { logger.info('Patch completed'); }
+      })
+      .error(function(err){
+        logger.error(err);
+      });
   }
 
   function add() {

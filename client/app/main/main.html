@@ -35,11 +35,13 @@
             </button>
           </td>
           <td>
-            <button type="button" ng-click="main.edit($index)" class="btn btn-sm btn-info">
+            <button type="button" class="btn btn-sm btn-info"
+                    ng-click="main.edit($index)"  ng-disabled="row.status">
               <i class="glyphicon glyphicon-edit">
               </i>
             </button>
-            <button type="button" ng-click="main.remove($index)" class="btn btn-sm btn-danger">
+            <button type="button" class="btn btn-sm btn-danger"
+                    ng-click="main.remove($index)" ng-disabled="row.status">
               <i class="glyphicon glyphicon-trash">
               </i>
             </button>

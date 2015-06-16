@@ -52,6 +52,20 @@ exports.update = function(req, res) {
   });
 };
 
+// Updates an survey status or basic information in the DB.
+exports.patch = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  Survey.findById(req.params.id, function (err, survey) {
+    if (err) { return handleError(res, err); }
+    if(!survey) { return res.send(404); }
+    var updated = _.merge(survey, req.body);
+    updated.save(function (err, result) {
+      if (err) { return handleError(res, err); }
+      return res.json(200, result);
+    });
+  });
+};
+
 // Deletes a survey from the DB.
 exports.destroy = function(req, res) {
   Survey.findById(req.params.id, function (err, survey) {
