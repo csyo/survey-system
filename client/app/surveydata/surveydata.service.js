@@ -52,7 +52,8 @@ angular.module('surveyApp')
     getItemIndex : function() { return tmpPage.items.length; },
     setHtmlText : setHtmlText,
     getHtmlText : getHtmlText,
-    getFile : getFile
+    getFile : getFile,
+    removeFile : removeFile
   };
   return surveydataService;
 
@@ -179,8 +180,21 @@ angular.module('surveyApp')
     }
   }
 
-  function removeSurvey(surveyId) {
-    return $http.delete('/api/surveys/'+ surveyId)
+  function removeSurvey(survey) {
+    var pages = survey.pages;
+    pages.forEach(function(page) {
+      if (page.pageType.val === pageType.multimedia.val) {
+        removeFile(page.fileId)
+          .then(function(data) {
+            logger.info(data);
+          })
+          .catch(function(err) {
+            logger.error(err);
+          });
+      }
+    });
+
+    return $http.delete('/api/surveys/'+ survey._id)
             .then(deleted).catch(notDeleted);
 
     function deleted(data) {
@@ -225,6 +239,20 @@ angular.module('surveyApp')
 
     function getFileFailed(error) {
       logger.error('XHR Failed for fetchSurveys.', error.data);
+    }
+  }
+
+  function removeFile(fileId) {
+    return $http.delete('/api/uploads/' + fileId)
+            .then(deleted)
+            .catch(failed);
+
+    function deleted(response) {
+      return response;
+    }
+
+    function failed(error) {
+      return error;
     }
   }
 

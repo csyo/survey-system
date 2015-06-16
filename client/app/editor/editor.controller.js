@@ -96,6 +96,13 @@ angular.module('surveyApp')
     }
 
     function remove(index) {
+      if (vm.rows[index].fileId) {
+        surveydata.removeFile(vm.rows[index].fileId)
+          .then(function(response) {
+            logger.info(response);
+            surveydata.setPages(vm.currentSurvey);
+          });
+      }
       vm.rows.splice(index, 1);
       vm.rows.forEach(function (row, index) {
         row.pageOrder = index + 1;

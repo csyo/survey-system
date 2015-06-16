@@ -76,7 +76,7 @@ angular.module('surveyApp')
     });
     confirm.result.then(function (remove){
       if (remove) {
-        surveydata.removeSurvey(vm.rows[index]._id)
+        surveydata.removeSurvey(vm.rows[index])
           .then(function(){
             vm.rows.splice(index, 1);
             vm.rows.forEach(function(row, rowIndex){
