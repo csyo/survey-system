@@ -7,7 +7,6 @@ angular.module('surveyApp', [
   'ui.router',
   'ui.bootstrap',
   'smart-table',
-  'ngDialog',
   'xeditable',
   'colorpicker.module',
   'textAngular',
