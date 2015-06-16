@@ -14,7 +14,7 @@
              st-table="main.displayed" st-safe-src="main.rows" >
         <thead>
         <tr>
-          <th>編號</th>
+          <th>#</th>
           <th>標題</th>
           <th>帳號</th>
           <th>狀態</th>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="row in main.rows track by $index">
-          <td>{{::row.serialNo}}</td>
+          <td>{{::row.index| toSerialNo}}</td>
           <td>{{::row.title || '無標題'}}</td>
           <td>{{::row.account}}</td>
           <td>

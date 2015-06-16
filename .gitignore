@@ -5,5 +5,5 @@ public
 .DS_Store
 client/bower_components
 dist
-client/app/TODO.md
+TODO.md
 /server/config/local.env.js

@@ -5,10 +5,17 @@ var Survey = require('./survey.model');
 
 // Get list of surveys
 exports.index = function(req, res) {
-  Survey.find({ account: req.user._doc.name }, function (err, surveys) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, surveys);
-  });
+  if (req.user._doc.role === 'admin') {
+    Survey.find({}, function (err, surveys) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, surveys);
+    });
+  } else {
+    Survey.find({ account: req.user._doc.name }, function (err, surveys) {
+      if(err) { return handleError(res, err); }
+      return res.json(200, surveys);
+    });
+  }
 };
 
 // Get a single survey

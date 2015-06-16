@@ -103,9 +103,9 @@ angular.module('surveyApp')
 
     function fetchSurveysComplete(response) {
       var data = response.data;
-      data.sort(function(a, b){ // sort the data by serial number
-        if (a.serialNo < b.serialNo) return -1;
-        else if (a.serialNo > b.serialNo) return 1;
+      data.sort(function(a, b){ // sort the data by objectId
+        if (a._id < b._id) return -1;
+        else if (a._id > b._id) return 1;
         else return 0;
       });
       data.forEach(function(survey, index){ // add index for sorted data
@@ -123,11 +123,10 @@ angular.module('surveyApp')
   function setPages(data, callback) {
     var survey = {};
     survey.title = data.title;
-    survey.serialNo = data.serialNo;
     survey.status = data.status || false;
     survey.pages = data.pages;
     survey.account = data.account || Auth.getCurrentUser().name;
-    if (survey.serialNo) { // edit mode
+    if (data.index) { // edit mode
       survey.index = data.index;
       survey._id = data._id;
       surveydata.surveys[survey.index] = survey;
@@ -139,9 +138,6 @@ angular.module('surveyApp')
       });
     } else { // add mode
       survey.index = surveydata.surveys.length;
-      var lastNo = survey.index ? surveydata.surveys[survey.index-1].serialNo : '0';
-      var pad = '000', n = parseInt(lastNo) + 1;
-      survey.serialNo = (pad+n).slice(-pad.length);
       surveydata.surveys.push(survey);
       $http.post('/api/surveys', survey)
         .success(function(data){
