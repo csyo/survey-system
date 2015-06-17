@@ -14,6 +14,7 @@ angular.module('surveyApp')
 
     this.rows = surveydata.getItems();
     this.displayed = [].concat(this.rows);
+    this.itemOrder = this.rows.map(function(row){ return row.itemOrder; });
 
     /*** Declarsion ***/
 
@@ -202,14 +203,21 @@ angular.module('surveyApp')
           });
           row.lines += row.options.list.length;
         }
-      } else page.htmlContent = row.content;
+      } else {
+        page.htmlContent = row.content;
+        if (row.options && row.options.list) { // for choice type
+          row.options.list.forEach(function(option) {
+            page.htmlContent += '<li>' + option.name + '</li>';
+          });
+          row.lines += row.options.list.length;
+        }
+      }
       page.showTextEditor = true;
     }
 
     function checkTextarea(type) {
       if (type.match(/likerts/)) return true;
       if (type.match(/semantic/)) return true;
-      if (type.match(/choice/)) return true;
       return false;
     }
 
@@ -217,7 +225,7 @@ angular.module('surveyApp')
       var row = page.rows[page.editingRow];
       var content = page.htmlContent;
       var edited = content.match(/<li>/) ? content.split('<li>').length : content.split('<br>').length;
-      if (row.lines !== edited || !checkTextarea(row.itemType.val)) { // line should match with special case
+      if (row.lines !== edited || checkTextarea(row.itemType.val)) { // line should match with special case
         toastr.warning('請刪除多餘的行數或取消編輯', '格式錯誤！');
       } else {
         row.richText = true; // mark as html rich content
