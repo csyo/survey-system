@@ -124,6 +124,7 @@ angular.module('surveyApp')
   function setPages(callback) {
     if (typeof tmpSurvey.index === 'number') { // edit mode; index defined
       surveydata.surveys[tmpSurvey.index] = tmpSurvey;
+      if (tmpSurvey.__v) delete tmpSurvey.__v;
       $http.put('/api/surveys/' + tmpSurvey._id, tmpSurvey)
         .success(function(data){
         logger.info(data);

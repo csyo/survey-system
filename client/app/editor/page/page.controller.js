@@ -10,7 +10,6 @@ angular.module('surveyApp')
     this.customMenu = [['bold', 'italic', 'underline', 'strikethrough'],['font-color', 'hilite-color'],['remove-format']];
     this.showTextEditor = false;
     this.htmlContent = '';
-    this.editingRow;
 
     this.rows = surveydata.getItems();
     this.displayed = [].concat(this.rows);
@@ -193,8 +192,9 @@ angular.module('surveyApp')
       }
     }
 
+    var editingRow;
     function openTextEditor(row) {
-      page.editingRow = row.itemOrder-1;
+      editingRow = row.itemOrder-1;
       row.lines = format(row.content).split('<br>').length;
       if (checkTextarea(row.itemType.val)) {
         page.htmlContent = format(row.content);
@@ -218,12 +218,12 @@ angular.module('surveyApp')
 
     function checkTextarea(type) {
       if (type.match(/likerts/)) return true;
-      if (type.match(/semantic/)) return true;
+      if (type.match(/semantics/)) return true;
       return false;
     }
 
     function done() {
-      var row = page.rows[page.editingRow];
+      var row = page.rows[editingRow];
       var content = page.htmlContent;
       var edited = content.match(/<li>/) ? content.split('<li>').length : content.split('<br>').length;
       if (row.lines !== edited || checkTextarea(row.itemType.val)) { // line should match with special case
@@ -244,7 +244,7 @@ angular.module('surveyApp')
 
     function close() {
       page.htmlContent = '';
-      page.editingRow = -1;
+      editingRow = -1;
       page.showTextEditor = false;
     }
   });

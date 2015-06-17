@@ -62,13 +62,12 @@ angular.module('surveyApp')
       var content = item.content,
           scales = item.options.scales,
           questions = item.richText ? content.split('<br>') : content.split('\n');
-      if (questions[0].match(/,/) === null) {
-        item.title = questions.shift();
-      }
+      if (! (questions[0].match(/\|/) || questions[0].match(/｜/))) { item.title = questions.shift(); }
       questions.forEach(function(question, index){
         questions[index] = {
           order: index + 1,
-          content: question.split(','),
+          content: question.match(/\|/) ? question.split('|') :
+            question.match(/｜/) ? question.split('｜') : [question, ''],
           selected: '',
           options: generateScales(scales)
         };
