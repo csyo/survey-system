@@ -9,7 +9,7 @@ angular.module('surveyApp', [
   'smart-table',
   'xeditable',
   'colorpicker.module',
-  'textAngular',
+  'wysiwyg.module',
   'ngFileUpload',
   'pasvaz.bindonce',
   'toastr'
