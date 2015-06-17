@@ -121,29 +121,24 @@ angular.module('surveyApp')
     }
   }
 
-  function setPages(data, callback) {
-    var survey = {};
-    survey.title = data.title;
-    survey.status = data.status || false;
-    survey.pages = data.pages;
-    survey.account = data.account || Auth.getCurrentUser().name;
-    if (typeof data.index === 'number') { // edit mode; index defined
-      survey.index = data.index;
-      survey._id = data._id;
-      surveydata.surveys[survey.index] = survey;
-      $http.put('/api/surveys/' + data._id, survey)
+  function setPages(callback) {
+    if (typeof tmpSurvey.index === 'number') { // edit mode; index defined
+      surveydata.surveys[tmpSurvey.index] = tmpSurvey;
+      $http.put('/api/surveys/' + tmpSurvey._id, tmpSurvey)
         .success(function(data){
         logger.info(data);
       }).error(function(err){
         if (err) throw Error(err);
       });
     } else { // add mode; index undefined
-      survey.index = surveydata.surveys.length;
-      surveydata.surveys.push(survey);
-      $http.post('/api/surveys', survey)
+      tmpSurvey.index = surveydata.surveys.length;
+      tmpSurvey.status = false;
+      tmpSurvey.account = Auth.getCurrentUser().name;
+      surveydata.surveys.push(tmpSurvey);
+      $http.post('/api/surveys', tmpSurvey)
         .success(function(data){
           logger.info(data);
-          surveydata.surveys[survey.index]._id = data._id;
+          surveydata.surveys[tmpSurvey.index]._id = data._id;
         }).error(function(err){
           if (err) throw Error(err);
         });
@@ -162,7 +157,7 @@ angular.module('surveyApp')
   }
 
   function setCurrentSurvey(index) {
-    tmpSurvey = surveydata.surveys[index];
+    tmpSurvey = _.cloneDeep(surveydata.surveys[index]);
   }
 
   function getCurrentSurvey(mode) {
@@ -212,10 +207,9 @@ angular.module('surveyApp')
   }
   function getItems() {
     var items = tmpSurvey.pages.length ? tmpSurvey.pages[tmpPage.pageOrder - 1].items : '';
-    if (!items) return tmpPage.items;
+    if (!items) return [];
     else {
-      tmpPage.items = items;
-      return items;
+      return _.cloneDeep(items);
     }
   }
 
