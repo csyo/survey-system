@@ -87,6 +87,7 @@ angular.module('surveyApp')
     function checkRow(row) {
       // clean previous data
       row.content = '';
+      if (row.richText) delete row.richText;
       if (row.options) row.options = null;
       // add default value for scales
       switch (row.itemType.val) {

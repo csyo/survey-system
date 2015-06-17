@@ -29,23 +29,23 @@
         <thead>
         <tr>
           <th style="width:5%;" class="text-center">順序</th>
-          <th style="width:5%;">必填</th>
-          <th style="width:15%;">類型</th>
+          <th style="width:5%;" class="text-center">必填</th>
+          <th style="width:15%;" class="text-center">類型</th>
           <th style="width:50%;">內容</th>
-          <th style="width:10%;">量表尺度</th>
-          <th style="width:15%;">編輯項目</th>
+          <th style="width:15%;" class="text-center">編輯項目</th>
+          <th style="width:10%;" class="text-center">量表尺度</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="row in page.rows track by $index">
-          <td>
+          <td class="text-center">
             <span editable-number="row.itemOrder" e-min="1" e-max="{{page.rows.length}}"
                   onaftersave="page.moveItem(row.itemOrder-1, $index, row)">
               {{row.itemOrder}}
             </span>
           </td>
-          <td><input type="checkbox" ng-model="row.must"></td>
-          <td>
+          <td class="text-center"><input type="checkbox" ng-model="row.must"></td>
+          <td class="text-center">
             <span editable-select="row.itemType" e-name="itemType" buttons="no"
                   e-ng-options="type as type.name for (k,type) in page.itemTypes"
                   onaftersave="page.checkRow(row)">
@@ -54,20 +54,16 @@
           </td>
           <td>
             <div ng-include="page.showInputField(row)"></div>
-            <button type="button" class="btn btn-sm btn-default"
+            <button type="button" class="btn btn-sm btn-default" ng-if="row.richText"
                     ng-click="page.openTextEditor(row)" ng-hide="rowform.$visible">
+              <i class="glyphicon glyphicon-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-default" ng-if="!row.richText"
+                    ng-click="rowform.$show()" ng-hide="rowform.$visible">
               <i class="glyphicon glyphicon-pencil"></i>
             </button>
           </td>
-          <td>
-            <span editable-select="row.options.scales" buttons="no"
-                  e-ng-options="s for s in page.scaleOptions"
-                  e-ng-show="page.showScale(row.itemType)"
-                  onaftersave="page.clearScales(row)">
-              {{ row.options.scales}}
-            </span>
-          </td>
-          <td style="white-space: nowrap">
+          <td style="white-space: nowrap" class="text-center">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
                   shown="page.inserted == row">
               <button type="submit" ng-disabled="rowform.$waiting" ng-click="page.log(row)" class="btn btn-info">
@@ -84,13 +80,18 @@
                       ng-click="page.editOptionList(row)">
                 <i class="glyphicon glyphicon-list"></i>
               </button>
-              <button class="btn btn-primary" ng-click="rowform.$show()" ng-disabled="row.richText">
-                <i class="glyphicon glyphicon-edit"></i>
-              </button>
               <button class="btn btn-danger" ng-click="page.remove($index)">
                 <i class="glyphicon glyphicon-trash"></i>
               </button>
             </div>
+          </td>
+          <td class="text-center">
+            <span editable-select="row.options.scales" buttons="no"
+                  e-ng-options="s for s in page.scaleOptions"
+                  e-ng-show="page.showScale(row.itemType)"
+                  onaftersave="page.clearScales(row)">
+              {{ row.options.scales}}
+            </span>
           </td>
         </tr>
         </tbody>
