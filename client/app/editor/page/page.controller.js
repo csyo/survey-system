@@ -1,11 +1,16 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('PageCtrl', function ($state, $modal, surveydata) {
+  .controller('PageCtrl', function ($state, $modal, surveydata, toastr) {
     var page = this;
     var itemType = this.itemTypes = surveydata.getItemType();
     this.current = surveydata.getCurrentPage();
     this.scaleOptions = [3, 4, 5, 6, 7];
+
+    this.customMenu = [['bold', 'italic', 'underline', 'strikethrough'],['font-color', 'hilite-color'],['remove-format']];
+    this.showTextEditor = false;
+    this.htmlContent = '';
+    this.editingRow;
 
     this.rows = surveydata.getItems();
     this.displayed = [].concat(this.rows);
@@ -24,6 +29,9 @@ angular.module('surveyApp')
     this.showScale = showScale;
     this.clearScales = clearScales;
     this.moveItem = moveItem;
+    this.openTextEditor = openTextEditor;
+    this.done = done;
+    this.close = close;
 
     /*** Implementations ***/
 
@@ -72,13 +80,6 @@ angular.module('surveyApp')
 
       options.result.then(function (optionList) {
         row.options = optionList;
-//        row.preview = optionList.typeName === 'radio' ? '(單選題)' :
-//          optionList.typeName === 'checkbox' ? '(多選題)' : '(---)';
-//        optionList.list.forEach(function (option) {
-//          row.preview += '<li>' + option.name + '</li>';
-//        });
-//        row.preview += optionList.otherOption ? '<li>其他</li>' : '';
-        console.log(row);
       });
     }
 
@@ -160,12 +161,12 @@ angular.module('surveyApp')
      * @returns {String} formatted content
      */
     function format(content) {
-      return (content.match(/\n/g)) ? content.replace(/\n/g, '<br/>') : content;
+      return (content.match(/\n/g)) ? content.replace(/\n/g, '<br>') : content;
     }
 
     function add() {
       page.inserted = {
-        itemOrder: surveydata.getItemIndex() + 1,
+        itemOrder: page.rows.length + 1,
         itemType: '',
         must: false,
         content: ''
@@ -188,5 +189,53 @@ angular.module('surveyApp')
           row.itemOrder = index + 1;
         });
       }
+    }
+
+    function openTextEditor(row) {
+      page.editingRow = row.itemOrder-1;
+      row.lines = format(row.content).split('<br>').length;
+      if (checkTextarea(row.itemType.val)) {
+        page.htmlContent = format(row.content);
+        if (row.options && row.options.list) {
+          row.options.list.forEach(function(option) {
+            page.htmlContent += '<li>' + option.name + '</li>';
+          });
+          row.lines += row.options.list.length;
+        }
+      } else page.htmlContent = row.content;
+      page.showTextEditor = true;
+    }
+
+    function checkTextarea(type) {
+      if (type.match(/likerts/)) return true;
+      if (type.match(/semantic/)) return true;
+      if (type.match(/choice/)) return true;
+      return false;
+    }
+
+    function done() {
+      var row = page.rows[page.editingRow];
+      var content = page.htmlContent;
+      var edited = content.match(/<li>/) ? content.split('<li>').length : content.split('<br>').length;
+      if (row.lines !== edited || !checkTextarea(row.itemType.val)) { // line should match with special case
+        toastr.warning('請刪除多餘的行數或取消編輯', '格式錯誤！');
+      } else {
+        row.richText = true; // mark as html rich content
+        if (row.itemType.val.match(/choice/)) {
+          var contents = page.htmlContent.split('<li>');
+          row.content = contents.shift();
+          row.options.list = row.options.list.map(function(option, index) {
+            option.name = contents[index].replace(/<\/li>/, '').replace(/<br>/, '');
+            return option;
+          });
+        } else row.content = page.htmlContent;
+        close();
+      }
+    }
+
+    function close() {
+      page.htmlContent = '';
+      page.editingRow = -1;
+      page.showTextEditor = false;
     }
   });

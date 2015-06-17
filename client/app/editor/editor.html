@@ -12,13 +12,16 @@
       </button>
       </h1>
     </div>
-    <!-- textAngular editor -->
-    <div ng-if="editor.showTextEditor">
-      <div text-angular ng-model="editor.htmlContent"></div>
-      <div class="editor-btns">
-        <button type="button" class="btn btn-primary" ng-click="editor.done()">完成</button>
-        <button type="button" class="btn btn-default" ng-click="editor.cancel()">取消</button>
-      </div>
+    <!-- angular-wysiwyg -->
+    <div class="col-md-12" ng-if="editor.showTextEditor">
+        <wysiwyg textarea-id="textContent" textarea-class="form-control" textarea-height="400px"
+                 textarea-name="textareaContent" textarea-required
+                 ng-model="editor.htmlContent" enable-bootstrap-title="true">
+        </wysiwyg>
+        <div class="editor-btns">
+          <button type="button" class="btn btn-primary" ng-click="editor.done()">完成</button>
+          <button type="button" class="btn btn-default" ng-click="editor.cancel()">取消</button>
+        </div>
     </div>
     <!-- show pages here -->
     <div class="col-md-12" ng-hide="editor.showTextEditor">

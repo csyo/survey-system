@@ -3,7 +3,19 @@
     <div class="page-header">
       <h1>順序{{::page.current.pageOrder}}－{{::page.current.pageType.name}}</h1>
     </div>
-    <div class="col-md-12">
+    <!-- text editor div -->
+    <div class="col-md-12" ng-if="page.showTextEditor">
+        <wysiwyg textarea-id="rowContent" textarea-class="form-control" textarea-height="200px"
+                 textarea-name="textareaRowContent" textarea-required enable-bootstrap-title="true"
+                 ng-model="page.htmlContent" textarea-menu="page.customMenu">
+        </wysiwyg>
+        <div class="editor-btns">
+          <button type="button" class="btn btn-primary" ng-click="page.done()">完成</button>
+          <button type="button" class="btn btn-default" ng-click="page.close()">取消</button>
+        </div>
+    </div>
+    <!-- page items div -->
+    <div class="col-md-12" ng-hide="page.showTextEditor">
       <button type="button" ng-click="page.add()" class="btn btn-primary">
         <i class="glyphicon glyphicon-plus"></i>&nbsp;新增項目
       </button>
@@ -42,6 +54,10 @@
           </td>
           <td>
             <div ng-include="page.showInputField(row)"></div>
+            <button type="button" class="btn btn-sm btn-default"
+                    ng-click="page.openTextEditor(row)" ng-hide="rowform.$visible">
+              <i class="glyphicon glyphicon-pencil"></i>
+            </button>
           </td>
           <td>
             <span editable-select="row.options.scales" buttons="no"
@@ -68,7 +84,7 @@
                       ng-click="page.editOptionList(row)">
                 <i class="glyphicon glyphicon-list"></i>
               </button>
-              <button class="btn btn-primary" ng-click="rowform.$show()">
+              <button class="btn btn-primary" ng-click="rowform.$show()" ng-disabled="row.richText">
                 <i class="glyphicon glyphicon-edit"></i>
               </button>
               <button class="btn btn-danger" ng-click="page.remove($index)">
@@ -86,42 +102,42 @@
 <script type="text/ng-template" id="text.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="row.content">
+      ng-bind-html="row.content | toHtml">
 </span>
 </script>
 
 <script type="text/ng-template" id="likert.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="row.content">
+      ng-bind-html="row.content | toHtml">
 </span>
 </script>
 
 <script type="text/ng-template" id="likert-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="page.format(row.content)">
+      ng-bind-html="page.format(row.content) | toHtml">
 </span>
 </script>
 
 <script type="text/ng-template" id="semantic.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="2"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="page.format(row.content)">
+      ng-bind-html="page.format(row.content) | toHtml">
 </span>
 </script>
 
 <script type="text/ng-template" id="semantic-group.html">
 <span editable-textarea="row.content" e-name="content" e-form="rowform" e-rows="5"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="page.format(row.content)">
+      ng-bind-html="page.format(row.content) | toHtml">
 </span>
 </script>
 
 <script type="text/ng-template" id="question.html">
 <span editable-text="row.content" e-name="content" e-form="rowform"
       e-placeholder="{{row.tips}}"
-      ng-bind-html="row.content">
+      ng-bind-html="row.content | toHtml">
 </span>
-<p ng-bind-html="row.options | optionsPreview"></p>
+<p ng-bind-html="row.options | optionsPreview | toHtml"></p>
 </script>

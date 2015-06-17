@@ -28,12 +28,12 @@ angular.module('surveyApp')
 
     function activate() {
       vm.currentSurvey = surveydata.getCurrentSurvey({ edit: true });
-      vm.rows = surveydata.getPages();
+      vm.rows = vm.currentSurvey.pages;
       vm.displayed = [].concat(vm.rows);
     }
 
     function saveAll() {
-      surveydata.setPages(vm.currentSurvey, function () {
+      surveydata.setPages(function () {
         vm.goBack();
       });
     }
@@ -56,7 +56,6 @@ angular.module('surveyApp')
       logger.info(row);
       // update current page info
       var targetPage = surveydata.setCurrentPage(row);
-      // change route
       var type = surveydata.getPageType();
       switch (targetPage.pageType.val) {
       case type.questionary.val:

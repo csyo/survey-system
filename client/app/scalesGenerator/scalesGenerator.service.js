@@ -46,7 +46,7 @@ angular.module('surveyApp')
     function processLikertScale(item) {
       var content = item.content,
           scales = item.options.scales,
-          questions = content.split('\n');
+          questions = item.richText ? content.split('<br>') : content.split('\n');
       questions.forEach(function(question, index){
         questions[index] = {
           order: index + 1,
@@ -61,7 +61,7 @@ angular.module('surveyApp')
     function processSemanticScale(item) {
       var content = item.content,
           scales = item.options.scales,
-          questions = content.split('\n');
+          questions = item.richText ? content.split('<br>') : content.split('\n');
       if (questions[0].match(/,/) === null) {
         item.title = questions.shift();
       }
