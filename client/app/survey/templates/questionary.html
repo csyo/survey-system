@@ -61,6 +61,13 @@
               </td>
             </tr>
           </tbody>
+          <tfoot ng-if="item.questions.length > 10">
+            <tr>
+              <th class="likert likert-footer-content">&nbsp;</th>
+              <th class="likert likert-footer-option"
+                  bindonce ng-repeat="field in item.headers" bo-html="field.name | verticalText"></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
@@ -76,7 +83,7 @@
         <table class="semantic table">
           <thead>
             <th class="semantic-header-content">&nbsp;</th>
-            <th class="semantic-header-option"
+            <th bo-class="item.wider ? 'semantic-header-option-wide' : 'semantic-header-option'"
                 bindonce ng-repeat="field in item.headers" bo-html="field.name"></th>
             <th class="semantic-header-content">&nbsp;</th>
           </thead>
@@ -91,6 +98,13 @@
               <td class="semantic-content-right" bo-html="question.content[1]"></td>
             </tr>
           </tbody>
+          <tfoot ng-if="item.questions.length > 10">
+            <tr>
+              <th class="likert likert-footer-content">&nbsp;</th>
+              <th class="likert likert-footer-option"
+                  bindonce ng-repeat="field in item.headers" bo-html="field.name | verticalText"></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
 

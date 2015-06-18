@@ -45,7 +45,7 @@ angular.module('surveyApp')
       surveydata.getCurrentSurvey({ view: true })
         .then(function(data){
           if (!data) { vm.showError = true;}
-          vm.pages = data.pages;
+          else { vm.pages = data.pages; }
           showPage();
         });
     }
@@ -85,7 +85,8 @@ angular.module('surveyApp')
                   break;
                 case item_type.likerts.val:
                   item.viewOrder = ++viewOrder;
-                  viewOrder += item.content.split('\n').length -1;
+                  viewOrder += item.content.match(/\n/) ? item.content.split('\n').length -1 :
+                    item.content.split(/<br>/).length -1;
                   break;
                 default:
                   item.viewOrder = ++viewOrder;

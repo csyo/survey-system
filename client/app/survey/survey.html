@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row">
-    <div class="spinner-container" ng-if="survey.isLoading">
+    <div class="spinner-container" ng-if="survey.showError">
       <div class="spinner-display">
-        <div class="alert alert-danger" role="alert" ng-if="survey.showError">
+        <div class="alert alert-danger" role="alert">
           抱歉！你所輸入的網址無效，沒有內容可以顯示。
         </div>
       </div>
