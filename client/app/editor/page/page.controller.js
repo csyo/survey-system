@@ -78,8 +78,8 @@ angular.module('surveyApp')
         }
       });
 
-      options.result.then(function (optionList) {
-        row.options = optionList;
+      options.result.then(function (options) {
+        row.options = options;
       });
     }
 

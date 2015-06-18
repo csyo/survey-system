@@ -16,6 +16,7 @@ angular.module('surveyApp')
       data.list = optionList.list || [{ index: 0 }, { index: 1 }];
     } else {
       data.scales = optionList.scales;
+      if (data.wider) data.wider = optionList.wider;
       data.list = optionList.list || scalesGenerator.getHeader(optionList.scales, optionList.type);
     }
 
