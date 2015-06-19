@@ -99,11 +99,10 @@
             </tr>
           </tbody>
           <tfoot ng-if="item.questions.length > 10">
-            <tr>
-              <th class="likert likert-footer-content">&nbsp;</th>
-              <th class="likert likert-footer-option"
-                  bindonce ng-repeat="field in item.headers" bo-html="field.name | verticalText"></th>
-            </tr>
+            <th class="semantic-header-content">&nbsp;</th>
+            <th bo-class="item.options.wider ? 'semantic-header-option-wide' : 'semantic-header-option'"
+                bindonce ng-repeat="field in item.headers" bo-html="field.name"></th>
+            <th class="semantic-header-content">&nbsp;</th>
           </tfoot>
         </table>
       </div>

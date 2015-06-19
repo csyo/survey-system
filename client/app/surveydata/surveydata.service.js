@@ -75,7 +75,8 @@ angular.module('surveyApp')
     };
 
     var service = {
-      surveyId: tmpId,
+      setSurveyId: function(surveyId) { tmpId = surveyId; },
+      getSurveyId: function() { return tmpId; },
       saveResult: saveResult,
       getPageType: function() { return pageType; },
       getItemType: function() { return itemType; },
@@ -210,7 +211,7 @@ angular.module('surveyApp')
 
     function getCurrentSurvey(mode) {
       if (mode.view) {
-        return $http.get('/api/surveys/' + tmpId || 0)
+        return $http.get('/api/surveys/' + tmpId)
           .then(getSurveyComplete)
           .catch(getSurveyFailed);
       } else if (mode.edit) {
