@@ -39,7 +39,8 @@
         <tbody>
         <tr ng-repeat="row in page.rows track by $index">
           <td class="text-center">
-            <span editable-number="row.itemOrder" e-min="1" e-max="{{page.rows.length}}"
+            <span editable-select="row.itemOrder" buttons="no"
+                  e-ng-options="order for order in page.itemOrder"
                   onaftersave="page.moveItem(row.itemOrder-1, $index, row)">
               {{row.itemOrder}}
             </span>
@@ -54,14 +55,16 @@
           </td>
           <td>
             <div ng-include="page.showInputField(row)"></div>
-            <button type="button" class="btn btn-sm btn-default"
-                    ng-click="page.openTextEditor(row)" ng-hide="rowform.$visible">
-              <i class="glyphicon glyphicon-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-default" ng-if="!row.richText"
-                    ng-click="rowform.$show()" ng-hide="rowform.$visible">
-              <i class="glyphicon glyphicon-pencil"></i>
-            </button>
+            <div class="btn-group" style="margin-top: 5px;">
+              <button type="button" class="btn btn-sm btn-default" title="打開編輯器"
+                      ng-click="page.openTextEditor(row)" ng-hide="rowform.$visible">
+                <i class="glyphicon glyphicon-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-default" title="純文字輸入" ng-if="!row.richText"
+                      ng-click="rowform.$show()" ng-hide="rowform.$visible">
+                <i class="glyphicon glyphicon-pencil"></i>
+              </button>
+            </div>
           </td>
           <td style="white-space: nowrap" class="text-center">
             <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
@@ -88,9 +91,8 @@
           <td class="text-center">
             <span editable-select="row.options.scales" buttons="no"
                   e-ng-options="s for s in page.scaleOptions"
-                  e-ng-show="page.showScale(row.itemType)"
-                  onaftersave="page.clearScales(row)">
-              {{ row.options.scales}}
+                  >
+              {{ row.options.scales }}
             </span>
           </td>
         </tr>

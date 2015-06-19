@@ -1,24 +1,24 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location) {
+  .controller('SignupCtrl', function($scope, Auth, $location) {
     $scope.user = {};
     $scope.errors = {};
 
     $scope.register = function(form) {
       $scope.submitted = true;
 
-      if(form.$valid) {
+      if (form.$valid) {
         Auth.createUser({
           name: $scope.user.name,
           email: $scope.user.email,
           password: $scope.user.password
         })
-        .then( function() {
+        .then(function() {
           // Account created, redirect to home
           $location.path('/');
         })
-        .catch( function(err) {
+        .catch(function(err) {
           err = err.data;
           $scope.errors = {};
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('ConfirmCtrl', function ($modalInstance, title) {
+  .controller('ConfirmCtrl', function($modalInstance, title) {
     var vm = this;
     vm.ok = ok;
     vm.cancel = cancel;

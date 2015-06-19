@@ -14,7 +14,7 @@ angular.module('surveyApp', [
   'pasvaz.bindonce',
   'toastr'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
       .otherwise('/');
 
@@ -23,10 +23,10 @@ angular.module('surveyApp', [
 
   })
 
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
+  .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
-      request: function (config) {
+      request: function(config) {
         config.headers = config.headers || {};
         if ($cookieStore.get('token')) {
           config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
@@ -36,22 +36,21 @@ angular.module('surveyApp', [
 
       // Intercept 401s and redirect you to login
       responseError: function(response) {
-        if(response.status === 401) {
+        if (response.status === 401) {
           $location.path('/login');
           // remove any stale tokens
           $cookieStore.remove('token');
           return $q.reject(response);
-        }
-        else {
+        } else {
           return $q.reject(response);
         }
       }
     };
   })
 
-  .run(function ($rootScope, $location, Auth, editableOptions, logger) {
+  .run(function($rootScope, $location, Auth, editableOptions, logger) {
     // Redirect to login if route requires auth and you're not logged in
-    $rootScope.$on('$stateChangeStart', function (event, next) {
+    $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (next.authenticate && !loggedIn) {
           $location.path('/login');
@@ -66,24 +65,24 @@ angular.module('surveyApp', [
     var handlingRouteChangeError = false;
     $rootScope.$on('$stateChangeError',
         function(event, current, previous, rejection) {
-            if (handlingRouteChangeError) { return; }
-            handlingRouteChangeError = true;
-            var destination = (current && (current.title ||
-                current.name || current.loadedTemplateUrl)) ||
-                'unknown target';
-            var msg = 'Error routing to ' + destination + '. ' +
-                (rejection.msg || '');
+          if (handlingRouteChangeError) { return; }
+          handlingRouteChangeError = true;
+          var destination = (current && (current.title ||
+              current.name || current.loadedTemplateUrl)) ||
+              'unknown target';
+          var msg = 'Error routing to ' + destination + '. ' +
+              (rejection.msg || '');
 
-            /**
-             * Optionally log using a custom service or $log.
-             * (Don't forget to inject custom service)
-             */
-            logger.warning(msg, [current]);
+          /**
+           * Optionally log using a custom service or $log.
+           * (Don't forget to inject custom service)
+           */
+          logger.warning(msg, [current]);
 
-            /**
-             * On routing error, go to another route/state.
-             */
-            $location.path('/');
+          /**
+           * On routing error, go to another route/state.
+           */
+          $location.path('/');
 
         }
     );

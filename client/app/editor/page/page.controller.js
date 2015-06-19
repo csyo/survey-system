@@ -1,47 +1,63 @@
 'use strict';
-
 angular.module('surveyApp')
-  .controller('PageCtrl', function ($state, $modal, surveydata, toastr) {
-    var page = this;
+  .controller('PageCtrl', function($state, $modal, surveydata, toastr) {
+    var vm = this;
     var itemType = this.itemTypes = surveydata.getItemType();
-    this.current = surveydata.getCurrentPage();
-    this.scaleOptions = [3, 4, 5, 6, 7];
 
-    this.customMenu = [['bold', 'italic', 'underline', 'strikethrough'],['font-color', 'hilite-color'],['remove-format']];
+    /** text editor config **/
     this.showTextEditor = false;
     this.htmlContent = '';
+    this.customMenu = [
+      ['bold', 'italic', 'underline', 'strikethrough'],
+      ['font-color', 'hilite-color'],
+      ['remove-format']
+    ];
+    this.openTextEditor = openTextEditor;
+    this.done = submitTextEditor;
+    this.close = closeTextEditor;
 
-    this.rows = surveydata.getItems();
-    this.displayed = [].concat(this.rows);
-    this.itemOrder = this.rows.map(function(row){ return row.itemOrder; });
-
-    /*** Declarsion ***/
-
+    /** operation on row data **/
     this.add = add;
+    this.checkRow = checkRow;               // check everytime a new item type selected
+    this.moveItem = moveItem;
     this.remove = remove;
-    this.format = format;
+    this.showInputField = showInputField;   // show proper input field from item type
+
+    /** operaion on app data**/
     this.saveAll = saveAll;
     this.goBack = goBack;
-    this.checkRow = checkRow;
+
+    /** utility **/
+    this.format = format;
+
+    /** for options route **/
     this.editOptionList = editOptionList;
     this.showOptionList = showOptionList;
-    this.showInputField = showInputField;
+
+    /** for scale items **/
+    this.scaleOptions = [3, 4, 5, 6, 7];
     this.showScale = showScale;
-    this.clearScales = clearScales;
-    this.moveItem = moveItem;
-    this.openTextEditor = openTextEditor;
-    this.done = done;
-    this.close = close;
+
+    activate();
 
     /*** Implementations ***/
 
+    function activate() {
+      vm.current = surveydata.getCurrentPage();
+      vm.rows = vm.current.items || [];
+      vm.displayed = [].concat(vm.rows);
+      vm.itemOrder = vm.displayed.map(function(row) {
+        return row.itemOrder;
+      });
+    }
+
     function saveAll() {
-      page.rows.forEach(function (row) {
+      vm.rows.forEach(function(row) {
         delete row.preview;
         delete row.tips;
       });
-      surveydata.setItems(page.rows);
-      page.goBack();
+      surveydata.setItems(vm.rows);
+      vm.goBack();
     }
 
     function goBack() {
@@ -58,11 +74,11 @@ angular.module('surveyApp')
         type.match(/semantic/) ? type.match(/semantic/)[0] : row.itemType.val;
       var options = $modal.open({
         animation: true,
-        templateUrl: 'app/editor/page/options/options-'+ type +'.html',
+        templateUrl: 'app/editor/page/options/options-' + type + '.html',
         controller: 'OptionsCtrl',
         controllerAs: 'options',
         resolve: {
-          optionList: function () {
+          optionList: function() {
             switch (row.itemType.val) {
               /*jshint -W086*/
               case itemType.choice.val:
@@ -78,7 +94,7 @@ angular.module('surveyApp')
         }
       });
 
-      options.result.then(function (options) {
+      options.result.then(function(options) {
         row.options = options;
       });
     }
@@ -86,8 +102,8 @@ angular.module('surveyApp')
     function checkRow(row) {
       // clean previous data
       row.content = '';
-      if (row.richText) delete row.richText;
-      if (row.options) row.options = null;
+      if (row.richText) { delete row.richText; }
+      if (row.options) {row.options = null;}
       // add default value for scales
       switch (row.itemType.val) {
       case itemType.semantics.val:
@@ -95,7 +111,7 @@ angular.module('surveyApp')
       case itemType.likerts.val:
       case itemType.likert.val:
         row.options = {
-          scales: page.scaleOptions[4] // set default scale to 7
+          scales: vm.scaleOptions[4] // set default scale to 7
         };
         break;
       default:
@@ -112,10 +128,10 @@ angular.module('surveyApp')
         row.tips = '題目一\n題目二\n題目三\n題目四\n題目五';
         return 'likert-group.html';
       case itemType.semantic.val:
-        row.tips = '題目\n左選項 , 右選項';
+        row.tips = '題目\n左選項 | 右選項';
         return 'semantic.html';
       case itemType.semantics.val:
-        row.tips = '題目\n左選項 , 右選項\n左選項 , 右選項';
+        row.tips = '題目\n左選項 | 右選項\n左選項 | 右選項';
         return 'semantic-group.html';
       case itemType.choice.val:
       case itemType.blank.val:
@@ -152,10 +168,6 @@ angular.module('surveyApp')
       }
     }
 
-    function clearScales(row) {
-      row.options.list = null;
-    }
-
     /**
      * Format the content with html line break
      * @param   {Object}  row  Item data
@@ -166,27 +178,27 @@ angular.module('surveyApp')
     }
 
     function add() {
-      page.inserted = {
-        itemOrder: page.rows.length + 1,
+      vm.inserted = {
+        itemOrder: vm.rows.length + 1,
         itemType: '',
         must: false,
         content: ''
       };
-      page.rows.push(page.inserted);
+      vm.rows.push(vm.inserted);
     }
 
     function remove(index) {
-      page.rows.splice(index, 1);
-      page.rows.forEach(function (row, index) {
+      vm.rows.splice(index, 1);
+      vm.rows.forEach(function(row, index) {
         row.itemOrder = index + 1;
       });
     }
 
     function moveItem(newIndex, oldIndex, row) {
-      if (newIndex <= page.rows.length) {
-        page.rows.splice(oldIndex, 1);
-        page.rows.splice(newIndex, 0, row);
-        page.rows.forEach(function (row, index) {
+      if (newIndex <= vm.rows.length) {
+        vm.rows.splice(oldIndex, 1);
+        vm.rows.splice(newIndex, 0, row);
+        vm.rows.forEach(function(row, index) {
           row.itemOrder = index + 1;
         });
       }
@@ -194,57 +206,57 @@ angular.module('surveyApp')
 
     var editingRow;
     function openTextEditor(row) {
-      editingRow = row.itemOrder-1;
+      editingRow = row.itemOrder - 1;
       row.lines = format(row.content).split('<br>').length;
       if (checkTextarea(row.itemType.val)) {
-        page.htmlContent = format(row.content);
+        vm.htmlContent = format(row.content);
         if (row.options && row.options.list) {
           row.options.list.forEach(function(option) {
-            page.htmlContent += '<li>' + option.name + '</li>';
+            vm.htmlContent += '<li>' + option.name + '</li>';
           });
           row.lines += row.options.list.length;
         }
       } else {
-        page.htmlContent = row.content;
+        vm.htmlContent = row.content;
         if (row.options && row.options.list) { // for choice type
           row.options.list.forEach(function(option) {
-            page.htmlContent += '<li>' + option.name + '</li>';
+            vm.htmlContent += '<li>' + option.name + '</li>';
           });
-          row.lines += row.options.list.length;
+          vm.lines += row.options.list.length;
         }
       }
-      page.showTextEditor = true;
+      vm.showTextEditor = true;
     }
 
     function checkTextarea(type) {
-      if (type.match(/likerts/)) return true;
-      if (type.match(/semantics/)) return true;
+      if (type.match(/likerts/)) {return true;}
+      if (type.match(/semantics/)) {return true;}
       return false;
     }
 
-    function done() {
-      var row = page.rows[editingRow];
-      var content = page.htmlContent;
+    function submitTextEditor() {
+      var row = vm.rows[editingRow];
+      var content = vm.htmlContent;
       var edited = content.match(/<li>/) ? content.split('<li>').length : content.split('<br>').length;
       if (row.lines !== edited || checkTextarea(row.itemType.val)) { // line should match with special case
         toastr.warning('請刪除多餘的行數或取消編輯', '格式錯誤！');
       } else {
         row.richText = true; // mark as html rich content
         if (row.itemType.val.match(/choice/)) {
-          var contents = page.htmlContent.split('<li>');
+          var contents = vm.htmlContent.split('<li>');
           row.content = contents.shift();
           row.options.list = row.options.list.map(function(option, index) {
             option.name = contents[index].replace(/<\/li>/, '').replace(/<br>/, '');
             return option;
           });
-        } else row.content = page.htmlContent;
+        } else {row.content = vm.htmlContent;}
         close();
       }
     }
 
-    function close() {
-      page.htmlContent = '';
+    function closeTextEditor() {
+      vm.htmlContent = '';
       editingRow = -1;
-      page.showTextEditor = false;
+      vm.showTextEditor = false;
     }
   });

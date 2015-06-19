@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: PageCtrl', function () {
+describe('Controller: PageCtrl', function() {
 
   // load the controller's module
   beforeEach(module('surveyApp'));
@@ -8,11 +8,11 @@ describe('Controller: PageCtrl', function () {
   var PageCtrl;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller) {
+  beforeEach(inject(function($controller) {
     PageCtrl = $controller('PageCtrl');
   }));
 
-  xit('should have a page title', function () {
+  xit('should have a page title', function() {
     expect(PageCtrl.currentPage.title).toBeDefined();
   });
 
@@ -20,7 +20,7 @@ describe('Controller: PageCtrl', function () {
     expect(PageCtrl.displayed.length).not.toBe(0);
   });
 
-  xit('should save all the pages', function () {
+  xit('should save all the pages', function() {
     EditorCtrl.saveAll();
     expect(mockSurveydata.setPages).toHaveBeenCalled();
   });

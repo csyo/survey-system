@@ -48,7 +48,8 @@
         <tbody>
         <tr ng-repeat="row in editor.rows track by $index">
           <td class="text-center">
-            <span editable-number="row.pageOrder" e-min="1" e-max="{{editor.rows.length}}"
+            <span editable-select="row.pageOrder" buttons="no"
+                  e-ng-options="order for order in editor.pageOrder"
                   onaftersave="editor.movePage(row.pageOrder-1, $index, row)">
               {{row.pageOrder}}
             </span></td>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('UploadCtrl', function (fileId, surveydata, Upload, $modalInstance, logger) {
+  .controller('UploadCtrl', function(fileId, surveydata, Upload, $modalInstance, logger) {
     var vm = this;
     this.done = done;
     this.cancel = cancel;
@@ -20,7 +20,7 @@ angular.module('surveyApp')
       var request = surveydata.getFile(vm.fileId);
       if (request) {
         vm.isLoading = true;
-        request.then(function (data) {
+        request.then(function(data) {
           vm.isLoading = false;
           if (data && data.file) {
             vm.preview.data = data.file.img;
@@ -34,14 +34,14 @@ angular.module('surveyApp')
       vm.isLoading = true;
       if (vm.fileId) {
         return vm.update(vm.files[0])
-          .then(function(data){
-            if (vm.fileId !== data._id) logger.error('Something goes wrong!');
+          .then(function(data) {
+            if (vm.fileId !== data._id) {logger.error('Something goes wrong!');}
             vm.isLoading = false;
             $modalInstance.close();
           });
       } else {
         return vm.start(vm.files[0])
-          .then(function(data){
+          .then(function(data) {
             vm.isLoading = false;
             $modalInstance.close(data._id);
           });

@@ -1,16 +1,11 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('EditorCtrl', function ($state, $modal, surveydata, logger) {
+  .controller('EditorCtrl', function($state, $modal, surveydata, logger) {
     var vm = this;
     this.pageTypes = surveydata.getPageType();
     this.theme = 'ngdialog-theme-default custom-width';
     this.showTextEditor = false;
-
-    /*jshint -W030*/
-    this.currentSurvey;
-    this.rows;
-    this.displayed;
 
     this.saveAll = saveAll;
     this.add = add;
@@ -22,25 +17,30 @@ angular.module('surveyApp')
     this.movePage = movePage;
     this.toggleTextEditor = toggleTextEditor;
 
+    this.pageOrder = [];
+
     activate();
 
     ////////////////
 
     function activate() {
-      vm.currentSurvey = surveydata.getCurrentSurvey({ edit: true });
+      vm.currentSurvey = surveydata.getCurrentSurvey({edit: true});
       vm.rows = vm.currentSurvey.pages;
       vm.displayed = [].concat(vm.rows);
+      vm.pageOrder = vm.displayed.map(function(row) {
+        return row.pageOrder;
+      });
     }
 
     function saveAll() {
-      surveydata.setPages(function () {
+      surveydata.setPages(function() {
         vm.goBack();
       });
     }
 
     function goBack() {
-        // change route
-        $state.go('main');
+      // change route
+      $state.go('main');
     }
 
     function add() {
@@ -71,13 +71,13 @@ angular.module('surveyApp')
           controller: 'UploadCtrl',
           controllerAs: 'upload',
           resolve: {
-            fileId: function () {
+            fileId: function() {
               return row.fileId ? row.fileId : null;
             }
           }
         });
-        upload.result.then(function (fileId) {
-          if (!row.fileId) row.fileId = fileId;
+        upload.result.then(function(fileId) {
+          if (!row.fileId) { row.fileId = fileId; }
         });
         break;
       }
@@ -103,7 +103,7 @@ angular.module('surveyApp')
           });
       }
       vm.rows.splice(index, 1);
-      vm.rows.forEach(function (row, index) {
+      vm.rows.forEach(function(row, index) {
         row.pageOrder = index + 1;
       });
     }
@@ -112,7 +112,7 @@ angular.module('surveyApp')
       if (newIndex <= vm.rows.length) {
         vm.rows.splice(oldIndex, 1);
         vm.rows.splice(newIndex, 0, row);
-        vm.rows.forEach(function (row, index) {
+        vm.rows.forEach(function(row, index) {
           row.pageOrder = index + 1;
         });
       }

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('SurveyCtrl', function ($state, surveydata, scalesGenerator, logger, $timeout) {
+  .controller('SurveyCtrl', function($state, surveydata, scalesGenerator, logger, $timeout) {
     var vm = this;
-    var page_type = surveydata.getPageType();
-    var item_type = this.itemType = surveydata.getItemType();
+    var pageType = surveydata.getPageType();
+    var itemType = this.itemType = surveydata.getItemType();
 
     /** page data storage **/
     this.page = '';
@@ -42,10 +42,9 @@ angular.module('surveyApp')
     //////////////////////////
 
     function activate() {
-      surveydata.getCurrentSurvey({ view: true })
-        .then(function(data){
-          if (!data) { vm.showError = true;}
-          else { vm.pages = data.pages; }
+      surveydata.getCurrentSurvey({view: true})
+        .then(function(data) {
+          if (!data) { vm.showError = true;} else { vm.pages = data.pages; }
           showPage();
         });
     }
@@ -56,37 +55,37 @@ angular.module('surveyApp')
         vm.nextEnabled = true;
         vm.isEnd = vm.currentPage.pageOrder === vm.pages.length;
         switch (vm.currentPage.pageType.val) {
-        case page_type.description.val:
+        case pageType.description.val:
           vm.page = 'app/survey/templates/description.html';
           break;
-        case page_type.multimedia.val:
+        case pageType.multimedia.val:
           vm.page = 'app/survey/templates/multimedia.html';
           if (vm.currentPage.fileId) {
             vm.isLoading = true;
             vm.getFile(vm.currentPage.fileId)
-              .then(function (data) {
+              .then(function(data) {
                 vm.isLoading = false;
                 if (data && data.file) {
-                  vm.file = 'data:'+ data.file.mimetype +';base64,'+ data.file.img;
+                  vm.file = 'data:' + data.file.mimetype + ';base64,' + data.file.img;
                 }
               });
-          } else vm.file = '';
+          } else { vm.file = ''; }
           break;
-        case page_type.questionary.val:
+        case pageType.questionary.val:
           var viewOrder = 0;
           if (vm.currentPage.items) {
-            vm.currentPage.items.forEach(function(item){
+            vm.currentPage.items.forEach(function(item) {
               switch (item.itemType.val) {
-                case item_type.title.val:
-                case item_type.caption.val:
+                case itemType.title.val:
+                case itemType.caption.val:
                   break;
-                case item_type.semantics.val:
+                case itemType.semantics.val:
                   item.viewOrder = ++viewOrder;
                   break;
-                case item_type.likerts.val:
+                case itemType.likerts.val:
                   item.viewOrder = ++viewOrder;
-                  viewOrder += item.content.match(/\n/) ? item.content.split('\n').length -1 :
-                    item.content.split(/<br>/).length -1;
+                  viewOrder += item.content.match(/\n/) ? item.content.split('\n').length - 1 :
+                    item.content.split(/<br>/).length - 1;
                   break;
                 default:
                   item.viewOrder = ++viewOrder;
@@ -106,26 +105,26 @@ angular.module('surveyApp')
 
     function showItem(item) {
       switch (item.itemType.val) {
-      case item_type.title.val:
-      case item_type.caption.val:
+      case itemType.title.val:
+      case itemType.caption.val:
         return 'text.html';
-      case item_type.choice.val:
+      case itemType.choice.val:
         if (item.options.otherOption && (_.last(item.options.list).name !== '其他')) {
-          item.options.list.push({ index: item.options.list.length, name: '其他' });
+          item.options.list.push({index: item.options.list.length, name: '其他'});
         }
         return 'choice.html';
-      case item_type.blank.val:
+      case itemType.blank.val:
       case 'fill-in-blank':
         return 'blank.html';
-      case item_type.likert.val:
-      case item_type.likerts.val:
+      case itemType.likert.val:
+      case itemType.likerts.val:
         if (!item.headers) { item.headers = item.options.list ? item.options.list : scalesGenerator.getHeader(item.options.scales, 'likert'); }
-        if (!item.questions) item.questions = scalesGenerator.getLikerts(item);
+        if (!item.questions) { item.questions = scalesGenerator.getLikerts(item); }
         return 'likert.html';
-      case item_type.semantic.val:
-      case item_type.semantics.val:
-        if (!item.headers) { item.headers = item.options.list ? item.options.list :scalesGenerator.getHeader(item.options.scales, 'semantic'); }
-        if (!item.questions) item.questions = scalesGenerator.getSemantics(item);
+      case itemType.semantic.val:
+      case itemType.semantics.val:
+        if (!item.headers) { item.headers = item.options.list ? item.options.list : scalesGenerator.getHeader(item.options.scales, 'semantic'); }
+        if (!item.questions) { item.questions = scalesGenerator.getSemantics(item); }
         return 'semantic.html';
       }
     }
@@ -136,31 +135,31 @@ angular.module('surveyApp')
         // generate results item
         var results = [];
         vm.pages.forEach(function(page) {
-          if (page.pageType.val === page_type.questionary.val) {
+          if (page.pageType.val === pageType.questionary.val) {
             /*jshint -W030*/
             page.items && page.items.forEach(function(item) {
               switch (item.itemType.val) {
-                case item_type.blank.val:
+                case itemType.blank.val:
                   results.push({
-                    order: page.pageOrder +'-'+ item.viewOrder,
+                    order: page.pageOrder + '-' + item.viewOrder,
                     question: item.content,
                     answer: item.input
                   });
                   break;
-                case item_type.choice.val:
+                case itemType.choice.val:
                   results.push({
-                    order: page.pageOrder +'-'+ item.viewOrder,
+                    order: page.pageOrder + '-' + item.viewOrder,
                     question: item.content,
                     answer: choiceAnswer(item, item.options.typeName)
                   });
                   break;
-                case item_type.likert.val:
-                case item_type.likerts.val:
-                case item_type.semantic.val:
-                case item_type.semantics.val:
+                case itemType.likert.val:
+                case itemType.likerts.val:
+                case itemType.semantic.val:
+                case itemType.semantics.val:
                   item.questions.forEach(function(question) {
                     results.push({
-                      order: page.pageOrder +'-'+ item.viewOrder,
+                      order: page.pageOrder + '-' + item.viewOrder,
                       question: question.content.toString(),
                       answer: question.selected
                     });
@@ -174,7 +173,7 @@ angular.module('surveyApp')
         });
         logger.info(results);
         surveydata.saveResult(results)
-          .then(function(data){
+          .then(function(data) {
             logger.info(data);
             vm.showSuccessMsg = true;
           });
@@ -189,7 +188,7 @@ angular.module('surveyApp')
       } else if (typeName === 'checkbox') {
         var answers = [];
         for (var key in item.options.option) {
-          if (item.options.option[key]) answers.push(item.options.list[key]);
+          if (item.options.option[key]) { answers.push(item.options.list[key]); }
         }
         return answers;
       }
@@ -246,87 +245,87 @@ angular.module('surveyApp')
       return (vm.currentPage.pageOrder - 2) < 0;
     }
 
-//    function generateHeader(scales, type) {
-//      var headers = generateScales(scales);
-//      headers.forEach(function(scale, index){
-//        var content = '';
-//        if (type === 'likert') {
-//          _.forEach(generateScaleOption(scale), function(char){ content += char +'<br>'; });
-//        } else content = index + 1 + '';
-//        headers[index] = { val: scale, name: content };
-//      });
-//      return headers;
-//    }
-//
-//    function generateScaleOption(scale) {
-//      switch(scale) {
-//        case 1:
-//          return '非常不同意';
-//        case 2:
-//          return '不同意';
-//        case 3:
-//          return '有點不同意';
-//        case 4:
-//          return '沒意見';
-//        case 5:
-//          return '有點同意';
-//        case 6:
-//          return '同意';
-//        case 7:
-//          return '非常同意';
-//      }
-//    }
-//
-//    function processLikertScale(item) {
-//      var content = item.content,
-//          scales = item.options.scales,
-//          questions = content.split('\n');
-//      questions.forEach(function(question, index){
-//        questions[index] = {
-//          order: index + 1,
-//          content: question,
-//          selected: '',
-//          options: generateScales(scales)
-//        };
-//      });
-//      return questions;
-//    }
-//
-//    function processSemanticScale(item) {
-//      var content = item.content,
-//          scales = item.options.scales,
-//          questions = content.split('\n');
-//      if (questions[0].search(',') === -1) {
-//        item.title = questions.shift();
-//      }
-//      questions.forEach(function(question, index){
-//        questions[index] = {
-//          order: index + 1,
-//          content: question.split(','),
-//          selected: '',
-//          options: generateScales(scales)
-//        };
-//      });
-//      return questions;
-//    }
-//
-//    function generateScales(scales) {
-//      var data = [1,2,3,4,5,6,7];
-//      switch(scales) {
-//        case 7:
-//          return data;
-//        case 6: // 1,2,3,5,6,7
-//          data.splice(3,1);
-//          return data;
-//        case 5: // 2,3,4,5,6
-//          return data.slice(1, -1);
-//        case 4: // 2,3,5,6
-//          data = data.slice(1, -1);
-//          data.splice(2,1);
-//          return data;
-//        case 3: // 3,5,6
-//          return data.slice(2,-2);
-//      }
-//    }
+    //    function generateHeader(scales, type) {
+    //      var headers = generateScales(scales);
+    //      headers.forEach(function(scale, index){
+    //        var content = '';
+    //        if (type === 'likert') {
+    //          _.forEach(generateScaleOption(scale), function(char){ content += char +'<br>'; });
+    //        } else content = index + 1 + '';
+    //        headers[index] = { val: scale, name: content };
+    //      });
+    //      return headers;
+    //    }
+    //
+    //    function generateScaleOption(scale) {
+    //      switch(scale) {
+    //        case 1:
+    //          return '非常不同意';
+    //        case 2:
+    //          return '不同意';
+    //        case 3:
+    //          return '有點不同意';
+    //        case 4:
+    //          return '沒意見';
+    //        case 5:
+    //          return '有點同意';
+    //        case 6:
+    //          return '同意';
+    //        case 7:
+    //          return '非常同意';
+    //      }
+    //    }
+    //
+    //    function processLikertScale(item) {
+    //      var content = item.content,
+    //          scales = item.options.scales,
+    //          questions = content.split('\n');
+    //      questions.forEach(function(question, index){
+    //        questions[index] = {
+    //          order: index + 1,
+    //          content: question,
+    //          selected: '',
+    //          options: generateScales(scales)
+    //        };
+    //      });
+    //      return questions;
+    //    }
+    //
+    //    function processSemanticScale(item) {
+    //      var content = item.content,
+    //          scales = item.options.scales,
+    //          questions = content.split('\n');
+    //      if (questions[0].search(',') === -1) {
+    //        item.title = questions.shift();
+    //      }
+    //      questions.forEach(function(question, index){
+    //        questions[index] = {
+    //          order: index + 1,
+    //          content: question.split(','),
+    //          selected: '',
+    //          options: generateScales(scales)
+    //        };
+    //      });
+    //      return questions;
+    //    }
+    //
+    //    function generateScales(scales) {
+    //      var data = [1,2,3,4,5,6,7];
+    //      switch(scales) {
+    //        case 7:
+    //          return data;
+    //        case 6: // 1,2,3,5,6,7
+    //          data.splice(3,1);
+    //          return data;
+    //        case 5: // 2,3,4,5,6
+    //          return data.slice(1, -1);
+    //        case 4: // 2,3,5,6
+    //          data = data.slice(1, -1);
+    //          data.splice(2,1);
+    //          return data;
+    //        case 3: // 3,5,6
+    //          return data.slice(2,-2);
+    //      }
+    //    }
 
   });
