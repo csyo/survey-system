@@ -122,15 +122,10 @@ angular.module('surveyApp')
       var state = $state.current.name;
       switch (state) {
       case 'page':
-        tmpPage.pageOrder = 0;
-        tmpPage.pageCount = 0;
-        tmpPage.pageType = '';
-        tmpPage.items = [];
+        tmpPage = null;
         break;
       case 'editor':
-        tmpSurvey.serialNo = '';
-        tmpSurvey.title = '';
-        tmpSurvey.pages = [];
+        tmpSurvey = null;
         break;
       case 'survey':
         tmpId = '';

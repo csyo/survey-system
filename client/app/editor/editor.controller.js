@@ -39,6 +39,7 @@ angular.module('surveyApp')
     }
 
     function goBack() {
+      surveydata.reset();
       // change route
       $state.go('main');
     }

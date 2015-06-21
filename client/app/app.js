@@ -6,6 +6,7 @@ angular.module('surveyApp', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
+  'ngMessages',
   'smart-table',
   'xeditable',
   'colorpicker.module',

@@ -37,7 +37,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in page.rows track by $index">
+        <tr class="edit-mode" ng-repeat="row in page.rows track by $index">
           <td class="text-center">
             <span editable-select="row.itemOrder" buttons="no"
                   e-ng-options="order for order in page.itemOrder"

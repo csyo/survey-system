@@ -24,7 +24,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="row in main.rows track by $index">
+        <tr class="edit-mode" ng-repeat="row in main.rows track by $index">
           <td class="text-center">{{::row.index| toSerialNo}}</td>
           <td>{{::row.title || '無標題'}}</td>
           <td class="text-center">{{::row.account}}</td>

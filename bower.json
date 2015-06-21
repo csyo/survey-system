@@ -8,7 +8,7 @@
     "jquery": "~1.11.0",
     "bootstrap": "~3.1.1",
     "angular-resource": ">=1.2.*",
-    "angular-cookies": ">=1.2.*",
+    "angular-cookies": "~1.4.1",
     "angular-sanitize": ">=1.2.*",
     "angular-bootstrap": "~0.11.0",
     "font-awesome": ">=4.1.0",
@@ -21,11 +21,15 @@
     "angular-bootstrap-colorpicker": "~3.0.18",
     "angular-bindonce": "~0.3.3",
     "angular-toastr": "~1.4.1",
-    "angular-wysiwyg": "~1.2.2"
+    "angular-wysiwyg": "~1.2.2",
+    "angular-messages": "~1.4.1"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*",
     "angularjs-color-picker": "~0.4.0"
+  },
+  "resolutions": {
+    "angular": ">=1.2.*"
   }
 }

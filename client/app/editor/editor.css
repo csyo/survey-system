@@ -14,7 +14,7 @@
   display: block;
 }
 
-td {
+.edit-mode > td {
   height: 60px;
   vertical-align: middle!important;
 }

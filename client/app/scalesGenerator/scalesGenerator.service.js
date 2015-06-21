@@ -49,7 +49,7 @@ angular.module('surveyApp')
       var questions = item.richText ? content.split('<br>') : content.split('\n');
       questions.forEach(function(question, index) {
         questions[index] = {
-          order: index + 1,
+          order: item.viewOrder + index,
           content: question,
           selected: '',
           options: generateScales(scales)
