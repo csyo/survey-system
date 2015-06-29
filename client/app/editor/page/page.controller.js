@@ -250,7 +250,7 @@ angular.module('surveyApp')
             return option;
           });
         } else {row.content = vm.htmlContent;}
-        close();
+        closeTextEditor();
       }
     }
 
