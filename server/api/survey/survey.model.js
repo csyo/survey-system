@@ -8,7 +8,8 @@ var SurveySchema = new Schema({
   serialNo: String,
   status: Boolean,
   title: String,
-  pages: Array
+  pages: Array,
+  permissionList: [String]
 });
 
 module.exports = mongoose.model('Survey', SurveySchema);

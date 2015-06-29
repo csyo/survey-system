@@ -17,9 +17,10 @@
           <th class="text-center">#</th>
           <th>標題</th>
           <th class="text-center">帳號</th>
-          <th class="text-center">狀態</th>
           <th class="text-center">編輯</th>
           <th class="text-center">預覽</th>
+          <th class="text-center">權限設定</th>
+          <th class="text-center">對外開放</th>
           <th class="text-center">填寫網址</th>
         </tr>
         </thead>
@@ -29,22 +30,18 @@
           <td>{{::row.title || '無標題'}}</td>
           <td class="text-center">{{::row.account}}</td>
           <td class="text-center">
-            <button type="button" ng-click="main.toggleStatus(row)" class="btn btn-sm btn-default">
-              <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-eye-close'">
-              </i>
-            </button>
-          </td>
-          <td class="text-center">
-            <button type="button" class="btn btn-sm btn-info"
-                    ng-click="main.edit($index)"  ng-disabled="row.status">
-              <i class="glyphicon glyphicon-edit">
-              </i>
-            </button>
-            <button type="button" class="btn btn-sm btn-danger"
-                    ng-click="main.remove($index)" ng-disabled="row.status">
-              <i class="glyphicon glyphicon-trash">
-              </i>
-            </button>
+            <div ng-if="main.preventEdit(row)">
+              <button type="button" class="btn btn-sm btn-info"
+                      ng-click="main.edit($index)"  ng-disabled="row.status">
+                <i class="glyphicon glyphicon-edit">
+                </i>
+              </button>
+              <button type="button" class="btn btn-sm btn-danger"
+                      ng-click="main.remove($index)" ng-disabled="row.status">
+                <i class="glyphicon glyphicon-trash">
+                </i>
+              </button>
+            </div>
           </td>
           <td class="text-center">
           <button type="button" ng-click="main.preview(row._id)" class="btn btn-sm btn-success">
@@ -53,9 +50,24 @@
           </button>
           </td>
           <td class="text-center">
-          <button type="button" ng-click="main.generateUrl(row)" ng-disabled="!row.status" class="btn btn-sm btn-link">
-            開啟
+          <button type="button" class="btn btn-sm btn-default"
+                  ng-click="main.setPermission(row)" ng-if="main.preventEdit(row)" >
+            <i class="glyphicon glyphicon-tasks">
+            </i>
           </button>
+          </td>
+          <td class="text-center">
+            <button type="button" class="btn btn-sm btn-default"
+                    ng-click="main.toggleStatus(row)" ng-if="main.preventEdit(row)">
+              <i class="glyphicon" ng-class="row.status ? 'glyphicon-eye-open' : 'glyphicon-ban-circle'">
+              </i>
+            </button>
+          </td>
+          <td class="text-center">
+          <a type="button" ng-href="https://nckuba-survey.herokuapp.com/{{row._id}}"
+             ng-click="main.generateUrl(row)" ng-disabled="!row.status" class="btn btn-sm btn-link">
+            開啟
+          </a>
           </td>
         </tr>
         </tbody>

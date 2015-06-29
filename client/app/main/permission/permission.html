@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h3 class="modal-title">編輯 <small>在此新增可預覽此問卷的使用者帳號</small></h3>
+</div>
+<div class="modal-body">
+  <button class="btn btn-info" ng-click="permission.add()">新增</button>
+  <div class="options" ng-repeat="permission in permission.data">
+    <input type="text" class="form-control" ng-model="permission.name">
+    <button class="btn btn-danger" ng-click="permission.remove()">刪除</button>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="permission.ok()">完成</button>
+  <button class="btn btn-warning" ng-click="permission.cancel()">取消</button>
+</div>

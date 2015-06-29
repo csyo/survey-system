@@ -166,6 +166,7 @@ angular.module('surveyApp')
         $http.put('/api/surveys/' + tmpSurvey._id, tmpSurvey)
           .success(function(data) {
             logger.info(data);
+            if (callback) { callback(); }
           }).error(function(err) {
             if (err) {
               throw Error(err);
@@ -180,14 +181,12 @@ angular.module('surveyApp')
           .success(function(data) {
             logger.info(data);
             surveys[tmpSurvey.index]._id = data._id;
+            if (callback) { callback(); }
           }).error(function(err) {
             if (err) {
               throw Error(err);
             }
           });
-      }
-      if (callback) {
-        callback();
       }
     }
 

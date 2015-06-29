@@ -13,7 +13,11 @@ exports.index = function(req, res) {
   } else {
     Survey.find({ account: req.user._doc.name }, function (err, surveys) {
       if(err) { return handleError(res, err); }
-      return res.json(200, surveys);
+      Survey.find({ permissionList: req.user._doc.name }, function (err, others) {
+        if(err) { return handleError(res, err); }
+        var all = surveys.concat(others);
+        return res.json(200, all);
+      });
     });
   }
 };
@@ -59,6 +63,7 @@ exports.patch = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!survey) { return res.send(404); }
     var updated = _.merge(survey, req.body);
+    updated.markModified('permissionList');
     updated.save(function (err, result) {
       if (err) { return handleError(res, err); }
       return res.json(200, result);
