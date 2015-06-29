@@ -13,7 +13,7 @@
         <ol class="item-order" start="{{item.viewOrder}}">
           <li>
             <span bo-html="item.content"></span>
-            <span style="color: red;" bo-if="item.must"> *</span>
+            <span style="color: red;" bo-if="item.must">&nbsp;*</span>
           </li>
         </ol>
         <div ng-repeat="option in item.options.list">
@@ -47,10 +47,10 @@
           <tbody>
             <tr bindonce ng-repeat="question in item.questions">
               <td class="likert likert-content">
-                <ol class="likert-item-order" start="{{item.viewOrder + question.order - 1}}">
+                <ol class="likert-item-order" start="{{question.order}}">
                   <li>
                     <span bo-html="question.content"></span>
-                    <span style="color: red;" bo-if="item.must"> *</span>
+                    <span style="color: red;" bo-if="item.must">&nbsp;*</span>
                   </li>
                 </ol>
               </td>
@@ -76,7 +76,6 @@
         <ol class="item-order" start="{{item.viewOrder}}">
           <li>
             <span bo-html="item.title"></span>
-            <span style="color: red;" bo-if="item.must"> *</span>
           </li>
         </ol>
         <br/>
@@ -89,7 +88,11 @@
           </thead>
           <tbody>
             <tr bindonce ng-repeat="question in item.questions">
-              <td class="semantic-content-left" bo-html="question.content[0]"></td>
+              <td class="semantic-content-left">
+                <span style="float:left;" ng-if="item.itemType.val === 'semantics'">{{item.viewOrder}}.{{question.order}}</span>
+                <span style="float:left; color: red;" bo-if="item.must">&nbsp;*</span>
+                <span bo-html="question.content[0]"></span>
+              </td>
               <td class="semantic-option"
                   ng-repeat="option in question.options">
                 <input type="radio" ng-model="question.selected" ng-value="option"
@@ -113,7 +116,7 @@
         <ol class="item-order" start="{{item.viewOrder}}">
           <li>
             <span bo-html="item.content"></span>
-            <span style="color: red;" bo-if="item.must"> *</span>
+            <span style="color: red;" bo-if="item.must">&nbsp;*</span>
           </li>
         </ol>
         <br/>
