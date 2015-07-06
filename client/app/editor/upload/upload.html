@@ -1,14 +1,20 @@
 <div class="modal-header">
-  <div ngf-select ng-model="upload.files" class="btn btn-default" ngf-accept="'image/*'">
+  <div ngf-select ng-model="upload.files" ng-click="upload.type = 'image'" class="btn btn-default" ngf-accept="'image/*'">
     <i class="glyphicon glyphicon-hdd"> 選擇檔案</i>
   </div>
-  <div class="blank"></div>
+  <div class="btn btn-default" ng-click="upload.type = 'video'">
+    <i class="glyphicon glyphicon-facetime-video"> 插入YouTube影片網址</i>
+  </div>
+  &nbsp;
   <div class="throbber-loader" ng-show="upload.isLoading">
     Loading…
   </div>
   <div class="float-right">
-    <button type="button" class="btn btn-primary" ng-click="upload.done()">
+    <button type="button" class="btn btn-primary" ng-click="upload.done()" ng-if="upload.type === 'image'">
       <i class="glyphicon glyphicon-open"> 上傳</i>
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="upload.save()" ng-if="upload.type === 'video'">
+      <i class="glyphicon glyphicon-ok"> 儲存</i>
     </button>
     <button type="button" class="btn btn-warning" ng-click="upload.cancel()">
       <i class="glyphicon glyphicon-remove"></i>
@@ -16,8 +22,13 @@
   </div>
 </div>
 <div class="modal-body">
-  <img class="thumbnail" ng-show="upload.files[0] || !upload.preview.data"
-       ngf-src="upload.files[0]" ngf-default-src="/thumb.jpg" ngf-accept="'image/*'">
-  <img class="thumbnail" ng-if="upload.preview.data" ng-hide="upload.files[0]"
-       data-ng-src="data:{{upload.preview.type}};base64,{{upload.preview.data}}">
+  <div ng-show="upload.type === 'image'">
+    <img class="thumbnail" ng-show="upload.files[0] || !upload.preview.data"
+         ngf-src="upload.files[0]" ngf-default-src="/thumb.jpg" ngf-accept="'image/*'">
+    <img class="thumbnail" ng-if="upload.preview.data" ng-hide="upload.files[0]"
+         data-ng-src="data:{{upload.preview.type}};base64,{{upload.preview.data}}">
+  </div>
+  <div ng-show="upload.type === 'video'">
+    <input type="text" class="form-control" ng-model="upload.videoUrl">
+  </div>
 </div>

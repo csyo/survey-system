@@ -72,13 +72,13 @@ angular.module('surveyApp')
           controller: 'UploadCtrl',
           controllerAs: 'upload',
           resolve: {
-            fileId: function() {
-              return row.fileId ? row.fileId : null;
+            file: function() {
+              return row.file ? row.file : null;
             }
           }
         });
-        upload.result.then(function(fileId) {
-          if (!row.fileId) { row.fileId = fileId; }
+        upload.result.then(function(file) {
+          if (!row.file) { row.file = file; }
         });
         break;
       }
@@ -96,8 +96,9 @@ angular.module('surveyApp')
     }
 
     function remove(index) {
-      if (vm.rows[index].fileId) {
-        surveydata.removeFile(vm.rows[index].fileId)
+      var file = vm.rows[index].file;
+      if (file && file.type === 'image') {
+        surveydata.removeFile(file.imgId)
           .then(function(response) {
             logger.info(response);
             surveydata.setPages(vm.currentSurvey);

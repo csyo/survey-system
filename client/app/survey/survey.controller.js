@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('SurveyCtrl', function($state, surveydata, scalesGenerator, logger, $timeout) {
+  .controller('SurveyCtrl', function($state, surveydata, scalesGenerator, logger, $timeout, $sce) {
     var vm = this;
     var pageType = surveydata.getPageType();
     var itemType = this.itemType = surveydata.getItemType();
 
     /** page data storage **/
     this.page = '';
-    this.file = '';
+    this.file = null;
     this.pages = [];
     this.currentPage = {};
 
@@ -59,17 +59,20 @@ angular.module('surveyApp')
           vm.page = 'app/survey/templates/description.html';
           break;
         case pageType.multimedia.val:
+          var file = vm.currentPage.file;
           vm.page = 'app/survey/templates/multimedia.html';
-          if (vm.currentPage.fileId) {
+          if (file.type === 'image') {
             vm.isLoading = true;
-            vm.getFile(vm.currentPage.fileId)
+            vm.getFile(vm.currentPage.file.imgId)
               .then(function(data) {
                 vm.isLoading = false;
                 if (data && data.file) {
                   vm.file = 'data:' + data.file.mimetype + ';base64,' + data.file.img;
                 }
               });
-          } else { vm.file = ''; }
+          } else if (file.type === 'video') {
+            vm.file = $sce.trustAsHtml(file.videoUrl);
+          } else { vm.file = null; }
           break;
         case pageType.questionary.val:
           var viewOrder = 0;

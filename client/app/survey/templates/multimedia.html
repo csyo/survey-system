@@ -6,7 +6,8 @@
       </div>
     </div>
   </div>
-  <img ng-show="survey.file" class="img-responsive center-block" data-ng-src="{{survey.file}}">
+  <img ng-if="survey.currentPage.file.type==='image'" class="img-responsive center-block" data-ng-src="{{survey.file}}">
+  <div ng-if="survey.currentPage.file.type==='video'" class="center-block" ng-bind-html="survey.file"></div>
 </div>
 <div ng-include="'app/survey/templates/pagination.html'"></div>
 

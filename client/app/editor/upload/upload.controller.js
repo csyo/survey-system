@@ -1,41 +1,49 @@
 'use strict';
 
 angular.module('surveyApp')
-  .controller('UploadCtrl', function(fileId, surveydata, Upload, $modalInstance, logger) {
+  .controller('UploadCtrl', function(file, surveydata, Upload, $modalInstance, logger, toastr) {
     var vm = this;
     this.done = done;
+    this.save = save;
     this.cancel = cancel;
     this.start = start;
     this.update = update;
     this.files = [];
     this.preview = {};
-    this.fileId = fileId;
+    this.file = file;
     this.isLoading = false;
+    this.type = 'image';
 
     activate();
 
     /*** Implementations ***/
 
     function activate() {
-      var request = surveydata.getFile(vm.fileId);
-      if (request) {
-        vm.isLoading = true;
-        request.then(function(data) {
-          vm.isLoading = false;
-          if (data && data.file) {
-            vm.preview.data = data.file.img;
-            vm.preview.type = data.file.mimetype;
-          }
-        });
+      if (!vm.file) { return; }
+      if (vm.file.type === 'video') {
+        vm.type = 'video';
+        vm.videoUrl = vm.file.videoUrl;
+      } else if (vm.file.type === 'image') {
+        var request = surveydata.getFile(vm.file.imgId);
+        if (request) {
+          vm.isLoading = true;
+          request.then(function(data) {
+            vm.isLoading = false;
+            if (data && data.file) {
+              vm.preview.data = data.file.img;
+              vm.preview.type = data.file.mimetype;
+            }
+          });
+        }
       }
     }
 
     function done() {
       vm.isLoading = true;
-      if (vm.fileId) {
+      if (vm.file && vm.file.imgId) {
         return vm.update(vm.files[0])
           .then(function(data) {
-            if (vm.fileId !== data._id) {logger.error('Something goes wrong!');}
+            if (vm.file.imgId !== data._id) { logger.error('Something goes wrong!'); }
             vm.isLoading = false;
             $modalInstance.close();
           });
@@ -43,8 +51,16 @@ angular.module('surveyApp')
         return vm.start(vm.files[0])
           .then(function(data) {
             vm.isLoading = false;
-            $modalInstance.close(data._id);
+            $modalInstance.close({ imgId: data._id, type: 'image' });
           });
+      }
+    }
+
+    function save() {
+      if (vm.videoUrl) {
+        $modalInstance.close({ videoUrl: vm.videoUrl, type: 'video' });
+      } else {
+        toastr.warning('請貼上 YouTube 影片嵌入網址！');
       }
     }
 
@@ -67,7 +83,7 @@ angular.module('surveyApp')
       if (file) {
         return Upload.upload({
           method: 'PUT',
-          url: '/api/uploads/' + vm.fileId,
+          url: '/api/uploads/' + vm.file.imgId,
           file: file
         }).progress(uploadProgress)
           .then(uploadComplete)
