@@ -12,6 +12,8 @@ angular.module('surveyApp')
     this.toggleStatus = toggleStatus;
     this.setPermission = setPermission;
     this.preventEdit = preventEdit;
+    this.getResult = getResult;
+    this.getCsvHeaders = function(data) {return _.keys(data); };
 
     this.rows = surveydata.getSurveys();
     this.displayed = [].concat(this.rows);
@@ -126,6 +128,23 @@ angular.module('surveyApp')
       var user = Auth.getCurrentUser().name;
       if (user === 'Admin') { return true; }
       else { return row.account === user; }
+    }
+
+    function getResult(row) {
+      row.results = null;
+      $http.get('/api/results/' + row._id)
+        .success(function(response) {
+          console.info(response);
+          row.results = response.map(function(data) {
+            var csv = {};
+            csv.clientIp = data.clientIp;
+            data.results.forEach(function(result){
+              csv[result.order] = result.answer;
+            });
+            return csv;
+          });
+
+        });
     }
 
   });
