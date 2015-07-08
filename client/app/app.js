@@ -13,7 +13,8 @@ angular.module('surveyApp', [
   'wysiwyg.module',
   'ngFileUpload',
   'pasvaz.bindonce',
-  'toastr'
+  'toastr',
+  'ngCsv'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
